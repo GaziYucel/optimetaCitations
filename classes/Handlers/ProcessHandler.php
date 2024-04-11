@@ -66,13 +66,13 @@ class ProcessHandler
     /**
      * Execute
      *
-     * @param string $submissionId
-     * @param string $publicationId
+     * @param int $submissionId The ID of the submission.
+     * * @param int $publicationId The ID of the publication.
      * @param string $citationsRaw
      * @return bool
      */
-    public function execute(string $submissionId,
-                            string $publicationId,
+    public function execute(int $submissionId,
+                            int $publicationId,
                             string $citationsRaw): bool
     {
         if (empty($submissionId) || empty($publicationId) || empty($citationsRaw)) return false;

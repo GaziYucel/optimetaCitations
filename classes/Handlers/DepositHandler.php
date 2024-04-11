@@ -58,13 +58,13 @@ class DepositHandler
     /**
      * Deposit publication and citations to external services.
      *
-     * @param string $submissionId The ID of the submission.
-     * @param string $publicationId The ID of the publication.
+     * @param int $submissionId The ID of the submission.
+     * @param int $publicationId The ID of the publication.
      * @param array $citations Array of citations to be deposited.
      * @return bool
      */
-    public function execute(string $submissionId,
-                            string $publicationId,
+    public function execute(int $submissionId,
+                            int $publicationId,
                             array  $citations): bool
     {
         if (empty($submissionId) || empty($publicationId) || empty($citations)) return false;
