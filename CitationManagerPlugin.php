@@ -44,7 +44,7 @@ class CitationManagerPlugin extends GenericPlugin
     /** @var string Key for structured citations saved in publications */
     public const CITATIONS_STRUCTURED = CITATION_MANAGER_PLUGIN_NAME . '_CitationsStructured';
     /** @var string Key used for the form used in workflow and submission wizard */
-    public const CITATIONS_STRUCTURED_FORM = CITATION_MANAGER_PLUGIN_NAME . '_CitationsStructuredFrom';
+    public const CITATIONS_STRUCTURED_FORM = CITATION_MANAGER_PLUGIN_NAME . '_CitationsStructuredForm';
     /** @var string Wikidata username */
     public const WIKIDATA_USERNAME = CITATION_MANAGER_PLUGIN_NAME . '_Wikidata_Username';
     /** @var string Wikidata password */
