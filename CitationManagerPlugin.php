@@ -71,8 +71,6 @@ class CitationManagerPlugin extends GenericPlugin
 //                    return false;
 //                });
 
-                LogHelper::logInfo(CitationManagerPlugin::isTestMode());
-
                 $pluginSchema = new PluginSchema();
                 Hook::add('Schema::get::publication', [$pluginSchema, 'addToSchemaPublication']);
                 Hook::add('Schema::get::author', [$pluginSchema, 'addToSchemaAuthor']);

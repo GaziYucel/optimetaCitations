@@ -47,6 +47,13 @@ class PluginSchema
             ];
         }
 
+        $schema->properties->{CitationManagerPlugin::METADATA_PUBLICATION} = (object)[
+            'type' => 'string',
+            'multilingual' => false,
+            'apiSummary' => true,
+            'validation' => ['nullable']
+        ];
+
         return false;
     }
 
@@ -70,6 +77,13 @@ class PluginSchema
             ];
         }
 
+        $schema->properties->{CitationManagerPlugin::METADATA_JOURNAL} = (object)[
+            'type' => 'string',
+            'multilingual' => false,
+            'apiSummary' => true,
+            'validation' => ['nullable']
+        ];
+
         return false;
     }
 
@@ -92,6 +106,13 @@ class PluginSchema
                 'validation' => ['nullable']
             ];
         }
+
+        $schema->properties->{CitationManagerPlugin::METADATA_AUTHOR} = (object)[
+            'type' => 'string',
+            'multilingual' => false,
+            'apiSummary' => true,
+            'validation' => ['nullable']
+        ];
 
         return false;
     }

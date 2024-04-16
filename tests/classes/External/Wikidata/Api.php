@@ -42,17 +42,17 @@ class Api extends ApiAbstract
      * @param CitationManagerPlugin $plugin
      * @param string|null $url The base URL for API requests (optional).
      */
-    function __construct(CitationManagerPlugin $plugin, ?string $url = '')
+    function __construct(CitationManagerPlugin &$plugin, ?string $url = '')
     {
         parent::__construct($plugin, $url);
 
         $this->username = $this->plugin->getSetting(
             $this->plugin->getCurrentContextId(),
-            CitationManagerPlugin::CITATION_MANAGER_WIKIDATA_USERNAME);
+            CitationManagerPlugin::WIKIDATA_USERNAME);
 
         $this->password = $this->plugin->getSetting(
             $this->plugin->getCurrentContextId(),
-            CitationManagerPlugin::CITATION_MANAGER_WIKIDATA_PASSWORD);
+            CitationManagerPlugin::WIKIDATA_PASSWORD);
 
         $this->httpClient = new Client(
             [
