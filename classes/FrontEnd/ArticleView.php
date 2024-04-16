@@ -29,9 +29,9 @@ class ArticleView
     public CitationManagerPlugin $plugin;
 
     /** @param CitationManagerPlugin $plugin */
-    public function __construct(CitationManagerPlugin $plugin)
+    public function __construct(CitationManagerPlugin &$plugin)
     {
-        $this->plugin = $plugin;
+        $this->plugin = &$plugin;
     }
 
     /**
@@ -50,7 +50,7 @@ class ArticleView
         $request = $this->plugin->getRequest();
 
         $showStructured = $this->plugin->getSetting($this->plugin->getCurrentContextId(),
-            CitationManagerPlugin::CITATION_MANAGER_FRONTEND_SHOW_STRUCTURED);
+            CitationManagerPlugin::FRONTEND_SHOW_STRUCTURED);
 
         switch ($template) {
             case 'frontend/pages/article.tpl':

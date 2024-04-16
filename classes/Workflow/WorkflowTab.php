@@ -32,9 +32,9 @@ class WorkflowTab
     public CitationManagerPlugin $plugin;
 
     /** @param CitationManagerPlugin $plugin */
-    public function __construct(CitationManagerPlugin $plugin)
+    public function __construct(CitationManagerPlugin &$plugin)
     {
-        $this->plugin = $plugin;
+        $this->plugin = &$plugin;
     }
 
     /**
@@ -71,13 +71,13 @@ class WorkflowTab
             array_keys($locales), $locales);
 
         $form = new WorkflowForm(
-            CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED_FORM,
+            CitationManagerPlugin::CITATIONS_STRUCTURED_FORM,
             'PUT',
             $apiBaseUrl . 'submissions/' . $submissionId . '/publications/' . $publicationId,
             $locales);
 
         $state = $templateMgr->getTemplateVars('state');
-        $state['components'][CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED_FORM] = $form->getConfig();
+        $state['components'][CitationManagerPlugin::CITATIONS_STRUCTURED_FORM] = $form->getConfig();
         $templateMgr->assign('state', $state);
 
         $templateParameters = [

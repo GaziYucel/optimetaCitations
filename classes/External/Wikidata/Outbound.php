@@ -35,7 +35,7 @@ class Outbound extends OutboundAbstract
     private Property $property;
 
     /** @copydoc InboundAbstract::__construct */
-    public function __construct(CitationManagerPlugin $plugin,
+    public function __construct(CitationManagerPlugin &$plugin,
                                 ?Context              $context,
                                 ?Issue                $issue,
                                 ?Submission           $submission,
@@ -85,7 +85,7 @@ class Outbound extends OutboundAbstract
             if (empty($metadata->wikidata_id) && !empty($orcidId) && !empty($displayName))
                 $metadata->wikidata_id = $this->processAuthor($locale, $orcidId, $displayName);
 
-            $author->setData(CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR, $metadata);
+            $author->setData(CitationManagerPlugin::METADATA_AUTHOR, $metadata);
 
             $this->authors[$i] = $author;
         }
@@ -119,7 +119,7 @@ class Outbound extends OutboundAbstract
         foreach ($this->authors as $index => $author) {
             /** @var Author $author */
             $this->addReferenceClaim($item,
-                (array)$author->getData(CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR),
+                (array)$author->getData(CitationManagerPlugin::METADATA_AUTHOR),
                 $this->property->author['id']);
         }
 

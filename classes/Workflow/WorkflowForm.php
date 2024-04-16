@@ -33,7 +33,7 @@ class WorkflowForm extends FormComponent
         $pluginDao = new PluginDAO();
 
         $this->addField(new FieldText(
-            CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED, [
+            CitationManagerPlugin::CITATIONS_STRUCTURED, [
             'label' => '',
             'description' => '',
             'isMultilingual' => false,

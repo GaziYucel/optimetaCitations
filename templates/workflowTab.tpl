@@ -31,8 +31,8 @@
                            :class="(author.orcid)?'':'citationManager-Disabled'"
                            :href="author.orcid">iD</a>
                         <a class="pkpButton citationManager-Button" target="_blank"
-                           :class="(author.{CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR}.wikidata_id)?'':'citationManager-Disabled'"
-                           :href="'{$url.wikidata}/' + author.{CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR}.wikidata_id">WD</a>
+                           :class="(author.{CitationManagerPlugin::METADATA_AUTHOR}.wikidata_id)?'':'citationManager-Disabled'"
+                           :href="'{$url.wikidata}/' + author.{CitationManagerPlugin::METADATA_AUTHOR}.wikidata_id">WD</a>
 			        </span>
                 </td>
             </tr>
@@ -199,15 +199,15 @@
             <span>{{ citationManagerApp.submissionId               = workingPublication.submissionId }}</span>
             <span>{{ citationManagerApp.citationsRaw               = workingPublication.citationsRaw }}</span>
             <span>{{ citationManagerApp.workingPublicationId       = workingPublication.id }}</span>
-            <span>{{ citationManagerApp.workingCitationsStructured = workingPublication.{CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED} }}</span>
-            <span>{{ citationManagerApp.workingMetadataPublication = workingPublication.{CitationManagerPlugin::CITATION_MANAGER_METADATA_PUBLICATION} }}</span>
+            <span>{{ citationManagerApp.workingCitationsStructured = workingPublication.{CitationManagerPlugin::CITATIONS_STRUCTURED} }}</span>
+            <span>{{ citationManagerApp.workingMetadataPublication = workingPublication.{CitationManagerPlugin::METADATA_PUBLICATION} }}</span>
             <span>{{ citationManagerApp.workingAuthors             = workingPublication.authors }}</span>
 
-            <span>{{ components.{CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED_FORM}.fields[0]['value'] = JSON.stringify(citationManagerApp.citations) }}</span>
-            <span>{{ components.{CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED_FORM}.action = '{$apiBaseUrl}submissions/' + workingPublication.submissionId + '/publications/' + workingPublication.id }}</span>
+            <span>{{ components.{CitationManagerPlugin::CITATIONS_STRUCTURED_FORM}.fields[0]['value'] = JSON.stringify(citationManagerApp.citations) }}</span>
+            <span>{{ components.{CitationManagerPlugin::CITATIONS_STRUCTURED_FORM}.action = '{$apiBaseUrl}submissions/' + workingPublication.submissionId + '/publications/' + workingPublication.id }}</span>
         </div>
         <div>
-            <pkp-form v-bind="components.{CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED_FORM}" @set="set"/>
+            <pkp-form v-bind="components.{CitationManagerPlugin::CITATIONS_STRUCTURED_FORM}" @set="set"/>
         </div>
     </div>
 
@@ -235,9 +235,9 @@
             authors: function () {
                 let result = this.authorsIn;
                 for (let i = 0; i < result.length; i++) {
-                    let metadata = result[i].{CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR};
+                    let metadata = result[i].{CitationManagerPlugin::METADATA_AUTHOR};
                     if (typeof metadata === 'string') {
-                        result[i].{CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR} = JSON.parse(metadata);
+                        result[i].{CitationManagerPlugin::METADATA_AUTHOR} = JSON.parse(metadata);
                     }
                 }
                 return result;
@@ -407,17 +407,17 @@
                         row = this.workingAuthors[i];
                         let metadata = JSON.parse(JSON.stringify(this.authorModel));
 
-                        if (Object.hasOwn(row, '{CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR}')) {
-                            if (row.{CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR} !== null) {
-                                metadata = row.{CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR};
+                        if (Object.hasOwn(row, '{CitationManagerPlugin::METADATA_AUTHOR}')) {
+                            if (row.{CitationManagerPlugin::METADATA_AUTHOR} !== null) {
+                                metadata = row.{CitationManagerPlugin::METADATA_AUTHOR};
                             }
                         }
 
                         if (typeof metadata === 'string') {
-                            metadata = JSON.parse(row.{CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR});
+                            metadata = JSON.parse(row.{CitationManagerPlugin::METADATA_AUTHOR});
                         }
 
-                        row.{CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR} = metadata;
+                        row.{CitationManagerPlugin::METADATA_AUTHOR} = metadata;
 
                         this.authorsIn.push(row);
                     }

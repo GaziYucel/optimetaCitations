@@ -65,7 +65,7 @@ abstract class InboundAbstract
      * @param array|null $authors
      * @param array|null $citations
      */
-    public function __construct(CitationManagerPlugin $plugin,
+    public function __construct(CitationManagerPlugin &$plugin,
                                 ?Context              $context,
                                 ?Issue                $issue,
                                 ?Submission           $submission,
@@ -75,7 +75,7 @@ abstract class InboundAbstract
                                 ?array                $authors,
                                 ?array                $citations)
     {
-        $this->plugin = $plugin;
+        $this->plugin = &$plugin;
         $this->context = $context;
         $this->issue = $issue;
         $this->submission = $submission;

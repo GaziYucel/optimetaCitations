@@ -20,9 +20,9 @@ class WorkflowSave
     public CitationManagerPlugin $plugin;
 
     /** @param CitationManagerPlugin $plugin */
-    public function __construct(CitationManagerPlugin $plugin)
+    public function __construct(CitationManagerPlugin &$plugin)
     {
-        $this->plugin = $plugin;
+        $this->plugin = &$plugin;
     }
 
     /**
@@ -40,27 +40,27 @@ class WorkflowSave
         // citationsStructured
 
         // submissionWizard
-        $citationsStructured = $request->getuserVar(CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED);
+        $citationsStructured = $request->getuserVar(CitationManagerPlugin::CITATIONS_STRUCTURED);
 
         // publicationTab
-        if (array_key_exists(CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED, $params)) {
-            if (!empty($params[CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED])) {
-                $citationsStructured = $params[CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED];
+        if (array_key_exists(CitationManagerPlugin::CITATIONS_STRUCTURED, $params)) {
+            if (!empty($params[CitationManagerPlugin::CITATIONS_STRUCTURED])) {
+                $citationsStructured = $params[CitationManagerPlugin::CITATIONS_STRUCTURED];
             }
         }
-        $publication->setData(CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED, $citationsStructured);
+        $publication->setData(CitationManagerPlugin::CITATIONS_STRUCTURED, $citationsStructured);
 
         // metadataPublication
 
         // submissionWizard
-        $metadataPublication = $request->getuserVar(CitationManagerPlugin::CITATION_MANAGER_METADATA_PUBLICATION);
+        $metadataPublication = $request->getuserVar(CitationManagerPlugin::METADATA_PUBLICATION);
 
         // publicationTab
-        if (array_key_exists(CitationManagerPlugin::CITATION_MANAGER_METADATA_PUBLICATION, $params)) {
-            if (!empty($params[CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED])) {
-                $metadataPublication = $params[CitationManagerPlugin::CITATION_MANAGER_METADATA_PUBLICATION];
+        if (array_key_exists(CitationManagerPlugin::METADATA_PUBLICATION, $params)) {
+            if (!empty($params[CitationManagerPlugin::CITATIONS_STRUCTURED])) {
+                $metadataPublication = $params[CitationManagerPlugin::METADATA_PUBLICATION];
             }
         }
-        $publication->setData(CitationManagerPlugin::CITATION_MANAGER_METADATA_PUBLICATION, $metadataPublication);
+        $publication->setData(CitationManagerPlugin::METADATA_PUBLICATION, $metadataPublication);
     }
 }

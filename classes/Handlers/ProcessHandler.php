@@ -91,7 +91,7 @@ class ProcessHandler
         // author(s)
         /* @var Author $author */
         foreach ($publication->getData('authors') as $index => $author) {
-            $author->setData(CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR,
+            $author->setData(CitationManagerPlugin::METADATA_AUTHOR,
                 $pluginDao->getMetadataAuthor($author->getId(), $author));
             $this->authors[] = $author;
         }
@@ -125,7 +125,7 @@ class ProcessHandler
         foreach ($this->authors as $id => $author) {
             $pluginDao->saveMetadataAuthor(
                 $author->getId(),
-                $author->getData(CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR));
+                $author->getData(CitationManagerPlugin::METADATA_AUTHOR));
         }
 
         return true;

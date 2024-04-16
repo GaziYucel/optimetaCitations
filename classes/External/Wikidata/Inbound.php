@@ -35,7 +35,7 @@ class Inbound extends InboundAbstract
     public Property $property;
 
     /** @copydoc InboundAbstract::__construct */
-    public function __construct(CitationManagerPlugin $plugin,
+    public function __construct(CitationManagerPlugin &$plugin,
                                 ?Context              $context,
                                 ?Issue                $issue,
                                 ?Submission           $submission,
@@ -144,7 +144,7 @@ class Inbound extends InboundAbstract
 
         $metadata->wikidata_id = Wikidata::removePrefix($metadata->wikidata_id);
 
-        $author->setData(CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR, $metadata);
+        $author->setData(CitationManagerPlugin::METADATA_AUTHOR, $metadata);
 
         return $author;
     }

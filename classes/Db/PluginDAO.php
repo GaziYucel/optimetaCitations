@@ -47,7 +47,7 @@ class PluginDAO
 
         $fromDb =
             json_decode(
-                $publication->getData(CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED),
+                $publication->getData(CitationManagerPlugin::CITATIONS_STRUCTURED),
                 true
             );
 
@@ -78,7 +78,7 @@ class PluginDAO
         $publication = $this->getPublication($publicationId);
 
         $publication->setData(
-            CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED,
+            CitationManagerPlugin::CITATIONS_STRUCTURED,
             json_encode($citations)
         );
 
@@ -100,7 +100,7 @@ class PluginDAO
     {
         if (empty($publicationId)) return new MetadataPublication();
 
-        $key = CitationManagerPlugin::CITATION_MANAGER_METADATA_PUBLICATION;
+        $key = CitationManagerPlugin::METADATA_PUBLICATION;
 
         if (empty($publication) || empty($publication->getData($key)))
             $publication = $this->getPublication($publicationId);
@@ -128,7 +128,7 @@ class PluginDAO
         $publication = $this->getPublication($publicationId);
 
         $publication->setData(
-            CitationManagerPlugin::CITATION_MANAGER_METADATA_PUBLICATION,
+            CitationManagerPlugin::METADATA_PUBLICATION,
             json_encode($metadataPublication)
         );
 
@@ -150,7 +150,7 @@ class PluginDAO
     {
         if (empty($authorId)) return new MetadataAuthor();
 
-        $key = CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR;
+        $key = CitationManagerPlugin::METADATA_AUTHOR;
 
         if (empty($author) || empty($author->getData($key)))
             $author = $this->getAuthor($authorId);
@@ -178,7 +178,7 @@ class PluginDAO
         $author = $this->getAuthor($authorId);
 
         $author->setData(
-            CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR,
+            CitationManagerPlugin::METADATA_AUTHOR,
             json_encode($metadataAuthor)
         );
 
@@ -200,7 +200,7 @@ class PluginDAO
     {
         if (empty($journalId)) return new MetadataJournal();
 
-        $key = CitationManagerPlugin::CITATION_MANAGER_METADATA_JOURNAL;
+        $key = CitationManagerPlugin::METADATA_JOURNAL;
 
         // Reload the context schema
         Services::get('schema')->get(PKPSchemaService::SCHEMA_CONTEXT, true);
@@ -235,7 +235,7 @@ class PluginDAO
         $journal = $this->getJournal($contextId);
 
         $journal->setData(
-            CitationManagerPlugin::CITATION_MANAGER_METADATA_JOURNAL,
+            CitationManagerPlugin::METADATA_JOURNAL,
             json_encode($metadataJournal)
         );
 

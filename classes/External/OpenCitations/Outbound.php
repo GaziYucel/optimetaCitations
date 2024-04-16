@@ -43,7 +43,7 @@ class Outbound extends OutboundAbstract
     protected string $defaultType = 'journal article';
 
     /** @copydoc InboundAbstract::__construct */
-    public function __construct(CitationManagerPlugin $plugin,
+    public function __construct(CitationManagerPlugin &$plugin,
                                 ?Context              $context,
                                 ?Issue                $issue,
                                 ?Submission           $submission,

@@ -19,10 +19,12 @@ import('lib.pkp.classes.security.authorization.RoleBasedHandlerOperationPolicy')
 use APIResponse;
 use APIHandler;
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
+use PKP\core\APIRouter;
 use PolicySet;
 use RoleBasedHandlerOperationPolicy;
 use Slim\Http\Request as SlimRequest;
 use Slim\Http\Response;
+use Throwable;
 
 class PluginAPIHandler extends APIHandler
 {
@@ -63,6 +65,29 @@ class PluginAPIHandler extends APIHandler
         parent::__construct();
     }
 
+    /**
+     * Register custom endpoint
+     *
+     * @param $hookName
+     * @param $args
+     * @return void
+     * @throws Throwable
+     */
+    public function register($hookName, $args): void
+    {
+        $request = $args[0];
+        $router = $request->getRouter();
+
+        if ($router instanceof APIRouter
+            && str_contains($request->getRequestPath(), 'api/v1/' . CITATION_MANAGER_PLUGIN_NAME)
+        ) {
+            $handler = new PluginAPIHandler();
+            $router->setHandler($handler);
+            $handler->getApp()->run();
+            exit;
+        }
+    }
+
     /** @copydoc PKPHandler::authorize() */
     public function authorize($request, &$args, $roleAssignments): bool
     {
@@ -78,6 +103,7 @@ class PluginAPIHandler extends APIHandler
 
     /**
      * Handles the processing of raw citations.
+     *
      * @param SlimRequest $slimRequest
      * @param APIResponse $response
      * @param array $args
@@ -100,7 +126,7 @@ class PluginAPIHandler extends APIHandler
             return $response->withJson($this->responseBody, 200);
 
         $process = new ProcessHandler();
-        $process->execute($submissionId, $publicationId, $citationsRaw);
+        $process->execute((int)$submissionId, (int)$publicationId, $citationsRaw);
 
         $this->responseBody['message-type'] = 'process';
         $this->responseBody['message']['metadataJournal'] = $process->getMetadataJournal();
@@ -113,6 +139,7 @@ class PluginAPIHandler extends APIHandler
 
     /**
      * Handles the deposition of citations.
+     *
      * @param SlimRequest $slimRequest
      * @param APIResponse $response
      * @param array $args
@@ -135,7 +162,7 @@ class PluginAPIHandler extends APIHandler
             return $response->withJson($this->responseBody, 200);
 
         $deposit = new DepositHandler();
-        $deposit->execute($submissionId, $publicationId, $citations);
+        $deposit->execute((int)$submissionId, (int)$publicationId, $citations);
 
         $this->responseBody['message-type'] = 'deposit';
         $this->responseBody['message']['metadataJournal'] = $deposit->getMetadataJournal();

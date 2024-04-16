@@ -13,6 +13,10 @@
 namespace APP\plugins\generic\citationManager\classes\Db;
 
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
+use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataAuthor;
+use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataJournal;
+use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataPublication;
+use APP\plugins\generic\citationManager\classes\Helpers\ClassHelper;
 
 class PluginSchema
 {
@@ -27,19 +31,21 @@ class PluginSchema
     {
         $schema = &$args[0];
 
-        $schema->properties->{CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED} = (object)[
+        $schema->properties->{CitationManagerPlugin::CITATIONS_STRUCTURED} = (object)[
             'type' => 'string',
             'multilingual' => false,
             'apiSummary' => true,
             'validation' => ['nullable']
         ];
 
-        $schema->properties->{CitationManagerPlugin::CITATION_MANAGER_METADATA_PUBLICATION} = (object)[
-            'type' => 'string',
-            'multilingual' => false,
-            'apiSummary' => true,
-            'validation' => ['nullable']
-        ];
+        foreach (ClassHelper::getClassPropertiesAsArray(new MetadataPublication()) as $key) {
+            $schema->properties->{$key} = (object)[
+                'type' => 'string',
+                'multilingual' => false,
+                'apiSummary' => true,
+                'validation' => ['nullable']
+            ];
+        }
 
         return false;
     }
@@ -55,12 +61,14 @@ class PluginSchema
     {
         $schema = &$args[0];
 
-        $schema->properties->{CitationManagerPlugin::CITATION_MANAGER_METADATA_JOURNAL} = (object)[
-            'type' => 'string',
-            'multilingual' => false,
-            'apiSummary' => true,
-            'validation' => ['nullable']
-        ];
+        foreach (ClassHelper::getClassPropertiesAsArray(new MetadataJournal()) as $key) {
+            $schema->properties->{$key} = (object)[
+                'type' => 'string',
+                'multilingual' => false,
+                'apiSummary' => true,
+                'validation' => ['nullable']
+            ];
+        }
 
         return false;
     }
@@ -76,12 +84,14 @@ class PluginSchema
     {
         $schema = &$args[0];
 
-        $schema->properties->{CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR} = (object)[
-            'type' => 'string',
-            'multilingual' => false,
-            'apiSummary' => true,
-            'validation' => ['nullable']
-        ];
+        foreach (ClassHelper::getClassPropertiesAsArray(new MetadataAuthor()) as $key) {
+            $schema->properties->{$key} = (object)[
+                'type' => 'string',
+                'multilingual' => false,
+                'apiSummary' => true,
+                'validation' => ['nullable']
+            ];
+        }
 
         return false;
     }

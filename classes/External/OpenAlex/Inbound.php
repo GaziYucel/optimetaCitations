@@ -31,7 +31,7 @@ use Submission;
 class Inbound extends InboundAbstract
 {
     /** @copydoc InboundAbstract::__construct */
-    public function __construct(CitationManagerPlugin $plugin,
+    public function __construct(CitationManagerPlugin &$plugin,
                                 ?Context              $context,
                                 ?Issue                $issue,
                                 ?Submission           $submission,

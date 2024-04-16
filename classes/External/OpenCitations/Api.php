@@ -35,18 +35,18 @@ class Api extends ApiAbstract
      * @param CitationManagerPlugin $plugin
      * @param string|null $url The base URL for API requests (optional).
      */
-    public function __construct(CitationManagerPlugin $plugin, ?string $url = '')
+    public function __construct(CitationManagerPlugin &$plugin, ?string $url = '')
     {
         parent::__construct($plugin, $url);
 
         $this->owner = $this->plugin->getSetting($this->plugin->getCurrentContextId(),
-            CitationManagerPlugin::CITATION_MANAGER_OPEN_CITATIONS_OWNER);
+            CitationManagerPlugin::OPEN_CITATIONS_OWNER);
 
         $this->token = $this->plugin->getSetting($this->plugin->getCurrentContextId(),
-            CitationManagerPlugin::CITATION_MANAGER_OPEN_CITATIONS_TOKEN);
+            CitationManagerPlugin::OPEN_CITATIONS_TOKEN);
 
         $this->repository = $this->plugin->getSetting($this->plugin->getCurrentContextId(),
-            CitationManagerPlugin::CITATION_MANAGER_OPEN_CITATIONS_REPOSITORY);
+            CitationManagerPlugin::OPEN_CITATIONS_REPOSITORY);
 
         $this->httpClient = new Client([
             'headers' => [
