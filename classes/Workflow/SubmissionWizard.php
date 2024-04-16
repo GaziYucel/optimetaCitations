@@ -35,6 +35,14 @@ class SubmissionWizard
     public function execute(string $hookname, array $args): void
     {
         $templateMgr = &$args[1];
+
+        $request = $this->plugin->getRequest();
+
+        $templateParameters = [
+            'assetsUrl' => $request->getBaseUrl() . '/' . $this->plugin->getPluginPath() . '/assets'
+        ];
+        $templateMgr->assign($templateParameters);
+
         $templateMgr->display(
             $this->plugin->getTemplateResource("submissionWizard.tpl")
         );
