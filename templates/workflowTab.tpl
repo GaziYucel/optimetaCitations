@@ -31,8 +31,8 @@
                            :class="(author.orcid)?'':'citationManager-Disabled'"
                            :href="author.orcid">iD</a>
                         <a class="pkpButton citationManager-Button" target="_blank"
-                           :class="(author.{CitationManagerPlugin::METADATA_AUTHOR}.wikidata_id)?'':'citationManager-Disabled'"
-                           :href="'{$url.wikidata}/' + author.{CitationManagerPlugin::METADATA_AUTHOR}.wikidata_id">WD</a>
+                           :class="(author.wikidata_id)?'':'citationManager-Disabled'"
+                           :href="'{$url.wikidata}/' + author.wikidata_id">WD</a>
 			        </span>
                 </td>
             </tr>
@@ -40,11 +40,11 @@
                 <td><strong>{translate key="common.publication"}</strong></td>
                 <td>
                     <a class="pkpButton citationManager-Button" target="_blank"
-                       :class="(citationManagerApp.metadataPublication.wikidata_id)?'':'citationManager-Disabled'"
-                       :href="'{$url.wikidata}/' + citationManagerApp.metadataPublication.wikidata_id">Wikidata</a>
+                       :class="(citationManagerApp.publication.wikidata_id)?'':'citationManager-Disabled'"
+                       :href="'{$url.wikidata}/' + citationManagerApp.publication.wikidata_id">Wikidata</a>
                     <a class="pkpButton citationManager-Button" target="_blank"
-                       :class="(citationManagerApp.metadataPublication.opencitations_id)?'':'citationManager-Disabled'"
-                       :href="'{$url.openCitations}/' + citationManagerApp.metadataPublication.opencitations_id">OpenCitations</a>
+                       :class="(citationManagerApp.publication.opencitations_id)?'':'citationManager-Disabled'"
+                       :href="'{$url.openCitations}/' + citationManagerApp.publication.opencitations_id">OpenCitations</a>
                 </td>
                 <td class="citationManager-AlignRight">
                     <a @click="citationManagerApp.deposit()" id="buttonDeposit" class="pkpButton"
@@ -78,7 +78,7 @@
                     <col class="grid-column column-action" style="width: 6%;">
                 </colgroup>
                 <tbody>
-                <tr v-for="(citation, i) in citationManagerApp.citationsHelper" class="citationManager-Row">
+                <tr v-for="(citation, i) in citationManagerApp.citations" :key="i" class="citationManager-Row">
                     <td class="citationManager-ScrollableDiv-nr">{{ i + 1 }}</td>
                     <td class="citationManager-ScrollableDiv-parts">
                         <div>
@@ -195,19 +195,17 @@
 
     <div>
         <div class="citationManager-Hide">
+            <span>{{ citationManagerApp.workingPublication         = workingPublication }}</span>
             <span>{{ citationManagerApp.workingPublicationStatus   = workingPublication.status }}</span>
             <span>{{ citationManagerApp.submissionId               = workingPublication.submissionId }}</span>
-            <span>{{ citationManagerApp.citationsRaw               = workingPublication.citationsRaw }}</span>
             <span>{{ citationManagerApp.workingPublicationId       = workingPublication.id }}</span>
-            <span>{{ citationManagerApp.workingCitationsStructured = workingPublication.{CitationManagerPlugin::CITATIONS_STRUCTURED} }}</span>
-            <span>{{ citationManagerApp.workingMetadataPublication = workingPublication.{CitationManagerPlugin::METADATA_PUBLICATION} }}</span>
-            <span>{{ citationManagerApp.workingAuthors             = workingPublication.authors }}</span>
+            <span>{{ citationManagerApp.formCitations = components.{CitationManagerPlugin::CITATIONS_STRUCTURED_FORM}.fields[0]['value'] }}</span> <!-- //todo: citationsStructured gets emptied -->
 
-            <span>{{ components.{CitationManagerPlugin::CITATIONS_STRUCTURED_FORM}.fields[0]['value'] = JSON.stringify(citationManagerApp.citations) }}</span>
+            <span>{{ citationManagerApp.isUserInteracting ? components.{CitationManagerPlugin::CITATIONS_STRUCTURED_FORM}.fields[0]['value'] = JSON.stringify(citationManagerApp.citationsClean) : '' }}</span>
             <span>{{ components.{CitationManagerPlugin::CITATIONS_STRUCTURED_FORM}.action = '{$apiBaseUrl}submissions/' + workingPublication.submissionId + '/publications/' + workingPublication.id }}</span>
         </div>
         <div>
-            <pkp-form v-bind="components.{CitationManagerPlugin::CITATIONS_STRUCTURED_FORM}" @set="set"/>
+            <pkp-form v-bind="components.{CitationManagerPlugin::CITATIONS_STRUCTURED_FORM}" @set="set"></pkp-form>
         </div>
     </div>
 
@@ -215,44 +213,26 @@
 
 <script>
     let citationManagerApp = new pkp.Vue({
-        // el: '#citationManager',
-        data: {
-            metadataJournal: {$metadataJournal},
-            authorModel: {$authorModel},
-            metadataPublication: [],
-            authorsIn: [],
-            citationsHelper: [],
-            publicationId: 0,
-            submissionId: 0,                // workingPublication.submissionId
-            citationsRaw: '',               // workingPublication.citationsRaw
-            workingPublicationId: 0,        // workingPublication.id
-            workingPublicationStatus: 0,    // workingPublication.status
-            workingCitationsStructured: [], // workingPublication.citationsCitationManagerPlugin_CitationsStructured
-            workingMetadataPublication: [], // workingPublication.CitationManagerPlugin_MetadataPublication
-            workingAuthors: [],             // workingPublication.authors
+        data() {
+            return {
+                publication: {$publication},
+                publicationId: {$publicationId},
+                citations: {$citationStructured},
+                authors: [],
+                citationsRaw: '',
+                metadataJournal: {$metadataJournal},
+                authorModel: {$authorModel},
+                submissionId: 0,                        // workingPublication.submissionId
+                workingPublication: { /* */},           // workingPublication
+                workingPublicationId: {$publicationId}, // workingPublication.id
+                workingPublicationStatus: 0,            // workingPublication.status
+                formCitations: [], //todo: citationsStructured gets emptied
+                isUserInteracting: 0, //todo: citationsStructured gets emptied
+            }
         },
         computed: {
-            authors: function () {
-                let result = this.authorsIn;
-                for (let i = 0; i < result.length; i++) {
-                    let metadata = result[i].{CitationManagerPlugin::METADATA_AUTHOR};
-                    if (typeof metadata === 'string') {
-                        result[i].{CitationManagerPlugin::METADATA_AUTHOR} = JSON.parse(metadata);
-                    }
-                }
-                return result;
-            },
-            citations: function () {
-                let result = JSON.parse(JSON.stringify(this.citationsHelper));
-                for (let i = 0; i < result.length; i++) {
-                    if (Object.hasOwn(result[i], 'editRow')) {
-                        delete result[i]['editRow'];
-                    }
-                }
-                return result;
-            },
             isStructured: function () {
-                return this.citationsHelper.length !== 0;
+                return this.citations.length !== 0;
             },
             isPublished: function () {
                 let isPublished = false;
@@ -267,16 +247,26 @@
                 }
 
                 return isPublished;
-            }
+            },
+            citationsClean: function () {
+                let result = JSON.parse(JSON.stringify(this.citations));
+                for (let i = 0; i < result.length; i++) {
+                    if (Object.hasOwn(result[i], 'editRow')) {
+                        delete result[i]['editRow'];
+                    }
+                }
+                return result;
+            },
         },
         methods: {
             clear: function () {
                 if (confirm('{translate key="plugins.generic.citationManager.clear.question"}') !== true) return;
-
-                this.citationsHelper = [];
+                this.citations = [];
             },
             process: function () {
-                if (confirm('{translate key="plugins.generic.citationManager.process.question"}') !== true) return;
+                if (confirm('{translate key="plugins.generic.citationManager.process.question"}') !== true) {
+                    return;
+                }
 
                 this.toggleLoading();
 
@@ -294,19 +284,16 @@
                     },
                     success(response) {
                         let result = JSON.parse(JSON.stringify(response['message']));
-
-                        self.metadataJournal = result['metadataJournal'];
-                        self.metadataPublication = result['metadataPublication'];
-                        self.setCitationsHelper(result['citations']);
-                        self.authorsIn = result['authors'];
-                        for (let i = 0; i < self.authorsIn.length; i++) {
-                            self.authorsIn[i] = self.authorsIn[i]._data;
-                        }
+                        self.publication = result['publication'];
+                        self.setCitations(self.publication);
+                        self.setCitationsEditRow(self.citations);
+                        self.setAuthors(self.publication);
                     },
                     complete() {
                         self.toggleLoading();
                     }
                 });
+
             },
             deposit: function () {
                 if (confirm('{translate key="plugins.generic.citationManager.deposit.question"}') !== true) {
@@ -329,14 +316,10 @@
                     },
                     success(response) {
                         let result = JSON.parse(JSON.stringify(response['message']));
-
-                        self.metadataJournal = result['metadataJournal'];
-                        self.metadataPublication = result['metadataPublication'];
-                        self.setCitationsHelper(result['citations']);
-                        self.authorsIn = result['authors'];
-                        for (let i = 0; i < self.authorsIn.length; i++) {
-                            self.authorsIn[i] = self.authorsIn[i]._data;
-                        }
+                        self.publication = result['publication'];
+                        self.setCitations(self.publication);
+                        self.setCitationsEditRow(self.citations);
+                        self.setAuthors(self.publication);
                     },
                     complete() {
                         self.toggleLoading();
@@ -344,29 +327,29 @@
                 });
             },
             addAuthor: function (index) {
-                if (this.citationsHelper[index].authors === null) {
-                    this.citationsHelper[index].authors = [];
+                if (this.citations[index].authors === null) {
+                    this.citations[index].authors = [];
                 }
-                this.citationsHelper[index].authors.push(JSON.parse(JSON.stringify(this.authorModel)));
+                this.citations[index].authors.push(JSON.parse(JSON.stringify(this.authorModel)));
             },
             removeAuthor: function (index, authorIndex) {
                 if (confirm('{translate key="plugins.generic.citationManager.author.remove.question"}') !== true) {
                     return;
                 }
-                this.citationsHelper[index].authors.splice(authorIndex, 1);
+                this.citations[index].authors.splice(authorIndex, 1);
             },
             toggleEdit: function (index) {
-                this.citationsHelper[index].editRow = !this.citationsHelper[index].editRow;
-                if (this.citationsHelper[index].authors !== null) {
-                    for (let i = 0; i < this.citationsHelper[index].authors.length; i++) {
+                this.citations[index].editRow = !this.citations[index].editRow;
+                if (this.citations[index].authors !== null) {
+                    for (let i = 0; i < this.citations[index].authors.length; i++) {
                         let rowIsNull = true;
-                        for (let key in this.citationsHelper[index].authors[i]) {
-                            if (this.citationsHelper[index].authors[i][key] !== null) {
+                        for (let key in this.citations[index].authors[i]) {
+                            if (this.citations[index].authors[i][key] !== null) {
                                 rowIsNull = false;
                             }
                         }
                         if (rowIsNull === true) {
-                            this.citationsHelper[index].authors.splice(i);
+                            this.citations[index].authors.splice(i);
                         }
                     }
                 }
@@ -377,55 +360,63 @@
                 document.getElementById('citationManager-ScrollableDivValue').classList.toggle(cssClass);
                 document.getElementById('citationManager-ScrollableDivLoading').classList.toggle(cssClass);
             },
-            setCitationsHelper: function (citations) {
-                this.citationsHelper = [];
-                for (let i = 0; i < citations.length; i++) {
-                    let row = citations[i];
-                    row.editRow = false;
-                    this.citationsHelper.push(row);
+            setCitations: function (publication) {
+                this.citations = [];
+                if (publication["{CitationManagerPlugin::CITATIONS_STRUCTURED}"] !== undefined) {
+                    let citations = publication["{CitationManagerPlugin::CITATIONS_STRUCTURED}"];
+                    if (typeof citations === "string") {
+                        citations = JSON.parse(citations);
+                    }
+                    this.citations = citations;
+                }
+            },
+            setCitationsEditRow: function (citations) {
+                let result = [];
+                Object.values(citations).forEach(citation => {
+                    citation = JSON.parse(JSON.stringify(citation));
+                    citation.editRow = false;
+                    result.push(citation);
+                });
+                this.citations = result;
+            },
+            setAuthors: function (publication) {
+                this.authors = [];
+                if (publication['authors'] !== undefined) {
+                    Object.values(publication["authors"]).forEach(author => {
+                        let row = author;
+                        if (author['_data'] !== undefined) {
+                            row = author['_data'];
+                        }
+                        this.authors.push(row);
+                    });
+                }
+            },
+            setCitationsRaw: function (publication) {
+                this.citationsRaw = '';
+                if (publication['citationsRaw'] !== undefined) {
+                    this.citationsRaw = publication['citationsRaw'];
                 }
             }
         },
         watch: {
             workingPublicationId(newValue, oldValue) {
-                this.publicationId = this.workingPublicationId;
+                if (newValue !== oldValue) {
+                    this.publicationId = this.workingPublicationId;
+                    this.publication = this.workingPublication;
+                    this.setCitations(this.publication);
+                    this.setCitationsEditRow(this.citations);
+                    this.setAuthors(this.publication);
+                    this.setCitationsRaw(this.publication);
 
-                this.citationsHelper = [];
-                if (this.workingCitationsStructured && this.workingCitationsStructured.length > 0) {
-                    this.setCitationsHelper(JSON.parse(this.workingCitationsStructured));
+                    console.log(oldValue + ' > ' + newValue);
                 }
-
-                this.metadataPublication = [];
-                if (this.workingMetadataPublication && this.workingMetadataPublication.length > 0) {
-                    this.metadataPublication = JSON.parse(this.workingMetadataPublication);
-                }
-
-                this.authorsIn = [];
-                if (this.workingAuthors && this.workingAuthors.length > 0) {
-                    for (let i = 0; i < this.workingAuthors.length; i++) {
-                        let row = [];
-                        row = this.workingAuthors[i];
-                        let metadata = JSON.parse(JSON.stringify(this.authorModel));
-
-                        if (Object.hasOwn(row, '{CitationManagerPlugin::METADATA_AUTHOR}')) {
-                            if (row.{CitationManagerPlugin::METADATA_AUTHOR} !== null) {
-                                metadata = row.{CitationManagerPlugin::METADATA_AUTHOR};
-                            }
-                        }
-
-                        if (typeof metadata === 'string') {
-                            metadata = JSON.parse(row.{CitationManagerPlugin::METADATA_AUTHOR});
-                        }
-
-                        row.{CitationManagerPlugin::METADATA_AUTHOR} = metadata;
-
-                        this.authorsIn.push(row);
-                    }
-                }
-                console.log(oldValue + ' > ' + newValue);
             }
         },
         created() {
+            this.setCitationsEditRow(this.citations);
+            this.setAuthors(this.publication);
+            this.setCitationsRaw(this.publication);
+            this.isUserInteracting = true; //todo: citationsStructured gets emptied
         }
     });
 </script>
