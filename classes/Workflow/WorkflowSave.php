@@ -28,39 +28,11 @@ class WorkflowSave
     /**
      * Process data from post/put
      *
-     * @param string $hookname
+     * @param string $hookName
      * @param array $args [ Publication, parameters/publication, Request ]
      */
-    public function execute(string $hookname, array $args): void
+    public function execute(string $hookName, array $args): void
     {
-        $publication = $args[0];
-        $params = $args[2];
-        $request = $this->plugin->getRequest();
-
-        // citationsStructured
-
-        // submissionWizard
-        $citationsStructured = $request->getuserVar(CitationManagerPlugin::CITATIONS_STRUCTURED);
-
-        // publicationTab
-        if (array_key_exists(CitationManagerPlugin::CITATIONS_STRUCTURED, $params)) {
-            if (!empty($params[CitationManagerPlugin::CITATIONS_STRUCTURED])) {
-                $citationsStructured = $params[CitationManagerPlugin::CITATIONS_STRUCTURED];
-            }
-        }
-        $publication->setData(CitationManagerPlugin::CITATIONS_STRUCTURED, $citationsStructured);
-
-        // metadataPublication
-
-        // submissionWizard
-        $metadataPublication = $request->getuserVar(CitationManagerPlugin::METADATA_PUBLICATION);
-
-        // publicationTab
-        if (array_key_exists(CitationManagerPlugin::METADATA_PUBLICATION, $params)) {
-            if (!empty($params[CitationManagerPlugin::CITATIONS_STRUCTURED])) {
-                $metadataPublication = $params[CitationManagerPlugin::METADATA_PUBLICATION];
-            }
-        }
-        $publication->setData(CitationManagerPlugin::METADATA_PUBLICATION, $metadataPublication);
+        // nothing to do here
     }
 }
