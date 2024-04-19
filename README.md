@@ -66,7 +66,7 @@ Metadata
 | name      | description                                  | example                                      |
 |-----------|----------------------------------------------|----------------------------------------------|
 | id        | doi, issn, isbn, url, wikidata, wikipedia    | doi:3233/ds-170012                           |
-| title     | the title of the document                    |                                              |                                         
+| title     | the title of the document                    |                                              |
 | author    | name of author(s), orcid if available        | Yücel, Gazi [orcid:0000-0002-2013-6920]      |
 | pub_date  | the date of publication of the document      | 2021-02-28                                   |
 | venue     | the venue of the document                    | Journal of Public Knowledge [issn:0378-5955] |
@@ -131,9 +131,9 @@ Only items which have unique identifiers will be deposited to Wikidata.
 
 Get the correct version for your OJS version:
 
-- branch stable-3_3_0: use this version for OJS version 3.3.0.x  
+- branch stable-3_3_0: use this version for OJS version 3.3.0.x
   `git clone -b stable-3_3_0 https://github.com/TIBHannover/citationManager`
-- branch stable-3_4_0: use this version for OJS version 3.4.0.x  
+- branch stable-3_4_0: use this version for OJS version 3.4.0.x
   `git clone -b stable-3_4_0 https://github.com/TIBHannover/citationManager`
 
 ## Install via direct download
@@ -223,7 +223,7 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
     |  |  |  ├─ DataModels           # Data models for this service, e.g. mappings
     │  |  |  ├─ Api.php              # Methods for connecting to their API
     │  |  |  ├─ Inbound.php          # Methods for retrieving data
-    │  |  |  └─ Outbound.php         # Methods for depositing data 
+    │  |  |  └─ Outbound.php         # Methods for depositing data
     |  |  ├─ ... Other services      # Other services follow the same structure
     |  |  ├─ ApiAbstract.php         # This class is used by service Api class
     |  |  ├─ InboundAbstract.php     # This class is used by service Inbound class
@@ -235,12 +235,13 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
     │  ├─ ScheduledTasks             # Classes for the scheduler
     │  ├─ Settings                   # Settings classes
     │  └─ Workflow                   # Classes or the workflow and submission wizard
-    ├─ classesTest                   # Test classes, overwrites classes folder
-    │  └─ autoload.php               # Load test classes
     ├─ cypress                       # Cypress tests
     ├─ docs                          # Documentation, examples
     ├─ locale                        # Language files
     ├─ templates                     # Templates folder
+    ├─ tests                         # Tests folder
+    │  └─ classes                    # Classes for tests
+    ├─ vendor                        # Composer autoload and dependencies
     ├─ .gitignore                    # Git ignore file
     ├─ CitationManagerPlugin.php     # Main class of plugin
     ├─ composer.json                 # Composer configuration file
@@ -255,17 +256,14 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
 
 Notes
 
+- Autoload of the classes in the folder `classes/` is done with composer according 
+  to the PSR-4 specification.
 - All classes have namespaces and are structured according to PSR-4 standard.
-- OJS 3.4.0
-  - Autoload of the classes in the folder `classes/` is done according to the PSR-4 specification.
-  - This will happen automatically, no further action is needed.
-- OJS 3.3.0
-  - Autoload of the classes in the folder `classes/` is done with composer. 
-  - If you add or remove classes in the `classes` folder, run the following
-    command to update autoload files: `composer dump-autoload -o --no-dev`.
-  - Running `composer install -o --no-dev` or `composer update -o --no-dev`
-    will also generate the autoload files.
-  - The `-o` option generates the optimised files ready for production.
+- If you add or remove classes in the `classes` folder, run the following
+  command to update autoload files: `composer dump-autoload -o --no-dev`.
+- Running `composer install -o --no-dev` or `composer update -o --no-dev`
+  will also generate the autoload files.
+- The `-o` option generates the optimised files ready for production.
 
 ## Debugging
 
@@ -287,14 +285,15 @@ _Careful with sensitive information, (passwords, tokens) will be written in plai
 
 **Test classes**
 
-If you are developing, you might use the classes in `classesTest/`.
-The classes in this folder have the same name, folder and namespace structure as in `classes` folder.
+If you are developing, you might use the classes in `tests/classes/`.
+The classes in this folder have the same folder and namespace structure as in `classes` folder.
 The purpose of these classes is to override the main classes.
-The classes are loaded with the file `classesTest/autoload.php`. 
-If this is done, then test or sandbox versions of API's will be used. 
+You can accomplish this by running the composer command `composer dump-autoload -o --dev`.
+If this is done, then test or sandbox versions of API's will be used.
 For example test.wikidata.org instead of www.wikidata.org.
-First the classes in `classesTest/` are loaded, after which the classes in `classes/` are loaded.
-By doing this in this order, all classes present in `classesTest/` will override the classes in `classes/`.
+Autoload of the classes is done with composer [classmap](https://getcomposer.org/doc/04-schema.md#classmap).  
+First the classes in `tests/classes/` are loaded, after which the classes in `classes/` are loaded.
+By doing this in this order, all classes present in `tests/classes/` will override the classes in `classes/`.
 
 **Headless tests**
 
@@ -366,7 +365,7 @@ npm run-script test_open
 
 | name        | description                  |
 |-------------|------------------------------|
-| openalex_id | The OpenAlex ID of the work  | 
+| openalex_id | The OpenAlex ID of the work  |
 | wikidata_id | The Wikidata QID of the work |
 
 **MetadataPublication**

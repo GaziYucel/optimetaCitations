@@ -14,8 +14,9 @@ namespace APP\plugins\generic\citationManager;
 
 define('CITATION_MANAGER_PLUGIN_NAME', basename(__FILE__, '.php'));
 
-if (CitationManagerPlugin::isTestMode()) require_once(__DIR__ . '/classesTest/autoload.php');
+require_once(__DIR__ . '/vendor/autoload.php');
 
+use APP\plugins\generic\citationManager\classes\External\Wikidata\Api;
 use APP\plugins\generic\citationManager\classes\Db\PluginSchema;
 use APP\plugins\generic\citationManager\classes\FrontEnd\ArticleView;
 use APP\plugins\generic\citationManager\classes\Handlers\PluginAPIHandler;

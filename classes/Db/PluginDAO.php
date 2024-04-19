@@ -62,11 +62,10 @@ class PluginDAO
     /* OJS getters */
     public function getContext(int $contextId): ?Context
     {
-        try{
+        try {
             /* @var JournalDAO $dao */
             $dao = DAORegistry::getDAO('JournalDAO');
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             error_log($e->getMessage());
         }
 
@@ -97,12 +96,11 @@ class PluginDAO
     /* OJS setters */
     public function saveContext(Context $context): void
     {
-        try{
+        try {
             /* @var JournalDAO $dao */
             $dao = DAORegistry::getDAO('JournalDAO');
             $dao->updateObject($context);
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             error_log($e->getMessage());
         }
     }
