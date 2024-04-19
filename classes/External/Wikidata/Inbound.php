@@ -105,8 +105,6 @@ class Inbound extends ExecuteAbstract
      */
     public function processCitation(CitationModel $citation): CitationModel
     {
-        error_log('$citation->doi: ' . $citation->doi);
-
         $qid = $this->api
             ->getQidFromItem($this->api
                 ->getItemWithPropertyAndPid(

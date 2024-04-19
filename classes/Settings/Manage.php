@@ -75,3 +75,4 @@ class Manage
         return new JSONMessage(false);
     }
 }
+

@@ -55,3 +55,4 @@ class StatusForm extends Form
         return parent::fetch($request, $template, $display);
     }
 }
+
