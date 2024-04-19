@@ -27,9 +27,9 @@ class Manage
     public CitationManagerPlugin $plugin;
 
     /** @param CitationManagerPlugin $plugin */
-    public function __construct(CitationManagerPlugin $plugin)
+    public function __construct(CitationManagerPlugin &$plugin)
     {
-        $this->plugin = $plugin;
+        $this->plugin = &$plugin;
     }
 
     /** @copydoc Plugin::manage() */
@@ -53,7 +53,7 @@ class Manage
                 $form->initData();
                 return new JSONMessage(true, $form->fetch($request));
             case 'batch_process':
-                $process = new InboundHandler();
+                $process = new ProcessHandler();
                 $process->batchExecute();
                 $notificationManager = new NotificationManager();
                 $notificationManager->createTrivialNotification(
@@ -62,7 +62,7 @@ class Manage
                     array('contents' => __('plugins.generic.citationManager.settings.process.notification')));
                 return DAO::getDataChangedEvent();
             case 'batch_deposit':
-                $deposit = new OutboundHandler();
+                $deposit = new DepositHandler();
                 $deposit->batchExecute();
                 $notificationManager = new NotificationManager();
                 $notificationManager->createTrivialNotification(
@@ -75,3 +75,4 @@ class Manage
         return new JSONMessage(false);
     }
 }
+

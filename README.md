@@ -66,7 +66,7 @@ Metadata
 | name      | description                                  | example                                      |
 |-----------|----------------------------------------------|----------------------------------------------|
 | id        | doi, issn, isbn, url, wikidata, wikipedia    | doi:3233/ds-170012                           |
-| title     | the title of the document                    |                                              |                                         
+| title     | the title of the document                    |                                              |
 | author    | name of author(s), orcid if available        | Yücel, Gazi [orcid:0000-0002-2013-6920]      |
 | pub_date  | the date of publication of the document      | 2021-02-28                                   |
 | venue     | the venue of the document                    | Journal of Public Knowledge [issn:0378-5955] |
@@ -131,9 +131,9 @@ Only items which have unique identifiers will be deposited to Wikidata.
 
 Get the correct version for your OJS version:
 
-- branch stable-3_3_0: use this version for OJS version 3.3.0.x  
+- branch stable-3_3_0: use this version for OJS version 3.3.0.x
   `git clone -b stable-3_3_0 https://github.com/TIBHannover/citationManager`
-- branch stable-3_4_0: use this version for OJS version 3.4.0.x  
+- branch stable-3_4_0: use this version for OJS version 3.4.0.x
   `git clone -b stable-3_4_0 https://github.com/TIBHannover/citationManager`
 
 ## Install via direct download
@@ -223,7 +223,7 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
     |  |  |  ├─ DataModels           # Data models for this service, e.g. mappings
     │  |  |  ├─ Api.php              # Methods for connecting to their API
     │  |  |  ├─ Inbound.php          # Methods for retrieving data
-    │  |  |  └─ Outbound.php         # Methods for depositing data 
+    │  |  |  └─ Outbound.php         # Methods for depositing data
     |  |  ├─ ... Other services      # Other services follow the same structure
     |  |  ├─ ApiAbstract.php         # This class is used by service Api class
     |  |  ├─ InboundAbstract.php     # This class is used by service Inbound class
@@ -365,7 +365,7 @@ npm run-script test_open
 
 | name        | description                  |
 |-------------|------------------------------|
-| openalex_id | The OpenAlex ID of the work  | 
+| openalex_id | The OpenAlex ID of the work  |
 | wikidata_id | The Wikidata QID of the work |
 
 **MetadataPublication**

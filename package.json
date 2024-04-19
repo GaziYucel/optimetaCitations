@@ -1,48 +1,48 @@
 {
-  "name": "citationmanager",
-  "description": "OJS plugin which extracts and enriches citation data and deposits to external open access data services",
-  "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "@foreachbe/cypress-tinymce": "^1.0.0",
-    "cypress": "^10.2.0",
-    "cypress-failed-log": "^2.9.5",
-    "cypress-file-upload": "^5.0.8",
-    "cypress-wait-until": "^1.7.2",
-    "dotenv": "^16.0.1"
-  },
-  "scripts": {
-    "test_open": "npx cypress open",
-    "test_run": "npx cypress run",
-    "test_ci": "npx cypress run",
-    "test_compose": "docker-compose --file cypress/docker-compose-mysql.yml down --volume && OJS_VERSION=3_3_0-11 docker-compose --file cypress/docker-compose-mysql.yml up"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/TIBHannover/citationManager.git"
-  },
-  "keywords": [
-    "ojs",
-    "citationmanager",
-    "citations",
-    "publishing",
-    "metadata",
-    "research",
-    "communication",
-    "open",
-    "science"
-  ],
-  "author": "Daniel Nüst",
-  "license": "GPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/TIBHannover/citationManager/issues"
-  },
-  "homepage": "https://github.com/TIBHannover/citationManager#readme",
-  "jshintConfig": {
-    "expr": true,
-    "esversion": 6
-  }
+	"name": "citationmanager",
+	"description": "OJS plugin which extracts and enriches citation data and deposits to external open access data services",
+	"main": "index.js",
+	"directories": {
+		"test": "test"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"@foreachbe/cypress-tinymce": "^1.0.0",
+		"cypress": "^10.2.0",
+		"cypress-failed-log": "^2.9.5",
+		"cypress-file-upload": "^5.0.8",
+		"cypress-wait-until": "^1.7.2",
+		"dotenv": "^16.0.1"
+	},
+	"scripts": {
+		"test_open": "npx cypress open",
+		"test_run": "npx cypress run",
+		"test_ci": "npx cypress run",
+		"test_compose": "docker-compose --file cypress/docker-compose-mysql.yml down --volume && OJS_VERSION=3_3_0-11 docker-compose --file cypress/docker-compose-mysql.yml up"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/TIBHannover/citationManager.git"
+	},
+	"keywords": [
+		"ojs",
+		"citationmanager",
+		"citations",
+		"publishing",
+		"metadata",
+		"research",
+		"communication",
+		"open",
+		"science"
+	],
+	"author": "Gazi Yücel",
+	"license": "GPL-3.0-or-later",
+	"bugs": {
+		"url": "https://github.com/TIBHannover/citationManager/issues"
+	},
+	"homepage": "https://github.com/TIBHannover/citationManager#readme",
+	"jshintConfig": {
+		"expr": true,
+		"esversion": 6
+	}
 }

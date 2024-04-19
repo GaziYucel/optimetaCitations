@@ -28,7 +28,7 @@ class Api extends ApiAbstract
      * @param CitationManagerPlugin $plugin
      * @param string|null $url The base URL for API requests (optional).
      */
-    function __construct(CitationManagerPlugin $plugin, ?string $url = '')
+    function __construct(CitationManagerPlugin &$plugin, ?string $url = '')
     {
         parent::__construct($plugin, $url);
 

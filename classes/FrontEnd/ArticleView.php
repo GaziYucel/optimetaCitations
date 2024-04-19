@@ -29,9 +29,9 @@ class ArticleView
     public CitationManagerPlugin $plugin;
 
     /** @param CitationManagerPlugin $plugin */
-    public function __construct(CitationManagerPlugin $plugin)
+    public function __construct(CitationManagerPlugin &$plugin)
     {
-        $this->plugin = $plugin;
+        $this->plugin = &$plugin;
     }
 
     /**
@@ -50,7 +50,7 @@ class ArticleView
         $request = $this->plugin->getRequest();
 
         $showStructured = $this->plugin->getSetting($this->plugin->getCurrentContextId(),
-            CitationManagerPlugin::CITATION_MANAGER_FRONTEND_SHOW_STRUCTURED);
+            CitationManagerPlugin::FRONTEND_SHOW_STRUCTURED);
 
         switch ($template) {
             case 'frontend/pages/article.tpl':
@@ -94,7 +94,7 @@ class ArticleView
         $id = CITATION_MANAGER_PLUGIN_NAME . '_6ae88';
         $newOutput =
             "<div id='$id' style='display: none;'>$references</div>
-            <script> 
+            <script>
                 window.onload = function(){
                     let src = document.querySelector('#$id');
                     let dst = document.querySelector('.main_entry .references .value');
@@ -119,10 +119,9 @@ class ArticleView
     public function getCitationsAsHtml(int $publicationId): string
     {
         $output = '';
-
         $pluginDao = new PluginDAO();
-
-        $citations = $pluginDao->getCitations($publicationId);
+        $publication = $pluginDao->getPublication($publicationId);
+        $citations = $pluginDao->getCitations($publication);
 
         $count = count($citations);
         for ($i = 0; $i < $count; $i++) {
