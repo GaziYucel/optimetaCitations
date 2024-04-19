@@ -94,7 +94,7 @@ class ArticleView
         $id = CITATION_MANAGER_PLUGIN_NAME . '_6ae88';
         $newOutput =
             "<div id='$id' style='display: none;'>$references</div>
-            <script> 
+            <script>
                 window.onload = function(){
                     let src = document.querySelector('#$id');
                     let dst = document.querySelector('.main_entry .references .value');
@@ -119,10 +119,9 @@ class ArticleView
     public function getCitationsAsHtml(int $publicationId): string
     {
         $output = '';
-
         $pluginDao = new PluginDAO();
-
-        $citations = $pluginDao->getCitations($publicationId);
+        $publication = $pluginDao->getPublication($publicationId);
+        $citations = $pluginDao->getCitations($publication);
 
         $count = count($citations);
         for ($i = 0; $i < $count; $i++) {

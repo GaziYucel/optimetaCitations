@@ -28,11 +28,11 @@ class SubmissionWizard
     /**
      * Structured citations on submission wizard page
      *
-     * @param string $hookname
+     * @param string $hookName
      * @param array $args
      * @return void
      */
-    public function execute(string $hookname, array $args): void
+    public function execute(string $hookName, array $args): void
     {
         $templateMgr = &$args[1];
 

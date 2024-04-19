@@ -14,40 +14,28 @@ namespace APP\plugins\generic\citationManager\classes\External\Wikidata;
 
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
 use APP\plugins\generic\citationManager\classes\DataModels\Citation\CitationModel;
-use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataAuthor;
-use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataJournal;
-use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataPublication;
+use APP\plugins\generic\citationManager\classes\DataModels\MetadataAuthor;
+use APP\plugins\generic\citationManager\classes\DataModels\MetadataJournal;
+use APP\plugins\generic\citationManager\classes\DataModels\MetadataPublication;
 use APP\plugins\generic\citationManager\classes\Db\PluginDAO;
-use APP\plugins\generic\citationManager\classes\External\OutboundAbstract;
+use APP\plugins\generic\citationManager\classes\External\ExecuteAbstract;
 use APP\plugins\generic\citationManager\classes\External\Wikidata\DataModels\Claim;
 use APP\plugins\generic\citationManager\classes\External\Wikidata\DataModels\Property;
 use APP\plugins\generic\citationManager\classes\Helpers\ClassHelper;
 use APP\plugins\generic\citationManager\classes\PID\Orcid;
 use Author;
-use Context;
 use Issue;
 use Publication;
-use Submission;
 
-class Outbound extends OutboundAbstract
+class Outbound extends ExecuteAbstract
 {
     /** @var Property */
     private Property $property;
 
     /** @copydoc InboundAbstract::__construct */
-    public function __construct(CitationManagerPlugin &$plugin,
-                                ?Context              $context,
-                                ?Issue                $issue,
-                                ?Submission           $submission,
-                                ?Publication          $publication,
-                                ?MetadataJournal      $metadataJournal,
-                                ?MetadataPublication  $metadataPublication,
-                                ?array                $authors,
-                                ?array                $citations)
+    public function __construct(CitationManagerPlugin &$plugin, int $submissionId, int $publicationId)
     {
-        parent::__construct($plugin, $context, $issue, $submission, $publication,
-            $metadataJournal, $metadataPublication, $authors, $citations);
-
+        parent::__construct($plugin, $submissionId, $publicationId);
         $this->api = new Api($plugin);
         $this->property = new Property();
     }
@@ -62,71 +50,80 @@ class Outbound extends OutboundAbstract
         // return false if required data not provided
         if (!$this->api->isDepositPossible()) return false;
 
-        $locale = $this->publication->getData('locale');
-
         $pluginDao = new PluginDAO();
+        $context = $this->plugin->getRequest()->getContext();
+        $publication = $pluginDao->getPublication($this->publicationId);
+        $locale = $publication->getData('locale');
+
+        $issue = null;
+        if (!empty($publication->getData('issueId'))) {
+            $issue = $pluginDao->getIssue($publication->getData('issueId'));
+        }
 
         // journal
-        if (empty($this->metadataJournal->wikidata_id)) {
-            $this->metadataJournal->wikidata_id = $this->processJournal($locale, $this->context);
-            $pluginDao->saveMetadataJournal($this->context->getId(), $this->metadataJournal);
+        $onlineIssn = $context->getData('onlineIssn');
+        $journalLabel = $context->getData('name')[$locale];
+        $journalWikidataId = $context->getData(MetadataJournal::wikidataId);
+        if (empty($journalWikidataId) && !empty($onlineIssn) && !empty($journalLabel)) {
+            $journalWikidataId = $this->processJournal($onlineIssn, $journalLabel, $locale);
+            $context->setData(MetadataJournal::wikidataId, $journalWikidataId);
+            $pluginDao->saveContext($context);
         }
 
-        // author(s)
-        /** @var Author $author */
-        $countAuthors = count($this->authors);
-        for ($i = 0; $i < $countAuthors; $i++) {
-            $author = $this->authors[$i];
-            $metadata = $pluginDao->getMetadataAuthor($author->getId(), $author);
-
-            $orcidId = Orcid::removePrefix($author->getData('orcid'));
-            $displayName = trim($author->getGivenName($locale) . ' ' . $author->getFamilyName($locale));
-
-            if (empty($metadata->wikidata_id) && !empty($orcidId) && !empty($displayName))
-                $metadata->wikidata_id = $this->processAuthor($locale, $orcidId, $displayName);
-
-            $author->setData(CitationManagerPlugin::METADATA_AUTHOR, $metadata);
-
-            $this->authors[$i] = $author;
+        // authors of publication
+        /* @var Author $author */
+        foreach ($publication->getData('authors') as $index => $author) {
+            if (empty($author->getData(MetadataAuthor::wikidataId))) {
+                $pluginDao->saveAuthor($this->processAuthor($locale, $author));
+            }
         }
+        $publication = $pluginDao->getPublication($this->publicationId);
 
-        // cited articles
-        $countCitations = count($this->citations);
+        // citations
+        $citations = $pluginDao->getCitations($publication);
+        $countCitations = count($citations);
         for ($i = 0; $i < $countCitations; $i++) {
             /* @var CitationModel $citation */
-            $citation = Classhelper::getClassWithValuesAssigned(new CitationModel(), $this->citations[$i]);
+            $citation = Classhelper::getClassWithValuesAssigned(new CitationModel(), $citations[$i]);
 
             if ($citation->isProcessed && empty($citation->wikidata_id))
                 $citation->wikidata_id = $this->processCitedArticle($locale, $citation);
 
-            $this->citations[$i] = $citation;
+            $citations[$i] = $citation;
         }
+        $publication->setData(
+            CitationManagerPlugin::CITATIONS_STRUCTURED,
+            json_encode($citations));
+        $pluginDao->savePublication($publication);
 
         // main article
-        $this->metadataPublication->wikidata_id = $this->processMainArticle($locale, $this->issue, $this->publication);
+        $publication->setData(
+            MetadataPublication::wikidataId,
+            $this->processMainArticle($locale, $issue, $publication));
+        $pluginDao->savePublication($publication);
 
-        if (empty($this->metadataPublication->wikidata_id)) return false;
+        if (empty($publication->getData(MetadataPublication::wikidataId))) return false;
 
         // get main article
-        $item = $this->api->getItemWithQid($this->metadataPublication->wikidata_id);
+        $item = $this->api->getItemWithQid($publication->getData(MetadataPublication::wikidataId));
 
         // published in main article
         $this->addReferenceClaim($item,
-            (array)$this->metadataJournal,
+            $context->getData(MetadataJournal::wikidataId),
             $this->property->publishedIn['id']);
 
         // authors in main article
-        foreach ($this->authors as $index => $author) {
+        foreach ($publication->getData('authors') as $index => $author) {
             /** @var Author $author */
             $this->addReferenceClaim($item,
-                (array)$author->getData(CitationManagerPlugin::METADATA_AUTHOR),
+                $author->getData(MetadataAuthor::wikidataId),
                 $this->property->author['id']);
         }
 
         // cites work in main article
-        foreach ($this->citations as $index => $citation) {
+        foreach ($citations as $index => $citation) {
             $this->addReferenceClaim($item,
-                (array)$citation,
+                $citation->wikidata_id,
                 $this->property->citesWork['id']);
         }
 
@@ -136,22 +133,19 @@ class Outbound extends OutboundAbstract
     /**
      * Create journal and return QID
      *
+     * @param string $pid
+     * @param string $label
      * @param string $locale
-     * @param Context $context
      * @return string
      */
-    private function processJournal(string $locale, Context $context): string
+    private function processJournal(string $pid, string $label, string $locale): string
     {
-        $pid = $context->getData('onlineIssn');
-        $label = $context->getData('name')[$locale];
-
-        if (empty($pid) || empty($label)) return '';
-
         // find qid and return qid if found
         $qid = $this->api
             ->getQidFromItem($this->api
                 ->getItemWithPropertyAndPid(
                     $this->property->doi['id'], $pid));
+
         if (!empty($qid)) return $qid;
 
         // not found, create and return qid
@@ -176,21 +170,26 @@ class Outbound extends OutboundAbstract
     }
 
     /**
-     * Create author and return QID
+     * Create author and return Author
      *
      * @param string $locale
-     * @param string $pid
-     * @param string $label
-     * @return string
+     * @param Author $author
+     * @return Author
      */
-    private function processAuthor(string $locale, string $pid, string $label): string
+    private function processAuthor(string $locale, Author $author): Author
     {
-        // find qid and return qid if found
+        $pid = Orcid::removePrefix($author->getData('orcid'));
+        $label = trim($author->getGivenName($locale) . ' ' . $author->getFamilyName($locale));
+
+        // find qid and return author
         $qid = $this->api
             ->getQidFromItem($this->api
                 ->getItemWithPropertyAndPid(
                     $this->property->orcidId['id'], $pid));
-        if (!empty($qid)) return $qid;
+        if (!empty($qid)) {
+            $author->setData(MetadataAuthor::wikidataId, $qid);
+            return $author;
+        }
 
         // not found, create and return qid
         $claim = new Claim();
@@ -207,7 +206,9 @@ class Outbound extends OutboundAbstract
                 $pid)
         ];
 
-        return $this->api->addItemAndReturnQid($data);
+        $author->setData(MetadataAuthor::wikidataId, $this->api->addItemAndReturnQid($data));
+
+        return $author;
     }
 
     /**
@@ -262,8 +263,6 @@ class Outbound extends OutboundAbstract
      */
     private function processMainArticle(string $locale, Issue $issue, Publication $publication): string
     {
-        $pluginDao = new PluginDAO();
-
         // find qid and return qid if found
         $qid = $this->api
             ->getQidFromItem($this->api
@@ -293,7 +292,7 @@ class Outbound extends OutboundAbstract
                 date('+Y-m-d\T00:00:00\Z', strtotime($issue->getData('datePublished')))),
             $claim->getString(
                 $this->property->volume['id'],
-                $issue->getVolume())
+                (string)$issue->getVolume())
         ];
 
         return $this->api->addItemAndReturnQid($data);
@@ -303,20 +302,20 @@ class Outbound extends OutboundAbstract
      * Add published in reference to the main article.
      *
      * @param array $item https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q106622495
-     * @param array $referenced MetadataAuthor, MetadataJournal
+     * @param string $referencedQId
      * @param string $property
      * @return void
      */
-    private function addReferenceClaim(array $item, array $referenced, string $property): void
+    private function addReferenceClaim(array $item, string $referencedQId, string $property): void
     {
-        if (empty($referenced['wikidata_id'])) return;
+        if (empty($referencedQId)) return;
 
         $createClaim = true;
 
         if (!empty($item['claims'][$property])) {
             foreach ($item['claims'][$property] as $index => $claim) {
                 if (strtolower($claim['mainsnak']['datavalue']['value']['id'])
-                    === strtolower($referenced['wikidata_id'])) {
+                    === strtolower($referencedQId)) {
                     $createClaim = false;
                 }
             }
@@ -328,7 +327,7 @@ class Outbound extends OutboundAbstract
             $this->api->createWikibaseItemClaim(
                 $item['title'],
                 $property,
-                $claim->getWikibaseItemReference($referenced['wikidata_id']));
+                $claim->getWikibaseItemReference($referencedQId));
         }
     }
 }

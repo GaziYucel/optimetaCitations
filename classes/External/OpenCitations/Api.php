@@ -63,13 +63,13 @@ class Api extends ApiAbstract
      *
      * @param string $title The title of the issue.
      * @param string $body The body or description of the issue.
-     * @return int The ID of the created issue, or 0 if unsuccessful.
+     * @return string The ID of the created issue, or empty string if unsuccessful.
      */
-    public function addIssue(string $title, string $body): int
+    public function addIssue(string $title, string $body): string
     {
         if (empty($this->owner) || empty($this->token)
             || empty($this->repository) || empty($title) || empty($body)) {
-            return 0;
+            return '';
         }
 
         $result = $this->apiRequest(
@@ -84,11 +84,11 @@ class Api extends ApiAbstract
                     ]
             ]);
 
-        if (!empty($result['number']) && is_numeric($result['number'])) {
-            return (int)$result['number'];
+        if (is_numeric($result['number'] && (string)$result['number'] !== '0')) {
+            return $result['number'];
         }
 
-        return 0;
+        return '';
     }
 
     /**

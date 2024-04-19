@@ -19,6 +19,7 @@ import('lib.pkp.classes.security.authorization.RoleBasedHandlerOperationPolicy')
 use APIResponse;
 use APIHandler;
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
+use APP\plugins\generic\citationManager\classes\Db\PluginDAO;
 use PKP\core\APIRouter;
 use PolicySet;
 use RoleBasedHandlerOperationPolicy;
@@ -31,14 +32,9 @@ class PluginAPIHandler extends APIHandler
     /** @var array Structure of the response body */
     private array $responseBody = [
         'status' => 'ok',
-        'message-type' => 'empty',
-        'message-version' => '1',
-        'message' => [
-            'metadataJournal' => [],
-            'metadataPublication' => [],
-            'citations' => [],
-            'authors' => []
-        ]
+        'action' => 'none',
+        'version' => '1',
+        'publication' => []
     ];
 
     public function __construct()
@@ -128,13 +124,7 @@ class PluginAPIHandler extends APIHandler
         $process = new ProcessHandler();
         $process->execute((int)$submissionId, (int)$publicationId, $citationsRaw);
 
-        $this->responseBody['message-type'] = 'process';
-        $this->responseBody['message']['metadataJournal'] = $process->getMetadataJournal();
-        $this->responseBody['message']['metadataPublication'] = $process->getMetadataPublication();
-        $this->responseBody['message']['citations'] = $process->getCitations();
-        $this->responseBody['message']['authors'] = $process->getAuthors();
-
-        return $response->withJson($this->responseBody, 200);
+        return $this->response('process', $publicationId, $response);
     }
 
     /**
@@ -164,11 +154,25 @@ class PluginAPIHandler extends APIHandler
         $deposit = new DepositHandler();
         $deposit->execute((int)$submissionId, (int)$publicationId, $citations);
 
-        $this->responseBody['message-type'] = 'deposit';
-        $this->responseBody['message']['metadataJournal'] = $deposit->getMetadataJournal();
-        $this->responseBody['message']['metadataPublication'] = $deposit->getMetadataPublication();
-        $this->responseBody['message']['citations'] = $deposit->getCitations();
-        $this->responseBody['message']['authors'] = $deposit->getAuthors();
+        return $this->response('deposit', $publicationId, $response);
+    }
+
+    /**
+     * Prepare and return response.
+     *
+     * @param string $action
+     * @param string $publicationId
+     * @param APIResponse $response
+     * @return APIResponse
+     */
+    private function response(string $action, string $publicationId, APIResponse $response): APIResponse
+    {
+        $pluginDao = new PluginDao();
+
+        $this->responseBody['action'] = $action;
+
+        $publication = $pluginDao->getPublication((int)$publicationId);
+        $this->responseBody['publication'] = $publication->_data;
 
         return $response->withJson($this->responseBody, 200);
     }

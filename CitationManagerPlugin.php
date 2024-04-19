@@ -14,12 +14,11 @@ namespace APP\plugins\generic\citationManager;
 
 define('CITATION_MANAGER_PLUGIN_NAME', basename(__FILE__, '.php'));
 
-if (CitationManagerPlugin::isTestMode()) require_once(__DIR__ . '/vendor/autoload.php');
+if (CitationManagerPlugin::isTestMode()) require_once(__DIR__ . '/classesTest/autoload.php');
 
 use APP\plugins\generic\citationManager\classes\Db\PluginSchema;
 use APP\plugins\generic\citationManager\classes\FrontEnd\ArticleView;
 use APP\plugins\generic\citationManager\classes\Handlers\PluginAPIHandler;
-use APP\plugins\generic\citationManager\classes\Helpers\LogHelper;
 use APP\plugins\generic\citationManager\classes\Settings\Actions;
 use APP\plugins\generic\citationManager\classes\Settings\Manage;
 use APP\plugins\generic\citationManager\classes\Workflow\SubmissionWizard;
@@ -35,16 +34,10 @@ class CitationManagerPlugin extends GenericPlugin
 {
     /** @var string Whether show the structured or the raw citations */
     public const FRONTEND_SHOW_STRUCTURED = CITATION_MANAGER_PLUGIN_NAME . '_FrontEndShowStructured';
-    /** @var string Key for the journal metadata saved in journal */
-    public const METADATA_JOURNAL = CITATION_MANAGER_PLUGIN_NAME . '_MetadataJournal';
-    /** @var string Key for the publication metadata saved in publication */
-    public const METADATA_PUBLICATION = CITATION_MANAGER_PLUGIN_NAME . '_MetadataPublication';
-    /** @var string Key for the author metadata saved in author */
-    public const METADATA_AUTHOR = CITATION_MANAGER_PLUGIN_NAME . '_MetadataAuthor';
     /** @var string Key for structured citations saved in publications */
-    public const CITATIONS_STRUCTURED = CITATION_MANAGER_PLUGIN_NAME . '_CitationsStructured';
+    public const CITATIONS_STRUCTURED = 'citationsStructured';
     /** @var string Key used for the form used in workflow and submission wizard */
-    public const CITATIONS_STRUCTURED_FORM = CITATION_MANAGER_PLUGIN_NAME . '_CitationsStructuredForm';
+    public const CITATIONS_STRUCTURED_FORM = 'citationsStructuredForm';
     /** @var string Wikidata username */
     public const WIKIDATA_USERNAME = CITATION_MANAGER_PLUGIN_NAME . '_Wikidata_Username';
     /** @var string Wikidata password */
@@ -74,7 +67,7 @@ class CitationManagerPlugin extends GenericPlugin
                 $pluginSchema = new PluginSchema();
                 Hook::add('Schema::get::publication', [$pluginSchema, 'addToSchemaPublication']);
                 Hook::add('Schema::get::author', [$pluginSchema, 'addToSchemaAuthor']);
-                Hook::add('Schema::get::context', [$pluginSchema, 'addToSchemaContext']);
+                Hook::add('Schema::get::context', [$pluginSchema, 'addToSchemaJournal']);
 
                 $submissionWizard = new SubmissionWizard($this);
                 Hook::add('Template::SubmissionWizard::Section', [$submissionWizard, 'execute']);

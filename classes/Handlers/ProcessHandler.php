@@ -14,10 +14,12 @@ namespace APP\plugins\generic\citationManager\classes\Handlers;
 
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
 use APP\plugins\generic\citationManager\classes\DataModels\Citation\CitationModel;
-use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataAuthor;
-use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataJournal;
-use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataPublication;
+use APP\plugins\generic\citationManager\classes\DataModels\MetadataAuthor;
+use APP\plugins\generic\citationManager\classes\DataModels\MetadataJournal;
+use APP\plugins\generic\citationManager\classes\DataModels\MetadataPublication;
 use APP\plugins\generic\citationManager\classes\Db\PluginDAO;
+use APP\plugins\generic\citationManager\classes\External\ExecuteAbstract;
+use APP\plugins\generic\citationManager\classes\Helpers\ClassHelper;
 use APP\plugins\generic\citationManager\classes\Helpers\StringHelper;
 use APP\plugins\generic\citationManager\classes\PID\Arxiv;
 use APP\plugins\generic\citationManager\classes\PID\Doi;
@@ -37,18 +39,6 @@ class ProcessHandler
     /** @var CitationManagerPlugin */
     public CitationManagerPlugin $plugin;
 
-    /** @var MetadataJournal|null */
-    private ?MetadataJournal $metadataJournal = null;
-
-    /** @var MetadataPublication|null */
-    private ?MetadataPublication $metadataPublication = null;
-
-    /** @var array|null [ { CitationModel }, ... ] */
-    private ?array $citations = [];
-
-    /** @var array|null */
-    private ?array $authors = null;
-
     /** @var array|string[] */
     private array $services = [
         '\APP\plugins\generic\citationManager\classes\External\OpenAlex\Inbound',
@@ -64,68 +54,68 @@ class ProcessHandler
     }
 
     /**
-     * Execute
+     * Extract pids, structure and enrich
      *
      * @param int $submissionId The ID of the submission.
-     * * @param int $publicationId The ID of the publication.
-     * @param string $citationsRaw
+     * @param int $publicationId The ID of the publication.
+     * @param string $citationsRaw Raw citations to be processed
      * @return bool
      */
-    public function execute(int $submissionId,
-                            int $publicationId,
-                            string $citationsRaw): bool
+    public function execute(int $submissionId, int $publicationId, string $citationsRaw): bool
     {
         if (empty($submissionId) || empty($publicationId) || empty($citationsRaw)) return false;
 
         $pluginDao = new PluginDAO();
-        $context = $this->plugin->getRequest()->getContext();
-        $submission = $pluginDao->getSubmission($submissionId);
         $publication = $pluginDao->getPublication($publicationId);
-        $issue = null;
-        if (!empty($publication->getData('issueId')))
-            $issue = $pluginDao->getIssue($publication->getData('issueId'));
-        $this->metadataJournal = $pluginDao->getMetadataJournal($context->getId(), $context);
-        $this->metadataPublication = $pluginDao->getMetadataPublication($publicationId, $publication);
-        $this->citations = [];
+        $context = $this->plugin->getRequest()->getContext();
 
-        // author(s)
-        /* @var Author $author */
-        foreach ($publication->getData('authors') as $index => $author) {
-            $author->setData(CitationManagerPlugin::METADATA_AUTHOR,
-                $pluginDao->getMetadataAuthor($author->getId(), $author));
-            $this->authors[] = $author;
+        // journal
+        $contextChanged = false;
+        foreach(ClassHelper::getClassConstantsAndValuesAsArray(new MetadataJournal()) as $name => $key) {
+            if (empty($context->getData($key))) {
+                $context->setData($key, '');
+                $contextChanged = true;
+            }
         }
+        if($contextChanged) $pluginDao->saveContext($context);
 
-        // cleanup and split
-        $this->citations = $this->cleanupAndSplit($citationsRaw);
+        // citations clean, structure and save
+        $citations = $this->cleanupAndSplit($citationsRaw);
+        if (empty($citations)) return false;
+        $citations = $this->extractPids($citations);
+        $publication->setData(CitationManagerPlugin::CITATIONS_STRUCTURED, json_encode($citations));
 
-        if (empty($this->citations)) return false;
+        // publication metadata
+        $publicationChanged = false;
+        foreach(ClassHelper::getClassConstantsAndValuesAsArray(new MetadataPublication()) as $name => $key) {
+            if (empty($publication->getData($key))) {
+                $publication->setData($key, '');
+                $publicationChanged = true;
+            }
+        }
+        if($publicationChanged) $pluginDao->savePublication($publication);
 
-        // extract pid's
-        $this->citations = $this->extractPIDs($this->citations);
+        // authors of publication
+        /* @var Author $author */
+        $authorsChanged = false;
+        foreach ($publication->getData('authors') as $index => $author) {
+            $authorChanged = false;
+            foreach (ClassHelper::getClassConstantsAndValuesAsArray(new MetadataAuthor()) as $name => $key) {
+                if (empty($author->getData($key))) {
+                    $author->setData($key, '');
+                    $authorChanged = true;
+                    $authorsChanged = true;
+                }
+            }
+            if ($authorChanged) $pluginDao->saveAuthor($author);
+        }
+        if($authorsChanged) $publication = $pluginDao->getPublication($publicationId);
 
         // iterate services
+        /* @var ExecuteAbstract $service */
         foreach ($this->services as $serviceClass) {
-            $service = new $serviceClass ($this->plugin, $context, $issue, $submission, $publication,
-                $this->metadataJournal, $this->metadataPublication, $this->authors, $this->citations);
-
+            $service = new $serviceClass ($this->plugin, $submissionId, $publicationId);
             $service->execute();
-
-            $this->metadataJournal = $service->getMetadataJournal();
-            $this->metadataPublication = $service->getMetadataPublication();
-            $this->authors = $service->getAuthors();
-            $this->citations = $service->getCitations();
-        }
-
-        // save to database
-        $pluginDao->saveMetadataJournal($context->getId(), $this->metadataJournal);
-        $pluginDao->saveMetadataPublication($publicationId, $this->metadataPublication);
-        $pluginDao->saveCitations($publicationId, $this->citations);
-        /* @var Author $author */
-        foreach ($this->authors as $id => $author) {
-            $pluginDao->saveMetadataAuthor(
-                $author->getId(),
-                $author->getData(CitationManagerPlugin::METADATA_AUTHOR));
         }
 
         return true;
@@ -140,8 +130,9 @@ class ProcessHandler
     {
         $contextIds = [];
 
-        $contextDao = Application::getContextDAO();
+        $pluginDao = new PluginDAO();
 
+        $contextDao = Application::getContextDAO();
         $contextFactory = $contextDao->getAll();
 
         try {
@@ -152,8 +143,6 @@ class ProcessHandler
             error_log(__METHOD__ . ' ' . $e->getMessage());
         }
 
-        $pluginDao = new PluginDAO();
-
         foreach ($contextIds as $contextId) {
 
             $submissions = Repo::submission()->getCollector()
@@ -163,23 +152,26 @@ class ProcessHandler
             foreach ($submissions as $submission) {
 
                 // skip if declined
-                if($submission->getData('status') === Submission::STATUS_DECLINED)
-                    continue;
+                if ($submission->getData('status') === Submission::STATUS_DECLINED) continue;
 
                 $publications = $submission->getData('publications');
 
                 /* @var Publication $publication */
                 foreach ($publications as $publication) {
 
+                    $citations = $pluginDao->getCitations($publication);
+                    $citationsRaw = $publication->getData('citationRaw');
+
                     // skip if declined or citations found
-                    if (!empty($pluginDao->getCitations($publication->getId()))
-                        || $publication->getData('status') === Submission::STATUS_DECLINED) {
+                    if (!empty($citations) || empty($citationsRaw)
+                        || $publication->getData('status') === Submission::STATUS_DECLINED)
                         continue;
-                    }
 
                     // not processed yet, proceed
-                    $citationsRaw = $publication->getData('citationRaw');
-                    $this->execute($submission->getId(), $publication->getId(), $citationsRaw);
+                    $this->execute(
+                        $submission->getId(),
+                        $publication->getId(),
+                        $citationsRaw);
                 }
             }
         }
@@ -222,7 +214,7 @@ class ProcessHandler
      * @param array $citations
      * @return array
      */
-    private function extractPIDs(array $citations): array
+    private function extractPids(array $citations): array
     {
         $local = [];
 
@@ -259,23 +251,4 @@ class ProcessHandler
 
         return $local;
     }
-
-    // region getters
-    public function getMetadataJournal(): MetadataJournal
-    {
-        return $this->metadataJournal;
-    }
-    public function getMetadataPublication(): MetadataPublication
-    {
-        return $this->metadataPublication;
-    }
-    public function getCitations(): array
-    {
-        return $this->citations;
-    }
-    public function getAuthors(): array
-    {
-        return $this->authors;
-    }
-    // endregion
 }

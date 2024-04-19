@@ -208,7 +208,6 @@
             <pkp-form v-bind="components.{CitationManagerPlugin::CITATIONS_STRUCTURED_FORM}" @set="set"></pkp-form>
         </div>
     </div>
-
 </tab>
 
 <script>
@@ -283,8 +282,7 @@
                         'X-Csrf-Token': pkp.currentUser.csrfToken
                     },
                     success(response) {
-                        let result = JSON.parse(JSON.stringify(response['message']));
-                        self.publication = result['publication'];
+                        self.publication = JSON.parse(JSON.stringify(response['publication']));
                         self.setCitations(self.publication);
                         self.setCitationsEditRow(self.citations);
                         self.setAuthors(self.publication);
@@ -315,8 +313,7 @@
                         'X-Csrf-Token': pkp.currentUser.csrfToken
                     },
                     success(response) {
-                        let result = JSON.parse(JSON.stringify(response['message']));
-                        self.publication = result['publication'];
+                        self.publication = JSON.parse(JSON.stringify(response['publication']));
                         self.setCitations(self.publication);
                         self.setCitationsEditRow(self.citations);
                         self.setAuthors(self.publication);
