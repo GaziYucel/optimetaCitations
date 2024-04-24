@@ -14,11 +14,7 @@ namespace APP\plugins\generic\citationManager;
 
 define('CITATION_MANAGER_PLUGIN_NAME', basename(__FILE__, '.php'));
 
-if (CitationManagerPlugin::isTestMode()) {
-    require_once(__DIR__ . '/tests/vendor/autoload.php');
-} else {
-    require_once(__DIR__ . '/vendor/autoload.php');
-}
+require_once(CitationManagerPlugin::autoloadFile());
 
 use APP\plugins\generic\citationManager\classes\Db\PluginSchema;
 use APP\plugins\generic\citationManager\classes\FrontEnd\ArticleView;
@@ -145,6 +141,17 @@ class CitationManagerPlugin extends GenericPlugin
         }
 
         return false;
+    }
+
+    /**
+     * Return composer autoload file path
+     *
+     * @return string
+     */
+    public static function autoloadFile(): string
+    {
+        if (self::isTestMode()) return __DIR__ . '/tests/vendor/autoload.php';
+        return __DIR__ . '/vendor/autoload.php';
     }
 }
 
