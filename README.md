@@ -240,7 +240,9 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
     ├─ locale                        # Language files
     ├─ templates                     # Templates folder
     ├─ tests                         # Tests folder
-    │  └─ classes                    # Classes for tests
+    │  ├─ classes                    # Classes for tests
+    │  ├─ composer.json              # Composer configuration file for tests
+    │  └─ vendor                     # Composer autoload and dependencies
     ├─ vendor                        # Composer autoload and dependencies
     ├─ .gitignore                    # Git ignore file
     ├─ CitationManagerPlugin.php     # Main class of plugin
