@@ -76,10 +76,6 @@ class CitationManagerPlugin extends GenericPlugin
 //                    $taskFilesPath[] = $this->getPluginPath() . DIRECTORY_SEPARATOR . 'scheduledTasks.xml';
 //                    return false;
 //                });
-
-                $api = new \APP\plugins\generic\citationManager\classes\External\Wikidata\Api($this);
-                error_log($api->url);
-
             }
 
             return true;
