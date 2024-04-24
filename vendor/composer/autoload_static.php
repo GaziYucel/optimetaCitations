@@ -77,6 +77,7 @@ class ComposerStaticInitad8cde92b9ea5aa78548b987215b52b8
         'APP\\plugins\\generic\\citationManager\\classes\\Settings\\Actions' => __DIR__ . '/../..' . '/classes/Settings/Actions.php',
         'APP\\plugins\\generic\\citationManager\\classes\\Settings\\ConfigurationForm' => __DIR__ . '/../..' . '/classes/Settings/ConfigurationForm.php',
         'APP\\plugins\\generic\\citationManager\\classes\\Settings\\Manage' => __DIR__ . '/../..' . '/classes/Settings/Manage.php',
+        'APP\\plugins\\generic\\citationManager\\classes\\Settings\\PluginConfig' => __DIR__ . '/../..' . '/classes/Settings/PluginConfig.php',
         'APP\\plugins\\generic\\citationManager\\classes\\Settings\\StatusForm' => __DIR__ . '/../..' . '/classes/Settings/StatusForm.php',
         'APP\\plugins\\generic\\citationManager\\classes\\Workflow\\SubmissionWizard' => __DIR__ . '/../..' . '/classes/Workflow/SubmissionWizard.php',
         'APP\\plugins\\generic\\citationManager\\classes\\Workflow\\WorkflowForm' => __DIR__ . '/../..' . '/classes/Workflow/WorkflowForm.php',

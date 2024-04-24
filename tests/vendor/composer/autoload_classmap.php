@@ -62,6 +62,7 @@ return array(
     'APP\\plugins\\generic\\citationManager\\classes\\Settings\\Actions' => $baseDir . '/../classes/Settings/Actions.php',
     'APP\\plugins\\generic\\citationManager\\classes\\Settings\\ConfigurationForm' => $baseDir . '/../classes/Settings/ConfigurationForm.php',
     'APP\\plugins\\generic\\citationManager\\classes\\Settings\\Manage' => $baseDir . '/../classes/Settings/Manage.php',
+    'APP\\plugins\\generic\\citationManager\\classes\\Settings\\PluginConfig' => $baseDir . '/../classes/Settings/PluginConfig.php',
     'APP\\plugins\\generic\\citationManager\\classes\\Settings\\StatusForm' => $baseDir . '/../classes/Settings/StatusForm.php',
     'APP\\plugins\\generic\\citationManager\\classes\\Workflow\\SubmissionWizard' => $baseDir . '/../classes/Workflow/SubmissionWizard.php',
     'APP\\plugins\\generic\\citationManager\\classes\\Workflow\\WorkflowForm' => $baseDir . '/../classes/Workflow/WorkflowForm.php',

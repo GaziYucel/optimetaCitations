@@ -215,7 +215,7 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
     ├─ classes                       # Main folder with models / logic
     │  ├─ DataModels                 # Data models used in this plugin
     │  │  ├─ Citation                # Data models for citations, authors in citations
-    │  │  └─ Metadata                # Metadata for OJS authors, journals and publications
+    │  │  └─ Metadata*               # Metadata for OJS authors, journals and publications
     │  └─ Db                         # Database related classes
     │  │  ├─ PluginDAO.php           # Retrieve / save data to / from database
     │  │  └─ PluginSchema.php        # Schema extestions for data models
