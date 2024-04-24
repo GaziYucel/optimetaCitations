@@ -21,10 +21,10 @@ use APP\plugins\generic\citationManager\classes\FrontEnd\ArticleView;
 use APP\plugins\generic\citationManager\classes\Handlers\PluginAPIHandler;
 use APP\plugins\generic\citationManager\classes\Settings\Actions;
 use APP\plugins\generic\citationManager\classes\Settings\Manage;
-use APP\plugins\generic\citationManager\classes\Settings\PluginConfig;
 use APP\plugins\generic\citationManager\classes\Workflow\SubmissionWizard;
 use APP\plugins\generic\citationManager\classes\Workflow\WorkflowSave;
 use APP\plugins\generic\citationManager\classes\Workflow\WorkflowTab;
+use PKP\config\Config;
 use PKP\core\JSONMessage;
 use PKP\plugins\GenericPlugin;
 use PKP\plugins\Hook;
@@ -108,13 +108,49 @@ class CitationManagerPlugin extends GenericPlugin
     }
 
     /**
+     * Get isDebugMode from config, return false if setting not present
+     *
+     * @return bool
+     */
+    public static function isDebugMode(): bool
+    {
+        $config_value = Config::getVar(CITATION_MANAGER_PLUGIN_NAME, 'isDebugMode');
+
+        if (!empty($config_value)
+            && (strtolower($config_value) === 'true' || (string)$config_value === '1')
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get isTestMode from config, return false if setting not present
+     *
+     * @return bool
+     */
+    public static function isTestMode(): bool
+    {
+        $config_value = Config::getVar(CITATION_MANAGER_PLUGIN_NAME, 'isTestMode');
+
+        if (!empty($config_value)
+            && (strtolower($config_value) === 'true' || (string)$config_value === '1')
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Return composer autoload file path
      *
      * @return string
      */
     public static function autoloadFile(): string
     {
-        if (PluginConfig::isTestMode()) return __DIR__ . '/tests/vendor/autoload.php';
+        if (self::isTestMode()) return __DIR__ . '/tests/vendor/autoload.php';
         return __DIR__ . '/vendor/autoload.php';
     }
 }

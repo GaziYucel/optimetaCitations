@@ -6,20 +6,6 @@ namespace Composer\Autoload;
 
 class ComposerStaticInitad8cde92b9ea5aa78548b987215b52b8
 {
-    public static $prefixLengthsPsr4 = array (
-        'A' => 
-        array (
-            'APP\\plugins\\generic\\citationManager\\classes\\' => 44,
-        ),
-    );
-
-    public static $prefixDirsPsr4 = array (
-        'APP\\plugins\\generic\\citationManager\\classes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/classes',
-        ),
-    );
-
     public static $classMap = array (
         'APP\\plugins\\generic\\citationManager\\classes\\DataModels\\Citation\\AuthorModel' => __DIR__ . '/../..' . '/classes/DataModels/Citation/AuthorModel.php',
         'APP\\plugins\\generic\\citationManager\\classes\\DataModels\\Citation\\CitationModel' => __DIR__ . '/../..' . '/classes/DataModels/Citation/CitationModel.php',
@@ -77,7 +63,6 @@ class ComposerStaticInitad8cde92b9ea5aa78548b987215b52b8
         'APP\\plugins\\generic\\citationManager\\classes\\Settings\\Actions' => __DIR__ . '/../..' . '/classes/Settings/Actions.php',
         'APP\\plugins\\generic\\citationManager\\classes\\Settings\\ConfigurationForm' => __DIR__ . '/../..' . '/classes/Settings/ConfigurationForm.php',
         'APP\\plugins\\generic\\citationManager\\classes\\Settings\\Manage' => __DIR__ . '/../..' . '/classes/Settings/Manage.php',
-        'APP\\plugins\\generic\\citationManager\\classes\\Settings\\PluginConfig' => __DIR__ . '/../..' . '/classes/Settings/PluginConfig.php',
         'APP\\plugins\\generic\\citationManager\\classes\\Settings\\StatusForm' => __DIR__ . '/../..' . '/classes/Settings/StatusForm.php',
         'APP\\plugins\\generic\\citationManager\\classes\\Workflow\\SubmissionWizard' => __DIR__ . '/../..' . '/classes/Workflow/SubmissionWizard.php',
         'APP\\plugins\\generic\\citationManager\\classes\\Workflow\\WorkflowForm' => __DIR__ . '/../..' . '/classes/Workflow/WorkflowForm.php',
@@ -89,8 +74,6 @@ class ComposerStaticInitad8cde92b9ea5aa78548b987215b52b8
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitad8cde92b9ea5aa78548b987215b52b8::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitad8cde92b9ea5aa78548b987215b52b8::$prefixDirsPsr4;
             $loader->classMap = ComposerStaticInitad8cde92b9ea5aa78548b987215b52b8::$classMap;
 
         }, null, ClassLoader::class);
