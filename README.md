@@ -20,6 +20,7 @@ Citation Manager for OJS
 - [Development](#development)
     - [Structure](#structure)
     - [Notes](#notes)
+    - [Debugging](#debugging)
     - [Tests](#tests)
 - [Contribute](#contribute)
 - [License](#license)
@@ -253,7 +254,7 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
     ├─ scheduledTasks.xml            # Scheduler configuration file
     └─ version.xml                   # Version information of the plugin
 
-Notes
+## Notes
 
 - Autoload of the classes in the folder `classes/` is done with composer according
   to the PSR-4 specification.
