@@ -209,7 +209,7 @@ class ProcessHandler
     }
 
     /**
-     * Extract PID's
+     * Extract PIDs
      *
      * @param array $citations
      * @return array
