@@ -235,7 +235,6 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
     │  ├─ ScheduledTasks             # Classes for the scheduler
     │  ├─ Settings                   # Settings classes
     │  └─ Workflow                   # Classes or the workflow and submission wizard
-    ├─ cypress                       # Cypress tests
     ├─ docs                          # Documentation, examples
     ├─ locale                        # Language files
     ├─ templates                     # Templates folder
@@ -248,11 +247,9 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
     ├─ CitationManagerPlugin.php     # Main class of plugin
     ├─ composer.json                 # Composer configuration file
     ├─ CODE_OF_CONDUCT.md            # Code of conduct
-    ├─ cypress.config.js             # Cypress configuration file
     ├─ index.php                     # Entry point plugin (ojs version 3.3.0)
     ├─ LICENSE                       # License file
     ├─ README.md                     # This file
-    ├─ package.json                  # npm packaging configuration
     ├─ scheduledTasks.xml            # Scheduler configuration file
     └─ version.xml                   # Version information of the plugin
 
