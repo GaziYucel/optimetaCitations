@@ -199,13 +199,13 @@
             <span>{{ citationManagerApp.workingPublicationStatus   = workingPublication.status }}</span>
             <span>{{ citationManagerApp.submissionId               = workingPublication.submissionId }}</span>
             <span>{{ citationManagerApp.workingPublicationId       = workingPublication.id }}</span>
-            <span>{{ citationManagerApp.formCitations = components.{CitationManagerPlugin::CITATIONS_STRUCTURED_FORM}.fields[0]['value'] }}</span> <!-- //todo: citationsStructured gets emptied -->
+            <span>{{ citationManagerApp.formCitations = components.{CitationManagerPlugin::CITATIONS_STRUCTURED}Form.fields[0]['value'] }}</span> <!-- //todo: citationsStructured gets emptied -->
 
-            <span>{{ citationManagerApp.isUserInteracting ? components.{CitationManagerPlugin::CITATIONS_STRUCTURED_FORM}.fields[0]['value'] = JSON.stringify(citationManagerApp.citationsClean) : '' }}</span>
-            <span>{{ components.{CitationManagerPlugin::CITATIONS_STRUCTURED_FORM}.action = '{$apiBaseUrl}submissions/' + workingPublication.submissionId + '/publications/' + workingPublication.id }}</span>
+            <span>{{ citationManagerApp.isUserInteracting ? components.{CitationManagerPlugin::CITATIONS_STRUCTURED}Form.fields[0]['value'] = JSON.stringify(citationManagerApp.citationsClean) : '' }}</span>
+            <span>{{ components.{CitationManagerPlugin::CITATIONS_STRUCTURED}Form.action = '{$apiBaseUrl}submissions/' + workingPublication.submissionId + '/publications/' + workingPublication.id }}</span>
         </div>
         <div>
-            <pkp-form v-bind="components.{CitationManagerPlugin::CITATIONS_STRUCTURED_FORM}" @set="set"></pkp-form>
+            <pkp-form v-bind="components.{CitationManagerPlugin::CITATIONS_STRUCTURED}Form" @set="set"></pkp-form>
         </div>
     </div>
 </tab>

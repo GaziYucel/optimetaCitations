@@ -16,9 +16,6 @@ use Context;
 use Exception;
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
 use APP\plugins\generic\citationManager\classes\DataModels\Citation\CitationModel;
-use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataAuthor;
-use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataJournal;
-use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataPublication;
 use APP\plugins\generic\citationManager\classes\Helpers\ClassHelper;
 use Author;
 use AuthorDAO;
@@ -35,7 +32,7 @@ use SubmissionDAO;
 class PluginDAO
 {
     /**
-     * This method retrieves the structured citations for a publication.
+     * This method retrieves the structured citations for a publication from the publication object.
      * After this, the method returns a normalized citations as an array of CitationModels.
      * If no citations are found, the method returns an empty array.
      *
@@ -113,7 +110,7 @@ class PluginDAO
     }
 
     /* OJS setters */
-    public function saveJournal(Journal $journal): void
+    public function saveContext(Context $context): void
     {
         /* @var JournalDAO $dao */
         $dao = DAORegistry::getDAO('JournalDAO');

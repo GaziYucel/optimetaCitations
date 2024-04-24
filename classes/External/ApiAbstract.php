@@ -14,6 +14,7 @@ namespace APP\plugins\generic\citationManager\classes\External;
 
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
 use APP\plugins\generic\citationManager\classes\Helpers\LogHelper;
+use APP\plugins\generic\citationManager\classes\Settings\PluginConfig;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -61,7 +62,7 @@ abstract class ApiAbstract
 
             if (empty($result) || json_last_error() !== JSON_ERROR_NONE) return [];
 
-            if (CitationManagerPlugin::isDebugMode()) {
+            if (PluginConfig::isDebugMode()) {
                 LogHelper::logInfo([$method, $url, $options, $response->getStatusCode(), $result]);
             }
 

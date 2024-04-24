@@ -40,13 +40,13 @@ class Api extends ApiAbstract
         parent::__construct($plugin, $url);
 
         $this->owner = $this->plugin->getSetting($this->plugin->getCurrentContextId(),
-            CitationManagerPlugin::OPEN_CITATIONS_OWNER);
-
-        $this->token = $this->plugin->getSetting($this->plugin->getCurrentContextId(),
-            CitationManagerPlugin::OPEN_CITATIONS_TOKEN);
+            Constants::owner);
 
         $this->repository = $this->plugin->getSetting($this->plugin->getCurrentContextId(),
-            CitationManagerPlugin::OPEN_CITATIONS_REPOSITORY);
+            Constants::repository);
+
+        $this->token = $this->plugin->getSetting($this->plugin->getCurrentContextId(),
+            Constants::token);
 
         $this->httpClient = new Client([
             'headers' => [
