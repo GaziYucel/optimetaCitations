@@ -25,7 +25,6 @@ use APP\plugins\generic\citationManager\classes\Settings\PluginConfig;
 use APP\plugins\generic\citationManager\classes\Workflow\SubmissionWizard;
 use APP\plugins\generic\citationManager\classes\Workflow\WorkflowSave;
 use APP\plugins\generic\citationManager\classes\Workflow\WorkflowTab;
-use Config;
 use PKP\core\JSONMessage;
 use PKP\plugins\GenericPlugin;
 use PKP\plugins\Hook;
