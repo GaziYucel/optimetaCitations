@@ -28,7 +28,7 @@ use Submission;
 class PluginDAO
 {
     /**
-     * This method retrieves the structured citations for a publication.
+     * This method retrieves the structured citations for a publication from the publication object.
      * After this, the method returns a normalized citations as an array of CitationModels.
      * If no citations are found, the method returns an empty array.
      *
