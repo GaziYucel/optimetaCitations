@@ -21,7 +21,6 @@ use APIHandler;
 use APIRouter;
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
 use APP\plugins\generic\citationManager\classes\Db\PluginDAO;
-use APP\plugins\generic\citationManager\classes\Helpers\LogHelper;
 use PolicySet;
 use RoleBasedHandlerOperationPolicy;
 use Slim\Http\Request as SlimRequest;
