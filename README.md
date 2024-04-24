@@ -176,8 +176,8 @@ For this you need a GitHub account, if you have none please register one through
 
 ### Wikidata.org
 
-Depositing at Wikidata.org will be done through the wikidata API.  
-For this you need an account on Wikidata.org.  
+Depositing at Wikidata.org will be done through the wikidata API.
+For this you need an account on Wikidata.org.
 If you have none please register one through https://www.wikidata.org/w/index.php?title=Special:CreateAccount.
 
 - Login at https://www.wikidata.org and navigate to https://www.wikidata.org/wiki/Special:BotPasswords
@@ -256,7 +256,7 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
 
 Notes
 
-- Autoload of the classes in the folder `classes/` is done with composer according 
+- Autoload of the classes in the folder `classes/` is done with composer according
   to the PSR-4 specification.
 - All classes have namespaces and are structured according to PSR-4 standard.
 - If you add or remove classes in the `classes` folder, run the following
@@ -275,7 +275,7 @@ You can find the `files_dir` constant in your config.inc.php file.
 
 Please put the following in the file config.inc.php to enable this:
 ```
-[citationmanager]
+[CitationManagerPlugin]
 isDebugMode=true
 ```
 
@@ -288,12 +288,18 @@ _Careful with sensitive information, (passwords, tokens) will be written in plai
 If you are developing, you might use the classes in `tests/classes/`.
 The classes in this folder have the same folder and namespace structure as in `classes` folder.
 The purpose of these classes is to override the main classes.
-You can accomplish this by running the composer command `composer dump-autoload -o --dev`.
+You can accomplish this by running the composer command `composer dump-autoload -o --dev -d tests`.
 If this is done, then test or sandbox versions of API's will be used.
 For example test.wikidata.org instead of www.wikidata.org.
-Autoload of the classes is done with composer [classmap](https://getcomposer.org/doc/04-schema.md#classmap).  
+Autoload of the classes is done with composer [classmap](https://getcomposer.org/doc/04-schema.md#classmap).
 First the classes in `tests/classes/` are loaded, after which the classes in `classes/` are loaded.
 By doing this in this order, all classes present in `tests/classes/` will override the classes in `classes/`.
+
+Please put the following in the file config.inc.php to enable this:
+```
+[CitationManagerPlugin]
+isTestMode=true
+```
 
 **Headless tests**
 
