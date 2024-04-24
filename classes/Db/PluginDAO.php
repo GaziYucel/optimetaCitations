@@ -22,7 +22,6 @@ use AuthorDAO;
 use DAORegistry;
 use Issue;
 use IssueDAO;
-use Journal;
 use JournalDAO;
 use Publication;
 use PublicationDAO;
@@ -114,7 +113,7 @@ class PluginDAO
     {
         /* @var JournalDAO $dao */
         $dao = DAORegistry::getDAO('JournalDAO');
-        $dao->updateObject($journal);
+        $dao->updateObject($context);
     }
 
     public function saveIssue(Issue $issue): void
