@@ -14,7 +14,12 @@ namespace APP\plugins\generic\citationManager;
 
 define('CITATION_MANAGER_PLUGIN_NAME', basename(__FILE__, '.php'));
 
-require_once(__DIR__ . '/vendor/autoload.php');
+if(CitationManagerPlugin::isTestMode()){
+    require_once(__DIR__ . '/tests/vendor/autoload.php');
+}
+else{
+    require_once(__DIR__ . '/vendor/autoload.php');
+}
 
 use APP\plugins\generic\citationManager\classes\Db\PluginSchema;
 use APP\plugins\generic\citationManager\classes\FrontEnd\ArticleView;
@@ -71,6 +76,10 @@ class CitationManagerPlugin extends GenericPlugin
 //                    $taskFilesPath[] = $this->getPluginPath() . DIRECTORY_SEPARATOR . 'scheduledTasks.xml';
 //                    return false;
 //                });
+
+                $api = new \APP\plugins\generic\citationManager\classes\External\Wikidata\Api($this);
+                error_log($api->url);
+
             }
 
             return true;

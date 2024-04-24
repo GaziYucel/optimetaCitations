@@ -21,9 +21,10 @@
 		"science"
 	],
 	"autoload": {
-		"psr-4": {
-			"APP\\plugins\\generic\\citationManager\\classes\\": "classes/"
-		}
+		"classmap": [
+			"../tests/classes",
+			"../classes/"
+		]
 	},
 	"minimum-stability": "stable",
 	"require": {
