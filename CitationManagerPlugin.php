@@ -47,14 +47,6 @@ class CitationManagerPlugin extends GenericPlugin
         if (parent::register($category, $path, $mainContextId)) {
 
             if ($this->getEnabled()) {
-
-//                // task scheduler; not working as expected
-//                Hook::add('AcronPlugin::parseCronTab', function ($hookName, $args) {
-//                    $taskFilesPath =& $args[0];
-//                    $taskFilesPath[] = $this->getPluginPath() . DIRECTORY_SEPARATOR . 'scheduledTasks.xml';
-//                    return false;
-//                });
-
                 $pluginSchema = new PluginSchema();
                 Hook::add('Schema::get::publication', [$pluginSchema, 'addToSchemaPublication']);
                 Hook::add('Schema::get::author', [$pluginSchema, 'addToSchemaAuthor']);
@@ -74,6 +66,13 @@ class CitationManagerPlugin extends GenericPlugin
 
                 $pluginApiHandler = new PluginAPIHandler();
                 Hook::add('Dispatcher::dispatch', [$pluginApiHandler, 'register']);
+
+//                // task scheduler; not working as expected
+//                Hook::add('AcronPlugin::parseCronTab', function ($hookName, $args) {
+//                    $taskFilesPath =& $args[0];
+//                    $taskFilesPath[] = $this->getPluginPath() . DIRECTORY_SEPARATOR . 'scheduledTasks.xml';
+//                    return false;
+//                });
             }
 
             return true;
