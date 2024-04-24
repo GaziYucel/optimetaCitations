@@ -16,7 +16,6 @@ define('CITATION_MANAGER_PLUGIN_NAME', basename(__FILE__, '.php'));
 
 require_once(__DIR__ . '/vendor/autoload.php');
 
-use APP\plugins\generic\citationManager\classes\External\Wikidata\Api;
 use APP\plugins\generic\citationManager\classes\Db\PluginSchema;
 use APP\plugins\generic\citationManager\classes\FrontEnd\ArticleView;
 use APP\plugins\generic\citationManager\classes\Handlers\PluginAPIHandler;
@@ -39,16 +38,6 @@ class CitationManagerPlugin extends GenericPlugin
     public const CITATIONS_STRUCTURED = 'citationsStructured';
     /** @var string Key used for the form used in workflow and submission wizard */
     public const CITATIONS_STRUCTURED_FORM = 'citationsStructuredForm';
-    /** @var string Wikidata username */
-    public const WIKIDATA_USERNAME = CITATION_MANAGER_PLUGIN_NAME . '_Wikidata_Username';
-    /** @var string Wikidata password */
-    public const WIKIDATA_PASSWORD = CITATION_MANAGER_PLUGIN_NAME . '_Wikidata_Password';
-    /** @var string GitHub handle / account used for Open Citations */
-    public const OPEN_CITATIONS_OWNER = CITATION_MANAGER_PLUGIN_NAME . '_OpenCitations_Owner';
-    /** @var string GitHub repository used for Open Citations */
-    public const OPEN_CITATIONS_REPOSITORY = CITATION_MANAGER_PLUGIN_NAME . '_OpenCitations_Repository';
-    /** @var string GitHub APi token used for Open Citations */
-    public const OPEN_CITATIONS_TOKEN = CITATION_MANAGER_PLUGIN_NAME . '_OpenCitations_Token';
     /** @var array Roles which can access PluginApiHandler */
     public const apiRoles = [Role::ROLE_ID_MANAGER, Role::ROLE_ID_SUB_EDITOR, Role::ROLE_ID_ASSISTANT, Role::ROLE_ID_REVIEWER, Role::ROLE_ID_AUTHOR];
 
@@ -59,6 +48,7 @@ class CitationManagerPlugin extends GenericPlugin
 
             if ($this->getEnabled()) {
 
+//                // task scheduler; not working as expected
 //                Hook::add('AcronPlugin::parseCronTab', function ($hookName, $args) {
 //                    $taskFilesPath =& $args[0];
 //                    $taskFilesPath[] = $this->getPluginPath() . DIRECTORY_SEPARATOR . 'scheduledTasks.xml';

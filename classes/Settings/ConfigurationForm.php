@@ -13,6 +13,8 @@
 namespace APP\plugins\generic\citationManager\classes\Settings;
 
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
+use APP\plugins\generic\citationManager\classes\External\Wikidata\Constants as WikidataConstants;
+use APP\plugins\generic\citationManager\classes\External\OpenCitations\Constants as OpenCitationsConstants;
 use Application;
 use PKP\form\Form;
 use PKP\form\validation\FormValidatorCSRF;
@@ -28,11 +30,11 @@ class ConfigurationForm extends Form
 
     /** @var string[] Array of variables saved in the database. */
     private array $settings = [
-        CitationManagerPlugin::WIKIDATA_USERNAME,
-        CitationManagerPlugin::WIKIDATA_PASSWORD,
-        CitationManagerPlugin::OPEN_CITATIONS_OWNER,
-        CitationManagerPlugin::OPEN_CITATIONS_REPOSITORY,
-        CitationManagerPlugin::OPEN_CITATIONS_TOKEN,
+        WikidataConstants::username,
+        WikidataConstants::password,
+        OpenCitationsConstants::owner,
+        OpenCitationsConstants::repository,
+        OpenCitationsConstants::token,
         CitationManagerPlugin::FRONTEND_SHOW_STRUCTURED
     ];
 
