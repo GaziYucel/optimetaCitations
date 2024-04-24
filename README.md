@@ -226,7 +226,7 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
     │  |  |  ├─ Constants.php        # Constants used in Api's, e.g. username, password
     │  |  |  ├─ Inbound.php          # Methods for retrieving data
     │  |  |  └─ Outbound.php         # Methods for depositing data
-    |  |  ├─ ... Other services      # Other services follow the same structure
+    |  |  ├─ ...Other services       # Other services follow the same structure
     |  |  ├─ ApiAbstract.php         # This class is used by service Api class
     |  |  └─ ExecuteAbstract.php     # This class is used by service Inbound / Outbound classes
     │  ├─ FrontEnd                   # Classes for the front end, e.g. ArticleView
