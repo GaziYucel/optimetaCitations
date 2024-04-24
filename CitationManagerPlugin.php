@@ -36,8 +36,6 @@ class CitationManagerPlugin extends GenericPlugin
     public const FRONTEND_SHOW_STRUCTURED = CITATION_MANAGER_PLUGIN_NAME . '_FrontEndShowStructured';
     /** @var string Key for structured citations saved in publications */
     public const CITATIONS_STRUCTURED = 'citationsStructured';
-    /** @var string Key used for the form used in workflow and submission wizard */
-    public const CITATIONS_STRUCTURED_FORM = 'citationsStructuredForm';
     /** @var array Roles which can access PluginApiHandler */
     public const apiRoles = [Role::ROLE_ID_MANAGER, Role::ROLE_ID_SUB_EDITOR, Role::ROLE_ID_ASSISTANT, Role::ROLE_ID_REVIEWER, Role::ROLE_ID_AUTHOR];
 
