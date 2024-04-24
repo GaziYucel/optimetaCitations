@@ -21,6 +21,7 @@ use APIHandler;
 use APIRouter;
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
 use APP\plugins\generic\citationManager\classes\Db\PluginDAO;
+use APP\plugins\generic\citationManager\classes\Helpers\LogHelper;
 use PolicySet;
 use RoleBasedHandlerOperationPolicy;
 use Slim\Http\Request as SlimRequest;
@@ -71,7 +72,7 @@ class PluginAPIHandler extends APIHandler
      */
     public function register($hookName, $args): void
     {
-        $request = $args[0];
+        $request = $args;
         $router = $request->getRouter();
 
         if ($router instanceof APIRouter
