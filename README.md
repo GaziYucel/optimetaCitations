@@ -166,7 +166,7 @@ For this you need a GitHub account, if you have none please register one through
 - Select "No expiration" at Expiration
 - Check the checkbox "public_repo"; leave all other checkboxes unchecked
 - Click on the button "Generate token"
-- You will be provided the token; save this token, as you will not shown this again
+- You will be provided the token; save this token, as you will not be shown this again
 - Login to your OJS with an administrator account
 - Navigate to Settings > Website > Plugins and find "Citation Manager Plugin" on the page
 - Click on the arrow at the left and click "Settings"
