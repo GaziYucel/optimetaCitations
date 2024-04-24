@@ -48,11 +48,11 @@ class Api extends ApiAbstract
 
         $this->username = $this->plugin->getSetting(
             $this->plugin->getCurrentContextId(),
-            CitationManagerPlugin::WIKIDATA_USERNAME);
+            Constants::username);
 
         $this->password = $this->plugin->getSetting(
             $this->plugin->getCurrentContextId(),
-            CitationManagerPlugin::WIKIDATA_PASSWORD);
+            Constants::password);
 
         $this->httpClient = new Client(
             [
