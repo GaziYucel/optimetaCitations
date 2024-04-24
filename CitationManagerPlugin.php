@@ -14,10 +14,9 @@ namespace APP\plugins\generic\citationManager;
 
 define('CITATION_MANAGER_PLUGIN_NAME', basename(__FILE__, '.php'));
 
-if(CitationManagerPlugin::isTestMode()){
+if (CitationManagerPlugin::isTestMode()) {
     require_once(__DIR__ . '/tests/vendor/autoload.php');
-}
-else{
+} else {
     require_once(__DIR__ . '/vendor/autoload.php');
 }
 
