@@ -13,13 +13,13 @@
 namespace APP\plugins\generic\citationManager\classes\Db;
 
 use Context;
-use Exception;
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
 use APP\plugins\generic\citationManager\classes\DataModels\Citation\CitationModel;
 use APP\plugins\generic\citationManager\classes\Helpers\ClassHelper;
 use Author;
 use AuthorDAO;
 use DAORegistry;
+use Exception;
 use Issue;
 use IssueDAO;
 use JournalDAO;
@@ -111,9 +111,13 @@ class PluginDAO
     /* OJS setters */
     public function saveContext(Context $context): void
     {
-        /* @var JournalDAO $dao */
-        $dao = DAORegistry::getDAO('JournalDAO');
-        $dao->updateObject($context);
+        try {
+            /* @var JournalDAO $dao */
+            $dao = DAORegistry::getDAO('JournalDAO');
+            $dao->updateObject($context);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+        }
     }
 
     public function saveIssue(Issue $issue): void

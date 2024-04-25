@@ -71,13 +71,13 @@ class ProcessHandler
 
         // journal
         $contextChanged = false;
-        foreach(ClassHelper::getClassConstantsAndValuesAsArray(new MetadataJournal()) as $name => $key) {
+        foreach (ClassHelper::getClassConstantsAndValuesAsArray(new MetadataJournal()) as $name => $key) {
             if (empty($context->getData($key))) {
                 $context->setData($key, '');
                 $contextChanged = true;
             }
         }
-        if($contextChanged) $pluginDao->saveContext($context);
+        if ($contextChanged) $pluginDao->saveContext($context);
 
         // citations clean, structure and save
         $citations = $this->cleanupAndSplit($citationsRaw);
@@ -87,13 +87,13 @@ class ProcessHandler
 
         // publication metadata
         $publicationChanged = false;
-        foreach(ClassHelper::getClassConstantsAndValuesAsArray(new MetadataPublication()) as $name => $key) {
+        foreach (ClassHelper::getClassConstantsAndValuesAsArray(new MetadataPublication()) as $name => $key) {
             if (empty($publication->getData($key))) {
                 $publication->setData($key, '');
                 $publicationChanged = true;
             }
         }
-        if($publicationChanged) $pluginDao->savePublication($publication);
+        if ($publicationChanged) $pluginDao->savePublication($publication);
 
         // authors of publication
         /* @var Author $author */
@@ -109,7 +109,7 @@ class ProcessHandler
             }
             if ($authorChanged) $pluginDao->saveAuthor($author);
         }
-        if($authorsChanged) $publication = $pluginDao->getPublication($publicationId);
+        if ($authorsChanged) $publication = $pluginDao->getPublication($publicationId);
 
         // iterate services
         /* @var ExecuteAbstract $service */
@@ -146,13 +146,14 @@ class ProcessHandler
         foreach ($contextIds as $contextId) {
 
             $submissions = Services::get('submission')->getMany([
-                'contextId' => $contextId]);
+                'contextId' => $contextId,
+                'status' => [
+                    STATUS_QUEUED,
+                    STATUS_SCHEDULED,
+                    STATUS_SCHEDULED]]);
 
             /* @var Submission $submission */
             foreach ($submissions as $submission) {
-
-                // skip if declined
-                if($submission->getData('status') === STATUS_DECLINED) continue;
 
                 $publications = $submission->getData('publications');
 
@@ -162,12 +163,8 @@ class ProcessHandler
                     $citations = $pluginDao->getCitations($publication);
                     $citationsRaw = $publication->getData('citationRaw');
 
-                    // skip if declined or citations found
-                    if (!empty($citations) || empty($citationsRaw)
-                        || $publication->getData('status') === STATUS_DECLINED)
-                        continue;
+                    if (!empty($citations) || empty($citationsRaw)) continue;
 
-                    // not processed yet, proceed
                     $this->execute(
                         $submission->getId(),
                         $publication->getId(),

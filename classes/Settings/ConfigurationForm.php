@@ -30,11 +30,11 @@ class ConfigurationForm extends Form
 
     /** @var string[] Array of variables saved in the database. */
     private array $settings = [
-        CitationManagerPlugin::WIKIDATA_USERNAME,
-        CitationManagerPlugin::WIKIDATA_PASSWORD,
-        CitationManagerPlugin::OPEN_CITATIONS_OWNER,
-        CitationManagerPlugin::OPEN_CITATIONS_REPOSITORY,
-        CitationManagerPlugin::OPEN_CITATIONS_TOKEN,
+        WikidataConstants::username,
+        WikidataConstants::password,
+        OpenCitationsConstants::owner,
+        OpenCitationsConstants::repository,
+        OpenCitationsConstants::token,
         CitationManagerPlugin::FRONTEND_SHOW_STRUCTURED
     ];
 

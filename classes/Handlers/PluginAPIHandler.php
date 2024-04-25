@@ -18,9 +18,9 @@ import('lib.pkp.classes.security.authorization.RoleBasedHandlerOperationPolicy')
 
 use APIResponse;
 use APIHandler;
-use APIRouter;
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
 use APP\plugins\generic\citationManager\classes\Db\PluginDAO;
+use APIRouter;
 use PolicySet;
 use RoleBasedHandlerOperationPolicy;
 use Slim\Http\Request as SlimRequest;

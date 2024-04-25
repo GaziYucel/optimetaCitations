@@ -78,7 +78,7 @@
                     <col class="grid-column column-action" style="width: 6%;">
                 </colgroup>
                 <tbody>
-                <tr v-for="(citation, i) in citationManagerApp.citations" :key="i" class="citationManager-Row">
+                <tr v-for="(citation, i) in citationManagerApp.citations" class="citationManager-Row">
                     <td class="citationManager-ScrollableDiv-nr">{{ i + 1 }}</td>
                     <td class="citationManager-ScrollableDiv-parts">
                         <div>
@@ -199,13 +199,13 @@
             <span>{{ citationManagerApp.workingPublicationStatus   = workingPublication.status }}</span>
             <span>{{ citationManagerApp.submissionId               = workingPublication.submissionId }}</span>
             <span>{{ citationManagerApp.workingPublicationId       = workingPublication.id }}</span>
-            <span>{{ citationManagerApp.formCitations = components.{CitationManagerPlugin::CITATIONS_STRUCTURED}Form.fields[0]['value'] }}</span> <!-- //todo: citationsStructured gets emptied -->
+            <span>{{ citationManagerApp.formCitations = components.{CitationManagerPlugin::CITATIONS_STRUCTURED}.fields[0]['value'] }}</span> <!-- //todo: citationsStructured gets emptied -->
 
-            <span>{{ citationManagerApp.isUserInteracting ? components.{CitationManagerPlugin::CITATIONS_STRUCTURED}Form.fields[0]['value'] = JSON.stringify(citationManagerApp.citationsClean) : '' }}</span>
-            <span>{{ components.{CitationManagerPlugin::CITATIONS_STRUCTURED}Form.action = '{$apiBaseUrl}submissions/' + workingPublication.submissionId + '/publications/' + workingPublication.id }}</span>
+            <span>{{ citationManagerApp.isUserInteracting ? components.{CitationManagerPlugin::CITATIONS_STRUCTURED}.fields[0]['value'] = JSON.stringify(citationManagerApp.citationsClean) : '' }}</span>
+            <span>{{ components.{CitationManagerPlugin::CITATIONS_STRUCTURED}.action = '{$apiBaseUrl}submissions/' + workingPublication.submissionId + '/publications/' + workingPublication.id }}</span>
         </div>
         <div>
-            <pkp-form v-bind="components.{CitationManagerPlugin::CITATIONS_STRUCTURED}Form" @set="set"></pkp-form>
+            <pkp-form v-bind="components.{CitationManagerPlugin::CITATIONS_STRUCTURED}" @set="set"></pkp-form>
         </div>
     </div>
 </tab>

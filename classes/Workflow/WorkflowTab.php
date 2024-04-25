@@ -72,13 +72,13 @@ class WorkflowTab
             array_keys($locales), $locales);
 
         $form = new WorkflowForm(
-            CitationManagerPlugin::CITATIONS_STRUCTURED . 'Form',
+            CitationManagerPlugin::CITATIONS_STRUCTURED,
             'PUT',
             $apiBaseUrl . 'submissions/' . $submissionId . '/publications/' . $publicationId,
             $locales);
 
         $state = $templateMgr->getTemplateVars('state');
-        $state['components'][CitationManagerPlugin::CITATIONS_STRUCTURED. 'Form'] = $form->getConfig();
+        $state['components'][CitationManagerPlugin::CITATIONS_STRUCTURED] = $form->getConfig();
         $templateMgr->assign('state', $state);
 
         $templateParameters = [
