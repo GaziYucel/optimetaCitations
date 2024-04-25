@@ -14,67 +14,60 @@ namespace APP\plugins\generic\citationManager\classes\External\Wikidata;
 
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
 use APP\plugins\generic\citationManager\classes\DataModels\Citation\CitationModel;
-use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataAuthor;
-use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataJournal;
-use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataPublication;
+use APP\plugins\generic\citationManager\classes\DataModels\MetadataAuthor;
+use APP\plugins\generic\citationManager\classes\DataModels\MetadataJournal;
 use APP\plugins\generic\citationManager\classes\Db\PluginDAO;
-use APP\plugins\generic\citationManager\classes\External\InboundAbstract;
+use APP\plugins\generic\citationManager\classes\External\ExecuteAbstract;
 use APP\plugins\generic\citationManager\classes\External\Wikidata\DataModels\Property;
 use APP\plugins\generic\citationManager\classes\Helpers\ClassHelper;
 use APP\plugins\generic\citationManager\classes\PID\Orcid;
 use APP\plugins\generic\citationManager\classes\PID\Wikidata;
 use Author;
-use Issue;
-use Publication;
-use Submission;
-use Context;
 
-class Inbound extends InboundAbstract
+class Inbound extends ExecuteAbstract
 {
     /** @var Property */
     public Property $property;
 
     /** @copydoc InboundAbstract::__construct */
-    public function __construct(CitationManagerPlugin $plugin,
-                                ?Context              $context,
-                                ?Issue                $issue,
-                                ?Submission           $submission,
-                                ?Publication          $publication,
-                                ?MetadataJournal      $metadataJournal,
-                                ?MetadataPublication  $metadataPublication,
-                                ?array                $authors,
-                                ?array                $citations)
+    public function __construct(CitationManagerPlugin &$plugin, int $submissionId, int $publicationId)
     {
-        parent::__construct($plugin, $context, $issue, $submission, $publication,
-            $metadataJournal, $metadataPublication, $authors, $citations);
-
+        parent::__construct($plugin, $submissionId, $publicationId);
         $this->api = new Api($plugin);
         $this->property = new Property();
     }
 
-    /**
-     * Process this external service
-     *
-     * @return bool
-     */
+    /** @copydoc InboundAbstract::execute */
     public function execute(): bool
     {
-        // journal
-        $this->metadataJournal = $this->processJournal(
-            $this->context->getData('onlineIssn'),
-            $this->metadataJournal);
+        $pluginDao = new PluginDAO();
+        $context = $this->plugin->getRequest()->getContext();
+        $publication = $pluginDao->getPublication($this->publicationId);
 
-        // authors of publication
-        $countAuthors = count($this->authors);
-        for ($i = 0; $i < $countAuthors; $i++) {
-            $this->authors[$i] = $this->processAuthor($this->authors[$i]);
+        // journal
+        $onlineIssn = $context->getData('onlineIssn');
+        $journalWikidataId = $context->getData(MetadataJournal::wikidataId);
+        if (empty($journalWikidataId) && !empty($onlineIssn)) {
+            $journalWikidataId = $this->processJournal($onlineIssn);
+            $context->setData(MetadataJournal::wikidataId, $journalWikidataId);
+            $pluginDao->saveContext($context);
         }
 
+        // authors of publication
+        /* @var Author $author */
+        foreach ($publication->getData('authors') as $index => $author) {
+            if (empty($author->getData(MetadataAuthor::wikidataId))) {
+                $pluginDao->saveAuthor($this->processAuthor($author));
+            }
+        }
+        $publication = $pluginDao->getPublication($this->publicationId);
+
         // citations
-        $countCitations = count($this->citations);
+        $citations = $pluginDao->getCitations($publication);
+        $countCitations = count($citations);
         for ($i = 0; $i < $countCitations; $i++) {
             /* @var CitationModel $citation */
-            $citation = $this->citations[$i];
+            $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(), $citations[$i]);
 
             if (!empty($citation->wikidata_id)) continue;
 
@@ -82,10 +75,26 @@ class Inbound extends InboundAbstract
 
             $citation->wikidata_id = Wikidata::removePrefix($citation->wikidata_id);
 
-            $this->citations[$i] = $citation;
+            $citations[$i] = $citation;
         }
+        $publication->setData(CitationManagerPlugin::CITATIONS_STRUCTURED, json_encode($citations));
+        $pluginDao->savePublication($publication);
 
         return true;
+    }
+
+    /**
+     * Get wikidata id for journal
+     *
+     * @param string $pid
+     * @return string
+     */
+    public function processJournal(string $pid): string
+    {
+        return $this->api
+            ->getQidFromItem($this->api
+                ->getItemWithPropertyAndPid(
+                    $this->property->issnL['id'], $pid));
     }
 
     /**
@@ -107,23 +116,6 @@ class Inbound extends InboundAbstract
     }
 
     /**
-     * Get wikidata id for journal
-     *
-     * @param string|null $issn
-     * @param MetadataJournal $metadataJournal
-     * @return MetadataJournal
-     */
-    public function processJournal(?string $issn, MetadataJournal $metadataJournal): MetadataJournal
-    {
-        $metadataJournal->wikidata_id = $this->api
-            ->getQidFromItem($this->api
-                ->getItemWithPropertyAndPid(
-                    $this->property->issnL['id'], $issn));
-
-        return $metadataJournal;
-    }
-
-    /**
      * Get wikidata id for author
      *
      * @param Author $author
@@ -131,20 +123,18 @@ class Inbound extends InboundAbstract
      */
     public function processAuthor(Author $author): Author
     {
-        $pluginDao = new PluginDAO();
-        $metadata = $pluginDao->getMetadataAuthor($author->getId(), $author);
-
+        $wikidataId = $author->getData(MetadataAuthor::wikidataId);
         $orcidId = Orcid::removePrefix($author->getData('orcid'));
 
-        if (empty($metadata->wikidata_id) && !empty($orcidId))
-            $metadata->wikidata_id = $this->api
+        if (empty($wikidataId) && !empty($orcidId))
+            $wikidataId = $this->api
                 ->getQidFromItem($this->api
                     ->getItemWithPropertyAndPid(
-                        $this->property->orcidId['id'], $orcidId));;
+                        $this->property->orcidId['id'], $orcidId));
 
-        $metadata->wikidata_id = Wikidata::removePrefix($metadata->wikidata_id);
+        $wikidataId = Wikidata::removePrefix($wikidataId);
 
-        $author->setData(CitationManagerPlugin::CITATION_MANAGER_METADATA_AUTHOR, $metadata);
+        $author->setData(MetadataAuthor::wikidataId, $wikidataId);
 
         return $author;
     }

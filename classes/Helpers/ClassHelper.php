@@ -99,6 +99,18 @@ class ClassHelper
     }
 
     /**
+     * Get public constants of an object as an array
+     *
+     * @param object $class The object for which properties are retrieved.
+     * @return array Array with constant names as keys. [ 'constant1' => 'value1', ... ]
+     */
+    public static function getClassConstantsAndValuesAsArray(object $class): array
+    {
+        $reflect = new ReflectionClass($class);
+        return $reflect->getConstants(ReflectionProperty::IS_PUBLIC);
+    }
+
+    /**
      * Get class public properties as a csv, e.g. "id","title","pub_date"
      *
      * @param object $class

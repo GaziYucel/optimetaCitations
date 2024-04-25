@@ -9,7 +9,7 @@
  * @brief Backend stylesheet for the plugin.
  */
 
-input[name="CitationManagerPlugin_CitationsStructured"] {
+input[name="citationsStructured"] {
     display: none;
 }
 

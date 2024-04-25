@@ -1,0 +1,33 @@
+{
+	"name": "ojs/citationmanager",
+	"description": "OJS plugin which extracts and enriches citation data and deposits to external open access data services",
+	"type": "project",
+	"license": "GPL-3.0 license",
+	"authors": [
+		{
+			"name": "GaziYucel",
+			"email": "GaziYucel@users.noreply.github.com"
+		}
+	],
+	"keywords": [
+		"ojs",
+		"citationmanager",
+		"citations",
+		"publishing",
+		"metadata",
+		"research",
+		"communication",
+		"open",
+		"science"
+	],
+	"autoload": {
+		"classmap": [
+			"../tests/classes",
+			"../classes/"
+		]
+	},
+	"minimum-stability": "stable",
+	"require": {
+		"php": ">=8.0"
+	}
+}

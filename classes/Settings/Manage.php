@@ -27,9 +27,9 @@ class Manage
     public CitationManagerPlugin $plugin;
 
     /** @param CitationManagerPlugin $plugin */
-    public function __construct(CitationManagerPlugin $plugin)
+    public function __construct(CitationManagerPlugin &$plugin)
     {
-        $this->plugin = $plugin;
+        $this->plugin = &$plugin;
     }
 
     /** @copydoc Plugin::manage() */
@@ -75,3 +75,4 @@ class Manage
         return new JSONMessage(false);
     }
 }
+

@@ -20,21 +20,29 @@ class SubmissionWizard
     public CitationManagerPlugin $plugin;
 
     /** @param CitationManagerPlugin $plugin */
-    public function __construct(CitationManagerPlugin $plugin)
+    public function __construct(CitationManagerPlugin &$plugin)
     {
-        $this->plugin = $plugin;
+        $this->plugin = &$plugin;
     }
 
     /**
      * Structured citations on submission wizard page
      *
-     * @param string $hookname
+     * @param string $hookName
      * @param array $args
      * @return void
      */
-    public function execute(string $hookname, array $args): void
+    public function execute(string $hookName, array $args): void
     {
         $templateMgr = &$args[1];
+
+        $request = $this->plugin->getRequest();
+
+        $templateParameters = [
+            'assetsUrl' => $request->getBaseUrl() . '/' . $this->plugin->getPluginPath() . '/assets'
+        ];
+        $templateMgr->assign($templateParameters);
+
         $templateMgr->display(
             $this->plugin->getTemplateResource("submissionWizard.tpl")
         );

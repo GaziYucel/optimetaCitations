@@ -32,8 +32,8 @@
         <p>
             {fbvElement
             type="text"
-            id="{CitationManagerPlugin::CITATION_MANAGER_OPEN_CITATIONS_OWNER}"
-            value=${CitationManagerPlugin::CITATION_MANAGER_OPEN_CITATIONS_OWNER}
+            id="{\APP\plugins\generic\citationManager\classes\External\OpenCitations\Constants::owner}"
+            value=${\APP\plugins\generic\citationManager\classes\External\OpenCitations\Constants::owner}
             label="plugins.generic.citationManager.settings.open_citations_owner"
             description="plugins.generic.citationManager.settings.open_citations_owner"
             placeholder="plugins.generic.citationManager.settings.open_citations_owner"
@@ -42,8 +42,8 @@
         <p>
             {fbvElement
             type="text"
-            id="{CitationManagerPlugin::CITATION_MANAGER_OPEN_CITATIONS_REPOSITORY}"
-            value=${CitationManagerPlugin::CITATION_MANAGER_OPEN_CITATIONS_REPOSITORY}
+            id="{\APP\plugins\generic\citationManager\classes\External\OpenCitations\Constants::repository}"
+            value=${\APP\plugins\generic\citationManager\classes\External\OpenCitations\Constants::repository}
             label="plugins.generic.citationManager.settings.open_citations_repository"
             description="plugins.generic.citationManager.settings.open_citations_repository"
             placeholder="plugins.generic.citationManager.settings.open_citations_repository"
@@ -53,8 +53,8 @@
             {fbvElement
             type="text"
             password=true
-            id="{CitationManagerPlugin::CITATION_MANAGER_OPEN_CITATIONS_TOKEN}"
-            value=${CitationManagerPlugin::CITATION_MANAGER_OPEN_CITATIONS_TOKEN}
+            id="{\APP\plugins\generic\citationManager\classes\External\OpenCitations\Constants::token}"
+            value=${\APP\plugins\generic\citationManager\classes\External\OpenCitations\Constants::token}
             label="plugins.generic.citationManager.settings.open_citations_token"
             description="plugins.generic.citationManager.settings.open_citations_token"
             placeholder="plugins.generic.citationManager.settings.open_citations_token"
@@ -68,8 +68,8 @@
         <p>
             {fbvElement
             type="text"
-            id="{CitationManagerPlugin::CITATION_MANAGER_WIKIDATA_USERNAME}"
-            value=${CitationManagerPlugin::CITATION_MANAGER_WIKIDATA_USERNAME}
+            id="{\APP\plugins\generic\citationManager\classes\External\Wikidata\Constants::username}"
+            value=${\APP\plugins\generic\citationManager\classes\External\Wikidata\Constants::username}
             label="plugins.generic.citationManager.settings.wikidata_username"
             description="plugins.generic.citationManager.settings.wikidata_username"
             placeholder="plugins.generic.citationManager.settings.wikidata_username"
@@ -79,8 +79,8 @@
             {fbvElement
             type="text"
             password=true
-            id="{CitationManagerPlugin::CITATION_MANAGER_WIKIDATA_PASSWORD}"
-            value=${CitationManagerPlugin::CITATION_MANAGER_WIKIDATA_PASSWORD}
+            id="{\APP\plugins\generic\citationManager\classes\External\Wikidata\Constants::password}"
+            value=${\APP\plugins\generic\citationManager\classes\External\Wikidata\Constants::password}
             label="plugins.generic.citationManager.settings.wikidata_password"
             description="plugins.generic.citationManager.settings.wikidata_password"
             placeholder="plugins.generic.citationManager.settings.wikidata_password"
@@ -93,11 +93,11 @@
     {fbvFormSection title="plugins.generic.citationManager.settings.show_structured_frontend.title" list="true"}
     {fbvElement
     type="checkbox"
-    name="{CitationManagerPlugin::CITATION_MANAGER_FRONTEND_SHOW_STRUCTURED}"
-    id="{CitationManagerPlugin::CITATION_MANAGER_FRONTEND_SHOW_STRUCTURED}"
-    value={CitationManagerPlugin::CITATION_MANAGER_FRONTEND_SHOW_STRUCTURED}
+    name="{CitationManagerPlugin::FRONTEND_SHOW_STRUCTURED}"
+    id="{CitationManagerPlugin::FRONTEND_SHOW_STRUCTURED}"
+    value={CitationManagerPlugin::FRONTEND_SHOW_STRUCTURED}
     label="plugins.generic.citationManager.settings.show_structured_frontend.checkbox"
-    checked=${CitationManagerPlugin::CITATION_MANAGER_FRONTEND_SHOW_STRUCTURED}
+    checked=${CitationManagerPlugin::FRONTEND_SHOW_STRUCTURED}
     }
     {/fbvFormSection}
         <!-- Show at Front -->

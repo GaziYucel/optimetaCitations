@@ -1,5 +1,0 @@
-Hauschke, Christian; Nüst, Daniel, Cordts, Anette; Lilienthal, Svantje (2021): Strengthening the Open Access publishing system through open citations and spatiotemporal metadata. Research Ideas and Outcomes 7: e66264. https://doi.org/10.3897/rio.7.e66264
-
-Nüst, Daniel, Hauschke, Christian, Cordts, Anette, & Yücel, Gazi. (2021). Das Projekt Stärkung des Open-Access-Publikationssystems durch offene Zitationen und raumzeitliche Metadaten. Poster. Open Access Tage 2021. https://doi.org/10.5281/zenodo.5526786
-
-Cordts, Anette, Hauschke, Christian & Yücel, Gazi. (2021, December 8). How even small and independent journals can contribute to the citation commons. Force2021 Conference, 7-9 December 2021. Slides. Zenodo. https://doi.org/10.5281/zenodo.5767060

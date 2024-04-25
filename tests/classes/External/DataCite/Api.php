@@ -28,7 +28,7 @@ class Api extends ApiAbstract
      * @param CitationManagerPlugin $plugin
      * @param string|null $url The base URL for API requests (optional).
      */
-    function __construct(CitationManagerPlugin $plugin, ?string $url = '')
+    function __construct(CitationManagerPlugin &$plugin, ?string $url = '')
     {
         parent::__construct($plugin, $url);
 
@@ -47,10 +47,9 @@ class Api extends ApiAbstract
      * Retrieves information about a DOI from the API.
      *
      * @param string $doi The Digital Object Identifier (DOI) to retrieve information for.
-     *
      * @return array The response body as an associative array.
      */
-    public function getDois(string $doi): array
+    public function getWork(string $doi): array
     {
         if (empty($doi)) return [];
 

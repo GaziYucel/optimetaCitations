@@ -15,55 +15,40 @@ namespace APP\plugins\generic\citationManager\classes\External\Orcid;
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
 use APP\plugins\generic\citationManager\classes\DataModels\Citation\AuthorModel;
 use APP\plugins\generic\citationManager\classes\DataModels\Citation\CitationModel;
-use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataJournal;
-use APP\plugins\generic\citationManager\classes\DataModels\Metadata\MetadataPublication;
-use APP\plugins\generic\citationManager\classes\External\InboundAbstract;
+use APP\plugins\generic\citationManager\classes\Db\PluginDAO;
+use APP\plugins\generic\citationManager\classes\External\ExecuteAbstract;
 use APP\plugins\generic\citationManager\classes\External\Orcid\DataModels\Mappings;
 use APP\plugins\generic\citationManager\classes\Helpers\ArrayHelper;
+use APP\plugins\generic\citationManager\classes\Helpers\ClassHelper;
 use APP\plugins\generic\citationManager\classes\PID\Orcid;
-use Context;
-use Issue;
-use Publication;
-use Submission;
 
-class Inbound extends InboundAbstract
+class Inbound extends ExecuteAbstract
 {
     /** @copydoc InboundAbstract::__construct */
-    public function __construct(CitationManagerPlugin $plugin,
-                                ?Context              $journal,
-                                ?Issue                $issue,
-                                ?Submission           $submission,
-                                ?Publication          $publication,
-                                ?MetadataJournal      $metadataJournal,
-                                ?MetadataPublication  $metadataPublication,
-                                ?array                $authors,
-                                ?array                $citations)
+    public function __construct(CitationManagerPlugin &$plugin, int $submissionId, int $publicationId)
     {
-        parent::__construct($plugin, $journal, $issue, $submission, $publication,
-            $metadataJournal, $metadataPublication, $authors, $citations);
-
+        parent::__construct($plugin, $submissionId, $publicationId);
         $this->api = new Api($plugin);
     }
 
-    /**
-     * Process this external service
-     *
-     * @return bool
-     */
+    /** @copydoc InboundAbstract::execute */
     public function execute(): bool
     {
-        $countCitations = count($this->citations);
+        $pluginDao = new PluginDAO();
+        $publication = $pluginDao->getPublication($this->publicationId);
+
+        $citations = $pluginDao->getCitations($publication);
+        $countCitations = count($citations);
         for ($i = 0; $i < $countCitations; $i++) {
 
             // skip if authors empty
-            if (empty($this->citations[$i]->authors) || !is_countable($this->citations[$i]->authors))
+            if (empty($citations[$i]->authors) || !is_countable($citations[$i]->authors))
                 continue;
 
             /** @var CitationModel $citation */
-            $citation = $this->citations[$i];
+            $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(),$citations[$i]);
 
             $countAuthors = count($citation->authors);
-
             for ($j = 0; $j < $countAuthors; $j++) {
                 /* @var AuthorModel $author */
                 $author = $citation->authors[$j];
@@ -89,8 +74,11 @@ class Inbound extends InboundAbstract
                 $citation->authors[$j] = $author;
             }
 
-            $this->citations[$i] = $citation;
+            $citations[$i] = $citation;
         }
+
+        $publication->setData(CitationManagerPlugin::CITATIONS_STRUCTURED, json_encode($citations));
+        $pluginDao->savePublication($publication);
 
         return true;
     }

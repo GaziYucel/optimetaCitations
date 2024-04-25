@@ -4,48 +4,35 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit17b2eb832ba4a3646c1e9ad7c60c2c2b
+class ComposerStaticInitad8cde92b9ea5aa78548b987215b52b8
 {
-    public static $prefixLengthsPsr4 = array (
-        'A' => 
-        array (
-            'APP\\plugins\\generic\\citationManager\\classes\\' => 44,
-        ),
-    );
-
-    public static $prefixDirsPsr4 = array (
-        'APP\\plugins\\generic\\citationManager\\classes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/classes',
-        ),
-    );
-
     public static $classMap = array (
         'APP\\plugins\\generic\\citationManager\\classes\\DataModels\\Citation\\AuthorModel' => __DIR__ . '/../..' . '/classes/DataModels/Citation/AuthorModel.php',
         'APP\\plugins\\generic\\citationManager\\classes\\DataModels\\Citation\\CitationModel' => __DIR__ . '/../..' . '/classes/DataModels/Citation/CitationModel.php',
-        'APP\\plugins\\generic\\citationManager\\classes\\DataModels\\Metadata\\MetadataAuthor' => __DIR__ . '/../..' . '/classes/DataModels/Metadata/MetadataAuthor.php',
-        'APP\\plugins\\generic\\citationManager\\classes\\DataModels\\Metadata\\MetadataJournal' => __DIR__ . '/../..' . '/classes/DataModels/Metadata/MetadataJournal.php',
-        'APP\\plugins\\generic\\citationManager\\classes\\DataModels\\Metadata\\MetadataPublication' => __DIR__ . '/../..' . '/classes/DataModels/Metadata/MetadataPublication.php',
+        'APP\\plugins\\generic\\citationManager\\classes\\DataModels\\MetadataAuthor' => __DIR__ . '/../..' . '/classes/DataModels/MetadataAuthor.php',
+        'APP\\plugins\\generic\\citationManager\\classes\\DataModels\\MetadataJournal' => __DIR__ . '/../..' . '/classes/DataModels/MetadataJournal.php',
+        'APP\\plugins\\generic\\citationManager\\classes\\DataModels\\MetadataPublication' => __DIR__ . '/../..' . '/classes/DataModels/MetadataPublication.php',
         'APP\\plugins\\generic\\citationManager\\classes\\Db\\PluginDAO' => __DIR__ . '/../..' . '/classes/Db/PluginDAO.php',
         'APP\\plugins\\generic\\citationManager\\classes\\Db\\PluginSchema' => __DIR__ . '/../..' . '/classes/Db/PluginSchema.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\ApiAbstract' => __DIR__ . '/../..' . '/classes/External/ApiAbstract.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\Crossref\\Api' => __DIR__ . '/../..' . '/classes/External/Crossref/Api.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\DataCite\\Api' => __DIR__ . '/../..' . '/classes/External/DataCite/Api.php',
+        'APP\\plugins\\generic\\citationManager\\classes\\External\\ExecuteAbstract' => __DIR__ . '/../..' . '/classes/External/ExecuteAbstract.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\GitHub\\Api' => __DIR__ . '/../..' . '/classes/External/GitHub/Api.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\GitHub\\DataModels\\Issue' => __DIR__ . '/../..' . '/classes/External/GitHub/DataModels/Issue.php',
-        'APP\\plugins\\generic\\citationManager\\classes\\External\\InboundAbstract' => __DIR__ . '/../..' . '/classes/External/InboundAbstract.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\OpenAlex\\Api' => __DIR__ . '/../..' . '/classes/External/OpenAlex/Api.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\OpenAlex\\DataModels\\Mappings' => __DIR__ . '/../..' . '/classes/External/OpenAlex/DataModels/Mappings.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\OpenAlex\\Inbound' => __DIR__ . '/../..' . '/classes/External/OpenAlex/Inbound.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\OpenCitations\\Api' => __DIR__ . '/../..' . '/classes/External/OpenCitations/Api.php',
+        'APP\\plugins\\generic\\citationManager\\classes\\External\\OpenCitations\\Constants' => __DIR__ . '/../..' . '/classes/External/OpenCitations/Constants.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\OpenCitations\\DataModels\\WorkCitingCited' => __DIR__ . '/../..' . '/classes/External/OpenCitations/DataModels/WorkCitingCited.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\OpenCitations\\DataModels\\WorkMetaData' => __DIR__ . '/../..' . '/classes/External/OpenCitations/DataModels/WorkMetaData.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\OpenCitations\\Outbound' => __DIR__ . '/../..' . '/classes/External/OpenCitations/Outbound.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\Orcid\\Api' => __DIR__ . '/../..' . '/classes/External/Orcid/Api.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\Orcid\\DataModels\\Mappings' => __DIR__ . '/../..' . '/classes/External/Orcid/DataModels/Mappings.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\Orcid\\Inbound' => __DIR__ . '/../..' . '/classes/External/Orcid/Inbound.php',
-        'APP\\plugins\\generic\\citationManager\\classes\\External\\OutboundAbstract' => __DIR__ . '/../..' . '/classes/External/OutboundAbstract.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\Wikidata\\Api' => __DIR__ . '/../..' . '/classes/External/Wikidata/Api.php',
+        'APP\\plugins\\generic\\citationManager\\classes\\External\\Wikidata\\Constants' => __DIR__ . '/../..' . '/classes/External/Wikidata/Constants.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\Wikidata\\DataModels\\Claim' => __DIR__ . '/../..' . '/classes/External/Wikidata/DataModels/Claim.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\Wikidata\\DataModels\\Language' => __DIR__ . '/../..' . '/classes/External/Wikidata/DataModels/Language.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\Wikidata\\DataModels\\Property' => __DIR__ . '/../..' . '/classes/External/Wikidata/DataModels/Property.php',
@@ -87,9 +74,7 @@ class ComposerStaticInit17b2eb832ba4a3646c1e9ad7c60c2c2b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit17b2eb832ba4a3646c1e9ad7c60c2c2b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit17b2eb832ba4a3646c1e9ad7c60c2c2b::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit17b2eb832ba4a3646c1e9ad7c60c2c2b::$classMap;
+            $loader->classMap = ComposerStaticInitad8cde92b9ea5aa78548b987215b52b8::$classMap;
 
         }, null, ClassLoader::class);
     }
