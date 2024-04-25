@@ -66,23 +66,23 @@ class DepositHandler
 
         // journal
         $contextChanged = false;
-        foreach(ClassHelper::getClassConstantsAndValuesAsArray(new MetadataJournal()) as $name => $key) {
+        foreach (ClassHelper::getClassConstantsAndValuesAsArray(new MetadataJournal()) as $name => $key) {
             if (empty($context->getData($key))) {
                 $context->setData($key, '');
                 $contextChanged = true;
             }
         }
-        if($contextChanged) $pluginDao->saveContext($context);
+        if ($contextChanged) $pluginDao->saveContext($context);
 
         // publication metadata
         $publicationChanged = false;
-        foreach(ClassHelper::getClassConstantsAndValuesAsArray(new MetadataPublication()) as $name => $key) {
+        foreach (ClassHelper::getClassConstantsAndValuesAsArray(new MetadataPublication()) as $name => $key) {
             if (empty($publication->getData($key))) {
                 $publication->setData($key, '');
                 $publicationChanged = true;
             }
         }
-        if($publicationChanged) $pluginDao->savePublication($publication);
+        if ($publicationChanged) $pluginDao->savePublication($publication);
 
         // authors of publication
         /* @var Author $author */
@@ -98,7 +98,7 @@ class DepositHandler
             }
             if ($authorChanged) $pluginDao->saveAuthor($author);
         }
-        if($authorsChanged) $publication = $pluginDao->getPublication($publicationId);
+        if ($authorsChanged) $publication = $pluginDao->getPublication($publicationId);
 
         // iterate services
         /* @var ExecuteAbstract $service */
