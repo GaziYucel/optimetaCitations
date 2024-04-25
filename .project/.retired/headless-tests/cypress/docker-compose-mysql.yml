@@ -1,0 +1,42 @@
+# @file cypress/docker-compose-mysql.yml
+#
+# @copyright (c) 2022 Gazi Yücel
+# @copyright (c) 2022 Daniel Nüst
+# @license Distributed under the GNU GPL v3. For full terms see the file LICENSE.
+
+version: '3.6'
+
+networks:
+  inside:
+
+services: 
+
+    db:
+        image: mariadb:10.2
+        env_file:
+            - .env
+        container_name: "${OJS_DB_HOST}"
+        environment:
+            MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+            MYSQL_DATABASE: "${MYSQL_DATABASE}"
+            MYSQL_USER: "${MYSQL_USER}"
+            MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+        restart: always
+        networks:
+            - inside
+    
+    ojs:
+        image: "pkpofficial/ojs:${OJS_VERSION}"
+        container_name: ojs
+        env_file:
+            - .env
+        restart: always
+        ports:
+            - "${OJS_PORT:-8080}:80"
+        volumes:
+            - ./logs:/var/log/apache2
+            - ../:/var/www/html/plugins/generic/citationManager
+        depends_on:
+            - db
+        networks:
+            - inside

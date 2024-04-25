@@ -14,6 +14,7 @@ namespace APP\plugins\generic\citationManager\classes\Workflow;
 
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
 use APP\plugins\generic\citationManager\classes\DataModels\Citation\AuthorModel;
+use APP\plugins\generic\citationManager\classes\DataModels\MetadataJournal;
 use APP\plugins\generic\citationManager\classes\Db\PluginDAO;
 use APP\plugins\generic\citationManager\classes\Helpers\ClassHelper;
 use APP\plugins\generic\citationManager\classes\PID\Doi;
@@ -32,9 +33,9 @@ class WorkflowTab
     public CitationManagerPlugin $plugin;
 
     /** @param CitationManagerPlugin $plugin */
-    public function __construct(CitationManagerPlugin $plugin)
+    public function __construct(CitationManagerPlugin &$plugin)
     {
-        $this->plugin = $plugin;
+        $this->plugin = &$plugin;
     }
 
     /**
@@ -71,18 +72,16 @@ class WorkflowTab
             array_keys($locales), $locales);
 
         $form = new WorkflowForm(
-            CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED_FORM,
+            CitationManagerPlugin::CITATIONS_STRUCTURED,
             'PUT',
             $apiBaseUrl . 'submissions/' . $submissionId . '/publications/' . $publicationId,
             $locales);
 
         $state = $templateMgr->getTemplateVars('state');
-        $state['components'][CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED_FORM] = $form->getConfig();
+        $state['components'][CitationManagerPlugin::CITATIONS_STRUCTURED] = $form->getConfig();
         $templateMgr->assign('state', $state);
 
         $templateParameters = [
-            'metadataJournal' => json_encode($pluginDao->getMetadataJournal($context->getId())),
-            'authorModel' => json_encode(ClassHelper::getClassAsArrayNullAssigned(new AuthorModel())),
             'assetsUrl' => $request->getBaseUrl() . '/' . $this->plugin->getPluginPath() . '/assets',
             'apiBaseUrl' => $apiBaseUrl,
             'url' => [
@@ -91,7 +90,15 @@ class WorkflowTab
                 'openCitations' => GitHubIssue::prefix,
                 'orcid' => Orcid::prefix,
                 'wikidata' => Wikidata::prefix
-            ]
+            ],
+            'authorModel' => json_encode(ClassHelper::getClassAsArrayNullAssigned(new AuthorModel())),
+            'publication' => json_encode($publication->_data),
+            'publicationId' => $publicationId,
+            'citationStructured' => json_encode($pluginDao->getCitations($publication)),
+            'metadataJournal' => json_encode([
+                MetadataJournal::openAlexId => $context->getData(MetadataJournal::openAlexId),
+                MetadataJournal::wikidataId => $context->getData(MetadataJournal::wikidataId)
+            ])
         ];
         $templateMgr->assign($templateParameters);
 

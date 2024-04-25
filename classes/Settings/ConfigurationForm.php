@@ -30,18 +30,18 @@ class ConfigurationForm extends Form
 
     /** @var string[] Array of variables saved in the database. */
     private array $settings = [
-        CitationManagerPlugin::CITATION_MANAGER_WIKIDATA_USERNAME,
-        CitationManagerPlugin::CITATION_MANAGER_WIKIDATA_PASSWORD,
-        CitationManagerPlugin::CITATION_MANAGER_OPEN_CITATIONS_OWNER,
-        CitationManagerPlugin::CITATION_MANAGER_OPEN_CITATIONS_REPOSITORY,
-        CitationManagerPlugin::CITATION_MANAGER_OPEN_CITATIONS_TOKEN,
-        CitationManagerPlugin::CITATION_MANAGER_FRONTEND_SHOW_STRUCTURED
+        WikidataConstants::username,
+        WikidataConstants::password,
+        OpenCitationsConstants::owner,
+        OpenCitationsConstants::repository,
+        OpenCitationsConstants::token,
+        CitationManagerPlugin::FRONTEND_SHOW_STRUCTURED
     ];
 
     /** @copydoc Form::__construct() */
-    public function __construct(CitationManagerPlugin $plugin)
+    public function __construct(CitationManagerPlugin &$plugin)
     {
-        $this->plugin = $plugin;
+        $this->plugin = &$plugin;
 
         // Always add POST and CSRF validation to secure your form.
         $this->addCheck(new FormValidatorPost($this));
@@ -102,7 +102,7 @@ class ConfigurationForm extends Form
         foreach ($this->settings as $key) {
             $value = $this->getData($key);
 
-            if ($key === CitationManagerPlugin::CITATION_MANAGER_FRONTEND_SHOW_STRUCTURED && !empty($value)) {
+            if ($key === CitationManagerPlugin::FRONTEND_SHOW_STRUCTURED && !empty($value)) {
                 $value = "true";
             }
 

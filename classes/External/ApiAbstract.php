@@ -32,9 +32,9 @@ abstract class ApiAbstract
      * @param CitationManagerPlugin $plugin
      * @param string|null $url The base URL for API requests (optional).
      */
-    function __construct(CitationManagerPlugin $plugin, ?string $url = '')
+    function __construct(CitationManagerPlugin &$plugin, ?string $url = '')
     {
-        $this->plugin = $plugin;
+        $this->plugin = &$plugin;
         if (!empty($url)) $this->url = $url;
     }
 

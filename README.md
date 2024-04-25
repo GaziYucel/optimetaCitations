@@ -20,12 +20,13 @@ Citation Manager for OJS
 - [Development](#development)
     - [Structure](#structure)
     - [Notes](#notes)
+    - [Debugging](#debugging)
     - [Tests](#tests)
 - [Contribute](#contribute)
 - [License](#license)
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
 
 # Features
 
@@ -66,7 +67,7 @@ Metadata
 | name      | description                                  | example                                      |
 |-----------|----------------------------------------------|----------------------------------------------|
 | id        | doi, issn, isbn, url, wikidata, wikipedia    | doi:3233/ds-170012                           |
-| title     | the title of the document                    |                                              |                                         
+| title     | the title of the document                    |                                              |
 | author    | name of author(s), orcid if available        | Yücel, Gazi [orcid:0000-0002-2013-6920]      |
 | pub_date  | the date of publication of the document      | 2021-02-28                                   |
 | venue     | the venue of the document                    | Journal of Public Knowledge [issn:0378-5955] |
@@ -131,9 +132,9 @@ Only items which have unique identifiers will be deposited to Wikidata.
 
 Get the correct version for your OJS version:
 
-- branch stable-3_3_0: use this version for OJS version 3.3.0.x  
+- branch stable-3_3_0: use this version for OJS version 3.3.0.x
   `git clone -b stable-3_3_0 https://github.com/TIBHannover/citationManager`
-- branch stable-3_4_0: use this version for OJS version 3.4.0.x  
+- branch stable-3_4_0: use this version for OJS version 3.4.0.x
   `git clone -b stable-3_4_0 https://github.com/TIBHannover/citationManager`
 
 ## Install via direct download
@@ -165,7 +166,7 @@ For this you need a GitHub account, if you have none please register one through
 - Select "No expiration" at Expiration
 - Check the checkbox "public_repo"; leave all other checkboxes unchecked
 - Click on the button "Generate token"
-- You will be provided the token; save this token, as you will not shown this again
+- You will be provided the token; save this token, as you will not be shown this again
 - Login to your OJS with an administrator account
 - Navigate to Settings > Website > Plugins and find "Citation Manager Plugin" on the page
 - Click on the arrow at the left and click "Settings"
@@ -176,8 +177,8 @@ For this you need a GitHub account, if you have none please register one through
 
 ### Wikidata.org
 
-Depositing at Wikidata.org will be done through the wikidata API.  
-For this you need an account on Wikidata.org.  
+Depositing at Wikidata.org will be done through the wikidata API.
+For this you need an account on Wikidata.org.
 If you have none please register one through https://www.wikidata.org/w/index.php?title=Special:CreateAccount.
 
 - Login at https://www.wikidata.org and navigate to https://www.wikidata.org/wiki/Special:BotPasswords
@@ -214,7 +215,7 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
     ├─ classes                       # Main folder with models / logic
     │  ├─ DataModels                 # Data models used in this plugin
     │  │  ├─ Citation                # Data models for citations, authors in citations
-    │  │  └─ Metadata                # Metadata for OJS authors, journals and publications
+    │  │  └─ Metadata*               # Metadata for OJS authors, journals and publications
     │  └─ Db                         # Database related classes
     │  │  ├─ PluginDAO.php           # Retrieve / save data to / from database
     │  │  └─ PluginSchema.php        # Schema extestions for data models
@@ -222,12 +223,12 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
     │  |  ├─ Wikidata                # Classes for Wikidata.org
     |  |  |  ├─ DataModels           # Data models for this service, e.g. mappings
     │  |  |  ├─ Api.php              # Methods for connecting to their API
+    │  |  |  ├─ Constants.php        # Constants used in Api's, e.g. username, password
     │  |  |  ├─ Inbound.php          # Methods for retrieving data
-    │  |  |  └─ Outbound.php         # Methods for depositing data 
-    |  |  ├─ ... Other services      # Other services follow the same structure
+    │  |  |  └─ Outbound.php         # Methods for depositing data
+    |  |  ├─ ...Other services       # Other services follow the same structure
     |  |  ├─ ApiAbstract.php         # This class is used by service Api class
-    |  |  ├─ InboundAbstract.php     # This class is used by service Inbound class
-    |  |  └─ OutboundAbstract.php    # This class is used by service Outbound class
+    |  |  └─ ExecuteAbstract.php     # This class is used by service Inbound / Outbound classes
     │  ├─ FrontEnd                   # Classes for the front end, e.g. ArticleView
     │  ├─ Handlers                   # Handlers, e.g. Outbound, Inbound, API
     │  ├─ Helpers                    # Helper classes
@@ -235,28 +236,27 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
     │  ├─ ScheduledTasks             # Classes for the scheduler
     │  ├─ Settings                   # Settings classes
     │  └─ Workflow                   # Classes or the workflow and submission wizard
-    ├─ cypress                       # Cypress tests
     ├─ docs                          # Documentation, examples
     ├─ locale                        # Language files
     ├─ templates                     # Templates folder
     ├─ tests                         # Tests folder
-    │  └─ classes                    # Classes for tests
+    │  ├─ classes                    # Classes for tests
+    │  ├─ composer.json              # Composer configuration file for tests
+    │  └─ vendor                     # Composer autoload and dependencies
     ├─ vendor                        # Composer autoload and dependencies
     ├─ .gitignore                    # Git ignore file
     ├─ CitationManagerPlugin.php     # Main class of plugin
     ├─ composer.json                 # Composer configuration file
     ├─ CODE_OF_CONDUCT.md            # Code of conduct
-    ├─ cypress.config.js             # Cypress configuration file
     ├─ index.php                     # Entry point plugin (ojs version 3.3.0)
     ├─ LICENSE                       # License file
     ├─ README.md                     # This file
-    ├─ package.json                  # npm packaging configuration
     ├─ scheduledTasks.xml            # Scheduler configuration file
     └─ version.xml                   # Version information of the plugin
 
-Notes
+## Notes
 
-- Autoload of the classes in the folder `classes/` is done with composer according 
+- Autoload of the classes in the folder `classes/` is done with composer according
   to the PSR-4 specification.
 - All classes have namespaces and are structured according to PSR-4 standard.
 - If you add or remove classes in the `classes` folder, run the following
@@ -275,7 +275,7 @@ You can find the `files_dir` constant in your config.inc.php file.
 
 Please put the following in the file config.inc.php to enable this:
 ```
-[citationmanager]
+[CitationManagerPlugin]
 isDebugMode=true
 ```
 
@@ -288,12 +288,18 @@ _Careful with sensitive information, (passwords, tokens) will be written in plai
 If you are developing, you might use the classes in `tests/classes/`.
 The classes in this folder have the same folder and namespace structure as in `classes` folder.
 The purpose of these classes is to override the main classes.
-You can accomplish this by running the composer command `composer dump-autoload -o --dev`.
+You can accomplish this by running the composer command `composer dump-autoload -o --dev -d tests`.
 If this is done, then test or sandbox versions of API's will be used.
 For example test.wikidata.org instead of www.wikidata.org.
-Autoload of the classes is done with composer [classmap](https://getcomposer.org/doc/04-schema.md#classmap).  
+Autoload of the classes is done with composer [classmap](https://getcomposer.org/doc/04-schema.md#classmap).
 First the classes in `tests/classes/` are loaded, after which the classes in `classes/` are loaded.
 By doing this in this order, all classes present in `tests/classes/` will override the classes in `classes/`.
+
+Please put the following in the file config.inc.php to enable this:
+```
+[CitationManagerPlugin]
+isTestMode=true
+```
 
 **Headless tests**
 
@@ -365,7 +371,7 @@ npm run-script test_open
 
 | name        | description                  |
 |-------------|------------------------------|
-| openalex_id | The OpenAlex ID of the work  | 
+| openalex_id | The OpenAlex ID of the work  |
 | wikidata_id | The Wikidata QID of the work |
 
 **MetadataPublication**
@@ -381,7 +387,7 @@ npm run-script test_open
 
 All help is welcome: asking questions, providing documentation, testing, or even development.
 
-Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md).
+Please note that this project is released with a [Contributor Code of Conduct](code_of_conduct.md).
 By participating in this project you agree to abide by its terms.
 
 # License

@@ -17,9 +17,9 @@ import('lib.pkp.classes.scheduledTask.ScheduledTask');
 
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
 use APP\plugins\generic\citationManager\classes\Handlers\ProcessHandler;
-use PluginRegistry;
 use ScheduledTask;
 use ScheduledTaskHelper;
+use PluginRegistry;
 
 class ProcessTask extends ScheduledTask
 {

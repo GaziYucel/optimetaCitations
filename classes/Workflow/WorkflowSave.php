@@ -20,47 +20,19 @@ class WorkflowSave
     public CitationManagerPlugin $plugin;
 
     /** @param CitationManagerPlugin $plugin */
-    public function __construct(CitationManagerPlugin $plugin)
+    public function __construct(CitationManagerPlugin &$plugin)
     {
-        $this->plugin = $plugin;
+        $this->plugin = &$plugin;
     }
 
     /**
      * Process data from post/put
      *
-     * @param string $hookname
+     * @param string $hookName
      * @param array $args [ Publication, parameters/publication, Request ]
      */
-    public function execute(string $hookname, array $args): void
+    public function execute(string $hookName, array $args): void
     {
-        $publication = $args[0];
-        $params = $args[2];
-        $request = $this->plugin->getRequest();
-
-        // citationsStructured
-
-        // submissionWizard
-        $citationsStructured = $request->getuserVar(CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED);
-
-        // publicationTab
-        if (array_key_exists(CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED, $params)) {
-            if (!empty($params[CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED])) {
-                $citationsStructured = $params[CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED];
-            }
-        }
-        $publication->setData(CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED, $citationsStructured);
-
-        // metadataPublication
-
-        // submissionWizard
-        $metadataPublication = $request->getuserVar(CitationManagerPlugin::CITATION_MANAGER_METADATA_PUBLICATION);
-
-        // publicationTab
-        if (array_key_exists(CitationManagerPlugin::CITATION_MANAGER_METADATA_PUBLICATION, $params)) {
-            if (!empty($params[CitationManagerPlugin::CITATION_MANAGER_CITATIONS_STRUCTURED])) {
-                $metadataPublication = $params[CitationManagerPlugin::CITATION_MANAGER_METADATA_PUBLICATION];
-            }
-        }
-        $publication->setData(CitationManagerPlugin::CITATION_MANAGER_METADATA_PUBLICATION, $metadataPublication);
+        // nothing to do here
     }
 }
