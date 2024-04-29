@@ -109,20 +109,24 @@ class PluginAPIHandler extends APIHandler
     {
         $request = $this->getRequest();
 
-        if (!empty($request->getUserVars()) && sizeof($request->getUserVars()) > 0) {
-            if (isset($request->getUserVars()['submissionId']))
-                $submissionId = trim($request->getUserVars()['submissionId']);
-            if (isset($request->getUserVars()['publicationId']))
-                $publicationId = trim($request->getUserVars()['publicationId']);
-            if (isset($request->getUserVars()['citationsRaw']))
-                $citationsRaw = trim($request->getUserVars()['citationsRaw']);
-        }
+        $body = json_decode(file_get_contents('php://input'), true);
+
+        if (empty($body) || json_last_error() !== JSON_ERROR_NONE)
+            return $response->withJson($this->responseBody, 200);
+
+        if (isset($body['submissionId'])) $submissionId = trim($body['submissionId']);
+        if (isset($body['publicationId'])) $publicationId = trim($body['publicationId']);
+        if (isset($body['citationsRaw'])) $citationsRaw = trim($body['citationsRaw']);
 
         if (empty($submissionId) || empty($publicationId) || empty($citationsRaw))
             return $response->withJson($this->responseBody, 200);
 
         $process = new ProcessHandler();
-        $process->execute((int)$submissionId, (int)$publicationId, $citationsRaw);
+        $process->execute(
+            $request->getContext()->getId(),
+            (int)$submissionId,
+            (int)$publicationId,
+            $citationsRaw);
 
         return $this->response('process', $publicationId, $response);
     }
@@ -139,20 +143,24 @@ class PluginAPIHandler extends APIHandler
     {
         $request = $this->getRequest();
 
-        if (!empty($request->getUserVars()) && sizeof($request->getUserVars()) > 0) {
-            if (isset($request->getUserVars()['submissionId']))
-                $submissionId = trim($request->getUserVars()['submissionId']);
-            if (isset($request->getUserVars()['publicationId']))
-                $publicationId = trim($request->getUserVars()['publicationId']);
-            if (isset($request->getUserVars()['citations']))
-                $citations = json_decode(trim($request->getUserVars()['citations']), true);
-        }
+        $body = json_decode(file_get_contents('php://input'), true);
+
+        if (empty($body) || json_last_error() !== JSON_ERROR_NONE)
+            return $response->withJson($this->responseBody, 200);
+
+        if (isset($body['submissionId'])) $submissionId = trim($body['submissionId']);
+        if (isset($body['publicationId'])) $publicationId = trim($body['publicationId']);
+        if (isset($body['citations'])) $citations = $body['citations'];
 
         if (empty($submissionId) || empty($publicationId) || empty($citations))
             return $response->withJson($this->responseBody, 200);
 
         $deposit = new DepositHandler();
-        $deposit->execute((int)$submissionId, (int)$publicationId, $citations);
+        $deposit->execute(
+            $request->getContext()->getId(),
+            (int)$submissionId,
+            (int)$publicationId,
+            (array)$citations);
 
         return $this->response('deposit', $publicationId, $response);
     }

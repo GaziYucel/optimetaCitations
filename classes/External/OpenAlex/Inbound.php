@@ -28,23 +28,31 @@ use APP\plugins\generic\citationManager\classes\PID\Orcid;
 class Inbound extends ExecuteAbstract
 {
     /** @copydoc InboundAbstract::__construct */
-    public function __construct(CitationManagerPlugin &$plugin, int $submissionId, int $publicationId)
+    public function __construct(CitationManagerPlugin &$plugin,
+                                int                   $contextId,
+                                int                   $submissionId,
+                                int                   $publicationId)
     {
-        parent::__construct($plugin, $submissionId, $publicationId);
-        $this->api = new Api($plugin);
+        parent::__construct(
+            $plugin,
+            $contextId,
+            $submissionId,
+            $publicationId);
+
+        $this->api = new Api();
     }
 
     /** @copydoc InboundAbstract::execute */
     public function execute(): bool
     {
         $pluginDao = new PluginDAO();
-        $context = $this->plugin->getRequest()->getContext();
+        $context = $pluginDao->getContext($this->contextId);
         $publication = $pluginDao->getPublication($this->publicationId);
 
         // journal
         $onlineIssn = $context->getData('onlineIssn');
         $openAlexId = $context->getData(MetadataJournal::openAlexId);
-        if(empty($openAlexId) && !empty($onlineIssn)){
+        if (empty($openAlexId) && !empty($onlineIssn)) {
             $source = $this->api->getSource($onlineIssn);
 
             if (!empty($source) && !empty($source['id']) && !empty($source['issn_l'] && $source['issn_l'] === $onlineIssn)) {
@@ -59,7 +67,7 @@ class Inbound extends ExecuteAbstract
         $countCitations = count($citations);
         for ($i = 0; $i < $countCitations; $i++) {
             /* @var CitationModel $citation */
-            $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(),$citations[$i]);
+            $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(), $citations[$i]);
 
             if ($citation->isProcessed || empty($citation->doi) || !empty($citation->openalex_id))
                 continue;

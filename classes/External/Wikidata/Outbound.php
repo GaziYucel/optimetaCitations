@@ -33,10 +33,22 @@ class Outbound extends ExecuteAbstract
     private Property $property;
 
     /** @copydoc InboundAbstract::__construct */
-    public function __construct(CitationManagerPlugin &$plugin, int $submissionId, int $publicationId)
+    public function __construct(CitationManagerPlugin &$plugin,
+                                int                   $contextId,
+                                int                   $submissionId,
+                                int                   $publicationId)
     {
-        parent::__construct($plugin, $submissionId, $publicationId);
-        $this->api = new Api($plugin);
+        parent::__construct(
+            $plugin,
+            $contextId,
+            $submissionId,
+            $publicationId);
+
+        $this->api = new Api([
+            'username' => $this->plugin->getSetting($this->contextId, Constants::username),
+            'password' => $this->plugin->getSetting($this->contextId, Constants::password)
+        ]);
+
         $this->property = new Property();
     }
 
@@ -51,7 +63,7 @@ class Outbound extends ExecuteAbstract
         if (!$this->api->isDepositPossible()) return false;
 
         $pluginDao = new PluginDAO();
-        $context = $this->plugin->getRequest()->getContext();
+        $context = $pluginDao->getContext($this->contextId);
         $publication = $pluginDao->getPublication($this->publicationId);
         $locale = $publication->getData('locale');
 

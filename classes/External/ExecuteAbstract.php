@@ -23,6 +23,9 @@ class ExecuteAbstract
     protected CitationManagerPlugin $plugin;
 
     /** @var int */
+    protected int $contextId = 0;
+
+    /** @var int */
     protected int $submissionId = 0;
 
     /** @var int */
@@ -32,12 +35,17 @@ class ExecuteAbstract
      * Constructor
      *
      * @param CitationManagerPlugin $plugin
+     * @param int $contextId
      * @param int $submissionId
      * @param int $publicationId
      */
-    public function __construct(CitationManagerPlugin &$plugin, int $submissionId, int $publicationId)
+    public function __construct(CitationManagerPlugin &$plugin,
+                                int                   $contextId,
+                                int                   $submissionId,
+                                int                   $publicationId)
     {
         $this->plugin = &$plugin;
+        $this->contextId = $contextId;
         $this->submissionId = $submissionId;
         $this->publicationId = $publicationId;
     }

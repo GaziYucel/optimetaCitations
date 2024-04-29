@@ -41,10 +41,22 @@ class Outbound extends ExecuteAbstract
     protected string $defaultType = 'journal article';
 
     /** @copydoc InboundAbstract::__construct */
-    public function __construct(CitationManagerPlugin &$plugin, int $submissionId, int $publicationId)
+    public function __construct(CitationManagerPlugin &$plugin,
+                                int                   $contextId,
+                                int                   $submissionId,
+                                int                   $publicationId)
     {
-        parent::__construct($plugin, $submissionId, $publicationId);
-        $this->api = new Api($plugin);
+        parent::__construct(
+            $plugin,
+            $contextId,
+            $submissionId,
+            $publicationId);
+
+        $this->api = new Api([
+            'owner' => $this->plugin->getSetting($this->contextId, Constants::owner),
+            'repository' => $this->plugin->getSetting($this->contextId, Constants::repository),
+            'token' => $this->plugin->getSetting($this->contextId, Constants::token)
+        ]);
     }
 
     /**
@@ -102,7 +114,8 @@ class Outbound extends ExecuteAbstract
      */
     private function getPublicationCsv(Publication $publication, Issue $issue): string
     {
-        $context = $this->plugin->getRequest()->getContext();
+        $pluginDao = new PluginDAO();
+        $context = $pluginDao->getContext($this->contextId);
         $work = new WorkMetaData();
 
         $locale = $publication->getData('locale');

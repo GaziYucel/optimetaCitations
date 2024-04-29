@@ -25,10 +25,18 @@ use APP\plugins\generic\citationManager\classes\PID\Orcid;
 class Inbound extends ExecuteAbstract
 {
     /** @copydoc InboundAbstract::__construct */
-    public function __construct(CitationManagerPlugin &$plugin, int $submissionId, int $publicationId)
+    public function __construct(CitationManagerPlugin &$plugin,
+                                int                   $contextId,
+                                int                   $submissionId,
+                                int                   $publicationId)
     {
-        parent::__construct($plugin, $submissionId, $publicationId);
-        $this->api = new Api($plugin);
+        parent::__construct(
+            $plugin,
+            $contextId,
+            $submissionId,
+            $publicationId);
+
+        $this->api = new Api();
     }
 
     /** @copydoc InboundAbstract::execute */
@@ -46,7 +54,7 @@ class Inbound extends ExecuteAbstract
                 continue;
 
             /** @var CitationModel $citation */
-            $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(),$citations[$i]);
+            $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(), $citations[$i]);
 
             $countAuthors = count($citation->authors);
             for ($j = 0; $j < $countAuthors; $j++) {

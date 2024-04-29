@@ -19,6 +19,7 @@ use APP\plugins\generic\citationManager\classes\DataModels\MetadataPublication;
 use APP\plugins\generic\citationManager\classes\Db\PluginDAO;
 use APP\plugins\generic\citationManager\classes\External\ExecuteAbstract;
 use APP\plugins\generic\citationManager\classes\Helpers\ClassHelper;
+use APP\plugins\generic\citationManager\classes\Helpers\LogHelper;
 use Author;
 use Application;
 use Publication;
@@ -32,7 +33,7 @@ class DepositHandler
     /** @var CitationManagerPlugin */
     public CitationManagerPlugin $plugin;
 
-    /** @var array|string[] */
+    /** @var array|string[] A list of external services processed */
     private array $services = [
         '\APP\plugins\generic\citationManager\classes\External\OpenCitations\Outbound',
         '\APP\plugins\generic\citationManager\classes\External\Wikidata\Outbound'
@@ -48,18 +49,19 @@ class DepositHandler
     /**
      * Deposit publication and citations to external services.
      *
+     * @param int $contextId
      * @param int $submissionId The ID of the submission.
      * @param int $publicationId The ID of the publication.
      * @param array $citations Array of citations to be deposited.
      * @return bool
      */
-    public function execute(int $submissionId, int $publicationId, array $citations): bool
+    public function execute(int $contextId, int $submissionId, int $publicationId, array $citations): bool
     {
         if (empty($submissionId) || empty($publicationId) || empty($citations)) return false;
 
         $pluginDao = new PluginDAO();
         $publication = $pluginDao->getPublication($publicationId);
-        $context = $this->plugin->getRequest()->getContext();
+        $context = $pluginDao->getContext($contextId);
 
         // return false if no doi found
         if (empty($publication->getStoredPubId('doi')) || empty($issue)) return false;
@@ -101,11 +103,21 @@ class DepositHandler
         if ($authorsChanged) $publication = $pluginDao->getPublication($publicationId);
 
         // iterate services
+        $services = '';
         /* @var ExecuteAbstract $service */
         foreach ($this->services as $serviceClass) {
-            $service = new $serviceClass ($this->plugin, $submissionId, $publicationId);
+            $service = new $serviceClass ($this->plugin, $contextId, $submissionId, $publicationId);
             $service->execute();
+            $services .= explode('\\', $serviceClass)[7] . ',';
         }
+
+        LogHelper::logInfo([
+            'title' => $publication->getData('title')[$publication->getData('locale')],
+            'submission' => $submissionId,
+            'publication' => $publicationId,
+            'services' => trim($services, ','),
+            'status' => 'processed'
+        ]);
 
         return true;
     }
@@ -117,6 +129,10 @@ class DepositHandler
      */
     public function batchExecute(): bool
     {
+        $batchFilter = [
+            Submission::STATUS_PUBLISHED
+        ];
+
         $contextIds = [];
 
         $pluginDao = new PluginDAO();
@@ -136,27 +152,27 @@ class DepositHandler
 
             $submissions = Repo::submission()->getCollector()
                 ->filterByContextIds([$contextId])
-                ->filterByStatus([Submission::STATUS_PUBLISHED]);
+                ->filterByStatus($batchFilter)
+                ->getMany();
 
             /* @var Submission $submission */
             foreach ($submissions as $submission) {
 
-                $publications = $submission->getPublishedPublications();
+                $publications = $submission->getData('publications');
 
                 /* @var Publication $publication */
                 foreach ($publications as $publication) {
 
                     $citations = $pluginDao->getCitations($publication);
 
-                    // skip if not published or citations empty
-                    if (empty($citations) || $publication->getData('status') !== Submission::STATUS_PUBLISHED)
-                        continue;
+                    if (!in_array($publication->getData('status'), $batchFilter)
+                        || empty($citations)) continue;
 
                     $this->execute(
+                        $contextId,
                         $submission->getId(),
                         $publication->getId(),
-                        $citations
-                    );
+                        $citations);
                 }
             }
         }
