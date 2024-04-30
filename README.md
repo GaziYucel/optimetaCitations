@@ -42,22 +42,28 @@ Citation Manager for OJS
 - OpenAlex.org
     - see [Models for citations](#models-for-citations)
 - Orcid.org
-    - given_name
-    - family_name
+    - givenName
+    - familyName
+- Wikidata.org
+    - Lookup the wikidata id's with following pids
+      - citation doi
+      - author orcid
+      - journal issn_l
 
 ## Task scheduler
 
 ### Process and enrich
 
-- Batch process can be executed from Website > Plugins > Settings.
 - Batch process is automatically triggered by the Task Scheduler.
-- All publications which are not declined are processed.
+- All publications with the following statuses will be processed:
+  - queued
+  - scheduled
 
 ### Deposit
 
-- Batch deposit can be executed from Website > Plugins > Settings.
 - Batch deposit is automatically triggered by the Task Scheduler.
-- All publications which are published are deposited.
+- All publications with the following statuses will be deposited:
+  - published
 
 ## Deposit to OpenCitations
 
