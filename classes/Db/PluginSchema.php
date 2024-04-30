@@ -17,6 +17,7 @@ use APP\plugins\generic\citationManager\classes\DataModels\MetadataAuthor;
 use APP\plugins\generic\citationManager\classes\DataModels\MetadataJournal;
 use APP\plugins\generic\citationManager\classes\DataModels\MetadataPublication;
 use APP\plugins\generic\citationManager\classes\Helpers\ClassHelper;
+use Services;
 
 class PluginSchema
 {
@@ -94,5 +95,16 @@ class PluginSchema
         }
 
         return false;
+    }
+
+    /**
+     * Reload the context so that changes to the context schema can take place.
+     *
+     * @return void
+     */
+    public static function reloadJournalSchema(): void
+    {
+        // import('classes.core.Services');
+        Services::get('schema')->get(SCHEMA_CONTEXT, true);
     }
 }

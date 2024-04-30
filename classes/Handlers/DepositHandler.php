@@ -17,6 +17,7 @@ use APP\plugins\generic\citationManager\classes\DataModels\MetadataAuthor;
 use APP\plugins\generic\citationManager\classes\DataModels\MetadataJournal;
 use APP\plugins\generic\citationManager\classes\DataModels\MetadataPublication;
 use APP\plugins\generic\citationManager\classes\Db\PluginDAO;
+use APP\plugins\generic\citationManager\classes\Db\PluginSchema;
 use APP\plugins\generic\citationManager\classes\External\ExecuteAbstract;
 use APP\plugins\generic\citationManager\classes\Helpers\ClassHelper;
 use APP\plugins\generic\citationManager\classes\Helpers\LogHelper;
@@ -44,6 +45,8 @@ class DepositHandler
         /** @var CitationManagerPlugin $plugin */
         $plugin = PluginRegistry::getPlugin('generic', strtolower(CITATION_MANAGER_PLUGIN_NAME));
         $this->plugin = $plugin;
+
+        PluginSchema::reloadJournalSchema();
     }
 
     /**
