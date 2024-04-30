@@ -69,13 +69,13 @@ class Inbound extends ExecuteAbstract
             /* @var CitationModel $citation */
             $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(), $citations[$i]);
 
-            if ($citation->isProcessed || empty($citation->doi) || !empty($citation->openalex_id))
+            if ($citation->isProcessed || empty($citation->doi) || !empty($citation->openAlexId))
                 continue;
 
             $citation = $this->getCitationWork($citation);
 
-            if (!empty($citation->openalex_id)) $citation->isProcessed = true;
-            $citation->openalex_id = OpenAlex::removePrefix($citation->openalex_id);
+            if (!empty($citation->openAlexId)) $citation->isProcessed = true;
+            $citation->openAlexId = OpenAlex::removePrefix($citation->openAlexId);
 
             $citations[$i] = $citation;
         }
@@ -138,17 +138,17 @@ class Inbound extends ExecuteAbstract
             }
         }
 
-        $authorOut->display_name = trim(str_replace('null', '', $authorOut->display_name));
-        if (empty($authorOut->display_name)) $authorOut->display_name = $authorIn['raw_author_name'];
+        $authorOut->displayName = trim(str_replace('null', '', $authorOut->displayName));
+        if (empty($authorOut->displayName)) $authorOut->displayName = $authorIn['raw_author_name'];
 
-        $authorDisplayNameParts = explode(' ', trim($authorOut->display_name));
+        $authorDisplayNameParts = explode(' ', trim($authorOut->displayName));
         if (count($authorDisplayNameParts) > 1) {
-            $authorOut->family_name = array_pop($authorDisplayNameParts);
-            $authorOut->given_name = implode(' ', $authorDisplayNameParts);
+            $authorOut->familyName = array_pop($authorDisplayNameParts);
+            $authorOut->givenName = implode(' ', $authorDisplayNameParts);
         }
 
-        $authorOut->orcid_id = Orcid::removePrefix($authorOut->orcid_id);
-        $authorOut->openalex_id = OpenAlex::removePrefix($authorOut->openalex_id);
+        $authorOut->orcid = Orcid::removePrefix($authorOut->orcid);
+        $authorOut->openAlexId = OpenAlex::removePrefix($authorOut->openAlexId);
 
         return $authorOut;
     }

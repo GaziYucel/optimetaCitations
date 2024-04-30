@@ -81,11 +81,11 @@ class Inbound extends ExecuteAbstract
             /* @var CitationModel $citation */
             $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(), $citations[$i]);
 
-            if (!empty($citation->wikidata_id)) continue;
+            if (!empty($citation->wikidataId)) continue;
 
             $citation = $this->processCitation($citation);
 
-            $citation->wikidata_id = Wikidata::removePrefix($citation->wikidata_id);
+            $citation->wikidataId = Wikidata::removePrefix($citation->wikidataId);
 
             $citations[$i] = $citation;
         }
@@ -122,7 +122,7 @@ class Inbound extends ExecuteAbstract
                 ->getItemWithPropertyAndPid(
                     $this->property->doi['id'], $citation->doi));
 
-        if (!empty($qid)) $citation->wikidata_id = $qid;
+        if (!empty($qid)) $citation->wikidataId = $qid;
 
         return $citation;
     }
