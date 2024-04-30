@@ -15,14 +15,14 @@ namespace APP\plugins\generic\citationManager\classes\DataModels;
 class MetadataPublication
 {
     /** @var string OpenAlex ID. */
-    public const openAlexId = 'openalex_id';
+    public const openAlexId = 'openAlexId';
 
     /** @var string Wikidata QID. */
-    public const wikidataId = 'wikidata_id';
+    public const wikidataId = 'wikidataId';
 
     /** @var string Open Citations ID. */
-    public const openCitationsId = 'opencitations_id';
+    public const openCitationsId = 'openCitationsId';
 
     /** @var string GitHub Issue ID for Open Citations. */
-    public const githubIssueId = 'github_issue_id';
+    public const githubIssueId = 'githubIssueId';
 }

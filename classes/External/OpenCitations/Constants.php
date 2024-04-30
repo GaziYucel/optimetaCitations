@@ -1,6 +1,6 @@
 <?php
 /**
- * @file classes/External/Wikidata/Constants.php
+ * @file classes/External/OpenCitations/Constants.php
  *
  * @copyright (c) 2021+ TIB Hannover
  * @copyright (c) 2021+ Gazi Yücel
@@ -12,8 +12,13 @@
 
 namespace APP\plugins\generic\citationManager\classes\External\OpenCitations;
 
-class Constants
+use APP\plugins\generic\citationManager\classes\External\ConstantsAbstract;
+
+class Constants extends ConstantsAbstract
 {
+    /** @var string The base URL for API requests. */
+    public const apiUrl = 'https://api.github.com/repos';
+
     /** @var string GitHub handle / account used for Open Citations */
     public const owner = CITATION_MANAGER_PLUGIN_NAME . '_OpenCitations_Owner';
 

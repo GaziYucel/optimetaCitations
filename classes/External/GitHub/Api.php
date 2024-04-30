@@ -12,16 +12,12 @@
 
 namespace APP\plugins\generic\citationManager\classes\External\GitHub;
 
-use APP\plugins\generic\citationManager\CitationManagerPlugin;
 use APP\plugins\generic\citationManager\classes\External\ApiAbstract;
 use Application;
 use GuzzleHttp\Client;
 
 class Api extends ApiAbstract
 {
-    /** @var string The base URL for GitHub API requests. */
-    public string $url = 'https://api.github.com/repos';
-
     /** @var string|null The owner of the GitHub repository. */
     public ?string $owner = '';
 
@@ -31,19 +27,11 @@ class Api extends ApiAbstract
     /** @var string|null The name of the GitHub repository. */
     public ?string $repository = '';
 
-    /**
-     * @param CitationManagerPlugin $plugin
-     * @param string|null $url The base URL for API requests (optional).
-     */
-    public function __construct(CitationManagerPlugin &$plugin, ?string $url = '')
+    /** @copydoc ApiAbstract::__construct */
+    function __construct(?array $args = [])
     {
-        parent::__construct($plugin, $url);
-
-        $this->owner = '';
-
-        $this->token = '';
-
-        $this->repository = '';
+        $args['url'] = Constants::apiUrl;
+        parent::__construct($args);
 
         $this->httpClient = new Client([
             'headers' => [

@@ -19,9 +19,6 @@ use GuzzleHttp\Exception\GuzzleException;
 
 abstract class ApiAbstract
 {
-    /** @var CitationManagerPlugin */
-    public CitationManagerPlugin $plugin;
-
     /** @var string The base URL for API requests. */
     public string $url = '';
 
@@ -29,13 +26,16 @@ abstract class ApiAbstract
     public Client $httpClient;
 
     /**
-     * @param CitationManagerPlugin $plugin
-     * @param string|null $url The base URL for API requests (optional).
+     * Api constructor.
+     *
+     * @param array|null $args Parameters such as username, password
      */
-    function __construct(CitationManagerPlugin &$plugin, ?string $url = '')
+    function __construct(?array $args = [])
     {
-        $this->plugin = &$plugin;
-        if (!empty($url)) $this->url = $url;
+        foreach ($args as $property => $value) {
+            if (property_exists($this, $property))
+                $this->{$property} = $value;
+        }
     }
 
     /**

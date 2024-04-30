@@ -28,18 +28,18 @@ final class Mappings
     public static function getWork(): array
     {
         return [
-            'openalex_id' => 'id',
+            'openAlexId' => 'id',
             'title' => 'title',
-            'publication_year' => 'publication_year',
-            'publication_date' => 'publication_date',
+            'publicationYear' => 'publication_year',
+            'publicationDate' => 'publication_date',
             'type' => 'type_crossref',
             'volume' => ['biblio', 'volume'],
             'issue' => ['biblio', 'issue'],
-            'first_page' => ['biblio', 'first_page'],
-            'last_page' => ['biblio', 'last_page'],
-            'journal_name' => ['locations', 0,'source', 'display_name'],
-            'journal_issn_l' => ['locations', 0,'source', 'issn_l'],
-            'journal_publisher' => ['locations', 0,'source', 'host_organization_name'],
+            'firstPage' => ['biblio', 'first_page'],
+            'lastPage' => ['biblio', 'last_page'],
+            'journalName' => ['locations', 0,'source', 'display_name'],
+            'journalIssnL' => ['locations', 0,'source', 'issn_l'],
+            'journalPublisher' => ['locations', 0,'source', 'host_organization_name'],
             'authors' => null // [ AuthorModel, ... ]
         ];
     }
@@ -53,11 +53,11 @@ final class Mappings
     public static function getAuthor(): array
     {
         return [
-            'orcid_id' => ['author', 'orcid'],
-            'display_name' => ['author', 'display_name'],
-            'given_name' => ['author', 'display_name'],
-            'family_name' => ['author', 'display_name'],
-            'openalex_id' => ['author', 'id']
+            'orcid' => ['author', 'orcid'],
+            'displayName' => ['author', 'display_name'],
+            'givenName' => ['author', 'display_name'],
+            'familyName' => ['author', 'display_name'],
+            'openAlexId' => ['author', 'id']
         ];
     }
 }

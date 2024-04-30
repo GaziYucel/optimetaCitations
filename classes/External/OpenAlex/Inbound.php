@@ -28,23 +28,31 @@ use APP\plugins\generic\citationManager\classes\PID\Orcid;
 class Inbound extends ExecuteAbstract
 {
     /** @copydoc InboundAbstract::__construct */
-    public function __construct(CitationManagerPlugin &$plugin, int $submissionId, int $publicationId)
+    public function __construct(CitationManagerPlugin &$plugin,
+                                int                   $contextId,
+                                int                   $submissionId,
+                                int                   $publicationId)
     {
-        parent::__construct($plugin, $submissionId, $publicationId);
-        $this->api = new Api($plugin);
+        parent::__construct(
+            $plugin,
+            $contextId,
+            $submissionId,
+            $publicationId);
+
+        $this->api = new Api();
     }
 
     /** @copydoc InboundAbstract::execute */
     public function execute(): bool
     {
         $pluginDao = new PluginDAO();
-        $context = $this->plugin->getRequest()->getContext();
+        $context = $pluginDao->getContext($this->contextId);
         $publication = $pluginDao->getPublication($this->publicationId);
 
         // journal
         $onlineIssn = $context->getData('onlineIssn');
         $openAlexId = $context->getData(MetadataJournal::openAlexId);
-        if(empty($openAlexId) && !empty($onlineIssn)){
+        if (empty($openAlexId) && !empty($onlineIssn)) {
             $source = $this->api->getSource($onlineIssn);
 
             if (!empty($source) && !empty($source['id']) && !empty($source['issn_l'] && $source['issn_l'] === $onlineIssn)) {
@@ -59,15 +67,15 @@ class Inbound extends ExecuteAbstract
         $countCitations = count($citations);
         for ($i = 0; $i < $countCitations; $i++) {
             /* @var CitationModel $citation */
-            $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(),$citations[$i]);
+            $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(), $citations[$i]);
 
-            if ($citation->isProcessed || empty($citation->doi) || !empty($citation->openalex_id))
+            if ($citation->isProcessed || empty($citation->doi) || !empty($citation->openAlexId))
                 continue;
 
             $citation = $this->getCitationWork($citation);
 
-            if (!empty($citation->openalex_id)) $citation->isProcessed = true;
-            $citation->openalex_id = OpenAlex::removePrefix($citation->openalex_id);
+            if (!empty($citation->openAlexId)) $citation->isProcessed = true;
+            $citation->openAlexId = OpenAlex::removePrefix($citation->openAlexId);
 
             $citations[$i] = $citation;
         }
@@ -130,17 +138,17 @@ class Inbound extends ExecuteAbstract
             }
         }
 
-        $authorOut->display_name = trim(str_replace('null', '', $authorOut->display_name));
-        if (empty($authorOut->display_name)) $authorOut->display_name = $authorIn['raw_author_name'];
+        $authorOut->displayName = trim(str_replace('null', '', $authorOut->displayName));
+        if (empty($authorOut->displayName)) $authorOut->displayName = $authorIn['raw_author_name'];
 
-        $authorDisplayNameParts = explode(' ', trim($authorOut->display_name));
+        $authorDisplayNameParts = explode(' ', trim($authorOut->displayName));
         if (count($authorDisplayNameParts) > 1) {
-            $authorOut->family_name = array_pop($authorDisplayNameParts);
-            $authorOut->given_name = implode(' ', $authorDisplayNameParts);
+            $authorOut->familyName = array_pop($authorDisplayNameParts);
+            $authorOut->givenName = implode(' ', $authorDisplayNameParts);
         }
 
-        $authorOut->orcid_id = Orcid::removePrefix($authorOut->orcid_id);
-        $authorOut->openalex_id = OpenAlex::removePrefix($authorOut->openalex_id);
+        $authorOut->orcid = Orcid::removePrefix($authorOut->orcid);
+        $authorOut->openAlexId = OpenAlex::removePrefix($authorOut->openAlexId);
 
         return $authorOut;
     }

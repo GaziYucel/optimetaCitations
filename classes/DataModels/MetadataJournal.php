@@ -15,8 +15,8 @@ namespace APP\plugins\generic\citationManager\classes\DataModels;
 class MetadataJournal
 {
     /** @var string OpenAlex ID. */
-    public const openAlexId = 'openalex_id';
+    public const openAlexId = 'openAlexId';
 
     /** @var string Wikidata QID. */
-    public const wikidataId = 'wikidata_id';
+    public const wikidataId = 'wikidataId';
 }
