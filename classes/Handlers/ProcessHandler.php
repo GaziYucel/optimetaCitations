@@ -77,7 +77,6 @@ class ProcessHandler
         // journal
         $contextChanged = false;
         foreach (ClassHelper::getClassConstantsAndValuesAsArray(new MetadataJournal()) as $name => $key) {
-            error_log($key . ': ' . $context->getData($key) . '(' . $contextId . ')');
             if (empty($context->getData($key))) {
                 $context->setData($key, '');
                 $contextChanged = true;
