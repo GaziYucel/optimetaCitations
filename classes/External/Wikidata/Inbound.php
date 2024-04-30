@@ -83,9 +83,10 @@ class Inbound extends ExecuteAbstract
 
             if (!empty($citation->wikidataId)) continue;
 
-            $citation = $this->processCitation($citation);
-
-            $citation->wikidataId = Wikidata::removePrefix($citation->wikidataId);
+            if(!empty($citation->doi)){
+                $citation = $this->processCitation($citation);
+                $citation->wikidataId = Wikidata::removePrefix($citation->wikidataId);
+            }
 
             $citations[$i] = $citation;
         }
