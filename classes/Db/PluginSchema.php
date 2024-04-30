@@ -12,11 +12,13 @@
 
 namespace APP\plugins\generic\citationManager\classes\Db;
 
+use APP\core\Services;
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
 use APP\plugins\generic\citationManager\classes\DataModels\MetadataAuthor;
 use APP\plugins\generic\citationManager\classes\DataModels\MetadataJournal;
 use APP\plugins\generic\citationManager\classes\DataModels\MetadataPublication;
 use APP\plugins\generic\citationManager\classes\Helpers\ClassHelper;
+use PKP\services\PKPSchemaService;
 
 class PluginSchema
 {
@@ -94,5 +96,15 @@ class PluginSchema
         }
 
         return false;
+    }
+
+    /**
+     * Reload the context so that changes to the context schema can take place.
+     *
+     * @return void
+     */
+    public static function reloadJournalSchema(): void
+    {
+        Services::get('schema')->get(PKPSchemaService::SCHEMA_CONTEXT, true);
     }
 }
