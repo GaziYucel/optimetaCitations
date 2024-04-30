@@ -12,6 +12,7 @@ Citation Manager for OJS
     - [Task scheduler](#task-scheduler)
     - [Deposit to OpenCitations](#deposit-to-opencitations)
     - [Deposit Wikidata.org](#deposit-wikidataorg)
+- [Screenshot(s) / screen recording(s)](#screenshots--screen-recordings)
 - [Install and configure the plugin](#install-and-configure-the-plugin)
     - [Requirements](#requirements)
     - [Install with Git](#install-with-git)
@@ -22,11 +23,13 @@ Citation Manager for OJS
     - [Notes](#notes)
     - [Debugging](#debugging)
     - [Tests](#tests)
+- [Data Models](#data-models)
+  - [Models for citations](#models-for-citations)
+  - [Metadata of OJS models](#metadata-of-ojs-models)
 - [Contribute](#contribute)
 - [License](#license)
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
 
 # Features
 
@@ -43,22 +46,28 @@ Citation Manager for OJS
 - OpenAlex.org
     - see [Models for citations](#models-for-citations)
 - Orcid.org
-    - given_name
-    - family_name
+    - givenName
+    - familyName
+- Wikidata.org
+    - Lookup the wikidata id's with following pids
+      - citation doi
+      - author orcid
+      - journal issn_l
 
 ## Task scheduler
 
 ### Process and enrich
 
-- Batch process can be executed from Website > Plugins > Settings.
 - Batch process is automatically triggered by the Task Scheduler.
-- All publications which are not declined are processed.
+- All publications with the following statuses will be processed:
+  - queued
+  - scheduled
 
 ### Deposit
 
-- Batch deposit can be executed from Website > Plugins > Settings.
 - Batch deposit is automatically triggered by the Task Scheduler.
-- All publications which are published are deposited.
+- All publications with the following statuses will be deposited:
+  - published
 
 ## Deposit to OpenCitations
 
@@ -121,6 +130,12 @@ Only items which have unique identifiers will be deposited to Wikidata.
     - author ([P50](https://www.wikidata.org/wiki/Property:P50)) [1. author]
     - published in ([P1433](https://www.wikidata.org/wiki/Property:P1433)) [2. journal]
     - cites work ([P2860](https://www.wikidata.org/wiki/Property:P2860)) [3. cited article]
+
+# Screenshot(s) / screen recording(s)
+
+![screen recording workflowTab edit.gif](.project/screenrecordings/workflowTab-edit-ojs340.gif)
+![screenshot settings](.project/screenshots/settings-ojs340.png)
+![screenshot settings](.project/screenshots/frontend-ojs340.png)
 
 # Install and configure the plugin
 
@@ -196,17 +211,7 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
 - At "Wikidata bot password", fill in the password which you have saved previously
 - Click Save
 
-# Screenshot(s) / screen recording(s)
-
-![screen recording workflowTab edit.gif](.project/screenrecordings/workflowTab-edit-ojs340.gif)
-![screenshot settings](.project/screenshots/settings-ojs340.png)
-![screenshot settings](.project/screenshots/frontend-ojs340.png)
-
 # Development
-
-- Fork the repository
-- Make your changes
-- Open a PR with your changes
 
 ## Structure
 
@@ -227,8 +232,9 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
     │  |  |  ├─ Inbound.php          # Methods for retrieving data
     │  |  |  └─ Outbound.php         # Methods for depositing data
     |  |  ├─ ...Other services       # Other services follow the same structure
-    |  |  ├─ ApiAbstract.php         # This class is used by service Api class
-    |  |  └─ ExecuteAbstract.php     # This class is used by service Inbound / Outbound classes
+    |  |  ├─ ApiAbstract.php         # This class is extended by the Api classes
+    |  |  ├─ ConstantsAbstract.php   # This class is used by by the Constants classes
+    |  |  └─ ExecuteAbstract.php     # This class is used by the Inbound / Outbound classes
     │  ├─ FrontEnd                   # Classes for the front end, e.g. ArticleView
     │  ├─ Handlers                   # Handlers, e.g. Outbound, Inbound, API
     │  ├─ Helpers                    # Helper classes
@@ -247,7 +253,6 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
     ├─ .gitignore                    # Git ignore file
     ├─ CitationManagerPlugin.php     # Main class of plugin
     ├─ composer.json                 # Composer configuration file
-    ├─ CODE_OF_CONDUCT.md            # Code of conduct
     ├─ index.php                     # Entry point plugin (ojs version 3.3.0)
     ├─ LICENSE                       # License file
     ├─ README.md                     # This file
@@ -260,9 +265,8 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
   to the PSR-4 specification.
 - All classes have namespaces and are structured according to PSR-4 standard.
 - If you add or remove classes in the `classes` folder, run the following
-  command to update autoload files: `composer dump-autoload -o --no-dev`.
-- Running `composer install -o --no-dev` or `composer update -o --no-dev`
-  will also generate the autoload files.
+  command to update autoload files: `composer dump-autoload -o`.
+- Running `composer install -o` or `composer update -o` will also generate the autoload files.
 - The `-o` option generates the optimised files ready for production.
 
 ## Debugging
@@ -288,7 +292,7 @@ _Careful with sensitive information, (passwords, tokens) will be written in plai
 If you are developing, you might use the classes in `tests/classes/`.
 The classes in this folder have the same folder and namespace structure as in `classes` folder.
 The purpose of these classes is to override the main classes.
-You can accomplish this by running the composer command `composer dump-autoload -o --dev -d tests`.
+You can accomplish this by running the composer command `composer dump-autoload -o -d tests`.
 If this is done, then test or sandbox versions of API's will be used.
 For example test.wikidata.org instead of www.wikidata.org.
 Autoload of the classes is done with composer [classmap](https://getcomposer.org/doc/04-schema.md#classmap).
@@ -301,94 +305,81 @@ Please put the following in the file config.inc.php to enable this:
 isTestMode=true
 ```
 
-**Headless tests**
-
-```bash
-npm install
-
-# start containers
-npm run-script test_compose
-
-# run tests with UI
-npm run-script test_open
-```
-
 # Data models
 
 ## Models for citations
 
 **CitationModel**
 
-| name              | description                                                       |
-|-------------------|-------------------------------------------------------------------|
-| doi               | The DOI for the work                                              |
-| title             | The title of this work                                            |
-| publication_year  | The year this work was published                                  |
-| publication_date  | The publication date, formatted as an ISO 8601 date eg 2018-02-13 |
-| type              | The type or genre of the work, eg journal-article                 |
-| volume            | The volume of the issue of the journal, eg 495                    |
-| issue             | The issue of the journal, eg 7442                                 |
-| pages             | The number of pages of the work/article, eg 4                     |
-| first_page        | The first page of the work/article, eg 49                         |
-| last_page         | The last page of the work/article, eg 59                          |
-| abstract          | The abstract of this work                                         |
-| authors           | List of AuthorModel objects                                       |
-| journal_name      | Name of the journal                                               |
-| journal_issn_l    | Issn_l of the journal                                             |
-| journal_publisher | Publisher name of the journal                                     |
-| url               | URL for the work                                                  |
-| urn               | URN for the work                                                  |
-| arxiv_id          | The arxiv id of the work                                          |
-| handle_id         | The handle id of the work                                         |
-| openalex_id       | The OpenAlex ID of the work                                       |
-| wikidata_id       | The Wikidata QID of the work                                      |
-| opencitations_id  | Open Citations ID                                                 |
-| github_issue_id   | GitHub Issue ID used by Open Citations                            |
-| raw               | The unchanged raw citation                                        |
-| isProcessed       | Is processed / structured                                         |
+| name             | description                                                         |
+|------------------|---------------------------------------------------------------------|
+| doi              | The DOI for the work                                                |
+| title            | The title of this work                                              |
+| publicationYear  | The year this work was published                                    |
+| publicationDate  | The publication date, formatted as an ISO 8601 date e.g. 2018-02-13 |
+| type             | The type or genre of the work, eg journal-article                   |
+| volume           | The volume of the issue of the journal, e.g. 495                    |
+| issue            | The issue of the journal, e.g. 7442                                 |
+| pages            | The number of pages of the work/article, e.g. 4                     |
+| firstPage        | The first page of the work/article, e.g. 49                         |
+| lastPage         | The last page of the work/article, e.g. 59                          |
+| abstract         | The abstract of this work                                           |
+| authors          | List of AuthorModel objects                                         |
+| journalName      | Name of the journal                                                 |
+| journalIssnL     | Issn_l of the journal                                               |
+| journalPublisher | Publisher name of the journal                                       |
+| url              | URL for the work                                                    |
+| urn              | URN for the work                                                    |
+| arxivId          | The arxiv id of the work                                            |
+| handleId         | The handle id of the work                                           |
+| openAlexId       | The OpenAlex ID of the work                                         |
+| wikidataId       | The Wikidata QID of the work                                        |
+| openCitationsId  | Open Citations ID                                                   |
+| githubIssueId    | GitHub Issue ID used by Open Citations                              |
+| raw              | The unchanged raw citation                                          |
+| isProcessed      | Is processed / structured                                           |
 
 **AuthorModel**
 
-| name         | description                                      |
-|--------------|--------------------------------------------------|
-| orcid_id     | The ORCID ID for this author                     |
-| display_name | The name of the author as a single string        |
-| given_name   | The given name of the author as a single string  |
-| family_name  | The family name of the author as a single string |
-| wikidata_id  | The Wikidata QID                                 |
-| openalex_id  | The OpenAlex ID                                  |
+| name             | description                                      |
+|------------------|--------------------------------------------------|
+| orcid            | The ORCID ID for this author                     |
+| displayName      | The name of the author as a single string        |
+| givenName        | The given name of the author as a single string  |
+| familyName       | The family name of the author as a single string |
+| wikidataId       | The Wikidata QID                                 |
+| openAlexId       | The OpenAlex ID                                  |
 
 ## Metadata of OJS models
 
 **MetadataJournal**
 
-| name        | description                  |
-|-------------|------------------------------|
-| openalex_id | The OpenAlex ID of the work  |
-| wikidata_id | The Wikidata QID of the work |
+| name            | description                  |
+|-----------------|------------------------------|
+| openAlexId      | The OpenAlex ID of the work  |
+| wikidataId      | The Wikidata QID of the work |
 
 **MetadataAuthor**
 
-| name        | description                  |
-|-------------|------------------------------|
-| openalex_id | The OpenAlex ID of the work  |
-| wikidata_id | The Wikidata QID of the work |
+| name            | description                  |
+|-----------------|------------------------------|
+| openAlexId      | The OpenAlex ID of the work  |
+| wikidataId      | The Wikidata QID of the work |
 
 **MetadataPublication**
 
-| name             | description                            |
-|------------------|----------------------------------------|
-| openalex_id      | The OpenAlex ID of the work            |
-| wikidata_id      | The Wikidata QID of the work           |
-| opencitations_id | Open Citations ID                      |
-| github_issue_id  | GitHub Issue ID used by Open Citations |
+| name            | description                            |
+|-----------------|----------------------------------------|
+| openAlexId      | The OpenAlex ID of the work            |
+| wikidataId      | The Wikidata QID of the work           |
+| openCitationsId | Open Citations ID                      |
+| githubIssueId   | GitHub Issue ID used by Open Citations |
 
 # Contribute
 
-All help is welcome: asking questions, providing documentation, testing, or even development.
-
-Please note that this project is released with a [Contributor Code of Conduct](code_of_conduct.md).
-By participating in this project you agree to abide by its terms.
+- Fork the repository
+- Make your changes
+- Open a PR with your changes
 
 # License
 

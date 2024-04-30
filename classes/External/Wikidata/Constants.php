@@ -12,8 +12,13 @@
 
 namespace APP\plugins\generic\citationManager\classes\External\Wikidata;
 
-class Constants
+use APP\plugins\generic\citationManager\classes\External\ConstantsAbstract;
+
+class Constants extends ConstantsAbstract
 {
+    /** @var string The base URL for API requests. */
+    public const apiUrl = 'https://www.wikidata.org/w/api.php';
+
     /** @var string Wikidata username */
     public const username = CITATION_MANAGER_PLUGIN_NAME . '_Wikidata_Username';
 

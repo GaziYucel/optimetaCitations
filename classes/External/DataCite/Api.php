@@ -12,25 +12,17 @@
 
 namespace APP\plugins\generic\citationManager\classes\External\DataCite;
 
-use APP\plugins\generic\citationManager\CitationManagerPlugin;
 use APP\plugins\generic\citationManager\classes\External\ApiAbstract;
 use Application;
 use GuzzleHttp\Client;
 
 class Api extends ApiAbstract
 {
-    /** @var string The base URL for API requests. */
-    public string $url = 'https://api.datacite.org';
-
-    /**
-     * Api constructor.
-     *
-     * @param CitationManagerPlugin $plugin
-     * @param string|null $url The base URL for API requests (optional).
-     */
-    function __construct(CitationManagerPlugin &$plugin, ?string $url = '')
+    /** @copydoc ApiAbstract::__construct */
+    function __construct(?array $args = [])
     {
-        parent::__construct($plugin, $url);
+        $args['url'] = Constants::apiUrl;
+        parent::__construct($args);
 
         $this->httpClient = new Client(
             [

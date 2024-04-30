@@ -20,6 +20,7 @@ use APP\plugins\generic\citationManager\classes\DataModels\MetadataPublication;
 use APP\plugins\generic\citationManager\classes\Db\PluginDAO;
 use APP\plugins\generic\citationManager\classes\External\ExecuteAbstract;
 use APP\plugins\generic\citationManager\classes\Helpers\ClassHelper;
+use APP\plugins\generic\citationManager\classes\Helpers\LogHelper;
 use APP\plugins\generic\citationManager\classes\Helpers\StringHelper;
 use APP\plugins\generic\citationManager\classes\PID\Arxiv;
 use APP\plugins\generic\citationManager\classes\PID\Doi;
@@ -39,7 +40,7 @@ class ProcessHandler
     /** @var CitationManagerPlugin */
     public CitationManagerPlugin $plugin;
 
-    /** @var array|string[] */
+    /** @var array|string[] A list of external services processed */
     private array $services = [
         '\APP\plugins\generic\citationManager\classes\External\OpenAlex\Inbound',
         '\APP\plugins\generic\citationManager\classes\External\Orcid\Inbound',
@@ -56,18 +57,19 @@ class ProcessHandler
     /**
      * Extract pids, structure and enrich
      *
+     * @param int $contextId
      * @param int $submissionId The ID of the submission.
      * @param int $publicationId The ID of the publication.
      * @param string $citationsRaw Raw citations to be processed
      * @return bool
      */
-    public function execute(int $submissionId, int $publicationId, string $citationsRaw): bool
+    public function execute(int $contextId, int $submissionId, int $publicationId, string $citationsRaw): bool
     {
         if (empty($submissionId) || empty($publicationId) || empty($citationsRaw)) return false;
 
         $pluginDao = new PluginDAO();
         $publication = $pluginDao->getPublication($publicationId);
-        $context = $this->plugin->getRequest()->getContext();
+        $context = $pluginDao->getContext($contextId);
 
         // journal
         $contextChanged = false;
@@ -112,11 +114,21 @@ class ProcessHandler
         if ($authorsChanged) $publication = $pluginDao->getPublication($publicationId);
 
         // iterate services
+        $services = '';
         /* @var ExecuteAbstract $service */
         foreach ($this->services as $serviceClass) {
-            $service = new $serviceClass ($this->plugin, $submissionId, $publicationId);
+            $service = new $serviceClass ($this->plugin, $contextId, $submissionId, $publicationId);
             $service->execute();
+            $services .= explode('\\', $serviceClass)[7] . ',';
         }
+
+        LogHelper::logInfo([
+            'title' => $publication->getData('title')[$publication->getData('locale')],
+            'submission' => $submissionId,
+            'publication' => $publicationId,
+            'services' => trim($services, ','),
+            'status' => 'processed'
+        ]);
 
         return true;
     }
@@ -128,6 +140,11 @@ class ProcessHandler
      */
     public function batchExecute(): bool
     {
+        $batchFilter = [
+            STATUS_QUEUED,
+            STATUS_SCHEDULED
+        ];
+
         $contextIds = [];
 
         $pluginDao = new PluginDAO();
@@ -147,10 +164,7 @@ class ProcessHandler
 
             $submissions = Services::get('submission')->getMany([
                 'contextId' => $contextId,
-                'status' => [
-                    STATUS_QUEUED,
-                    STATUS_SCHEDULED,
-                    STATUS_SCHEDULED]]);
+                'status' => $batchFilter]);
 
             /* @var Submission $submission */
             foreach ($submissions as $submission) {
@@ -161,11 +175,14 @@ class ProcessHandler
                 foreach ($publications as $publication) {
 
                     $citations = $pluginDao->getCitations($publication);
-                    $citationsRaw = $publication->getData('citationRaw');
+                    $citationsRaw = $publication->getData('citationsRaw');
 
-                    if (!empty($citations) || empty($citationsRaw)) continue;
+                    if (!in_array($publication->getData('status'), $batchFilter)
+                        || !empty($citations)
+                        || empty($citationsRaw)) continue;
 
                     $this->execute(
+                        $contextId,
                         $submission->getId(),
                         $publication->getId(),
                         $citationsRaw);
