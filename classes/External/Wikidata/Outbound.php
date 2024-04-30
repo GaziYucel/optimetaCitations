@@ -98,8 +98,8 @@ class Outbound extends ExecuteAbstract
             /* @var CitationModel $citation */
             $citation = Classhelper::getClassWithValuesAssigned(new CitationModel(), $citations[$i]);
 
-            if ($citation->isProcessed && empty($citation->wikidata_id))
-                $citation->wikidata_id = $this->processCitedArticle($locale, $citation);
+            if ($citation->isProcessed && empty($citation->wikidataId))
+                $citation->wikidataId = $this->processCitedArticle($locale, $citation);
 
             $citations[$i] = $citation;
         }
@@ -135,7 +135,7 @@ class Outbound extends ExecuteAbstract
         // cites work in main article
         foreach ($citations as $index => $citation) {
             $this->addReferenceClaim($item,
-                $citation->wikidata_id,
+                $citation->wikidataId,
                 $this->property->citesWork['id']);
         }
 

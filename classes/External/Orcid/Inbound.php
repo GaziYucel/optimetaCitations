@@ -61,9 +61,9 @@ class Inbound extends ExecuteAbstract
                 /* @var AuthorModel $author */
                 $author = $citation->authors[$j];
 
-                if (!empty($author->orcid_id)) {
+                if (!empty($author->orcid)) {
 
-                    $person = $this->api->getPerson(Orcid::removePrefix($author->orcid_id));
+                    $person = $this->api->getPerson(Orcid::removePrefix($author->orcid));
 
                     if (empty($person)) continue;
 

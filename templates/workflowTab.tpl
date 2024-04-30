@@ -13,11 +13,11 @@
                 <td><strong>{translate key="context.context"}</strong></td>
                 <td colspan="2">
                     <a class="pkpButton citationManager-Button" target="_blank"
-                       :class="(citationManagerApp.metadataJournal.openalex_id)?'':'citationManager-Disabled'"
-                       :href="'{$url.openAlex}/' + citationManagerApp.metadataJournal.openalex_id">OpenAlex</a>
+                       :class="(citationManagerApp.metadataJournal.openAlexId)?'':'citationManager-Disabled'"
+                       :href="'{$url.openAlex}/' + citationManagerApp.metadataJournal.openAlexId">OpenAlex</a>
                     <a class="pkpButton citationManager-Button" target="_blank"
-                       :class="(citationManagerApp.metadataJournal.wikidata_id)?'':'citationManager-Disabled'"
-                       :href="'{$url.wikidata}/' + citationManagerApp.metadataJournal.wikidata_id">Wikidata</a>
+                       :class="(citationManagerApp.metadataJournal.wikidataId)?'':'citationManager-Disabled'"
+                       :href="'{$url.wikidata}/' + citationManagerApp.metadataJournal.wikidataId">Wikidata</a>
                 </td>
             </tr>
             <tr>
@@ -31,8 +31,8 @@
                            :class="(author.orcid)?'':'citationManager-Disabled'"
                            :href="author.orcid">iD</a>
                         <a class="pkpButton citationManager-Button" target="_blank"
-                           :class="(author.wikidata_id)?'':'citationManager-Disabled'"
-                           :href="'{$url.wikidata}/' + author.wikidata_id">WD</a>
+                           :class="(author.wikidataId)?'':'citationManager-Disabled'"
+                           :href="'{$url.wikidata}/' + author.wikidataId">WD</a>
 			        </span>
                 </td>
             </tr>
@@ -40,11 +40,11 @@
                 <td><strong>{translate key="common.publication"}</strong></td>
                 <td>
                     <a class="pkpButton citationManager-Button" target="_blank"
-                       :class="(citationManagerApp.publication.wikidata_id)?'':'citationManager-Disabled'"
-                       :href="'{$url.wikidata}/' + citationManagerApp.publication.wikidata_id">Wikidata</a>
+                       :class="(citationManagerApp.publication.wikidataId)?'':'citationManager-Disabled'"
+                       :href="'{$url.wikidata}/' + citationManagerApp.publication.wikidataId">Wikidata</a>
                     <a class="pkpButton citationManager-Button" target="_blank"
-                       :class="(citationManagerApp.publication.opencitations_id)?'':'citationManager-Disabled'"
-                       :href="'{$url.openCitations}/' + citationManagerApp.publication.opencitations_id">OpenCitations</a>
+                       :class="(citationManagerApp.publication.openCitationsId)?'':'citationManager-Disabled'"
+                       :href="'{$url.openCitations}/' + citationManagerApp.publication.openCitationsId">OpenCitations</a>
                 </td>
                 <td class="citationManager-AlignRight">
                     <a @click="citationManagerApp.deposit()" id="buttonDeposit" class="pkpButton"
@@ -99,24 +99,24 @@
                             <div>
                                 <span v-for="(author, j) in citation.authors">
                                     <span v-show="!citation.editRow"
-                                          class="citationManager-Tag">{{ citation.authors[j].given_name }}</span>
-                                    <input id="given_name-{{ i + 1 }}-{{ j + 1 }}" placeholder="Given name"
+                                          class="citationManager-Tag">{{ citation.authors[j].givenName }}</span>
+                                    <input id="givenName-{{ i + 1 }}-{{ j + 1 }}" placeholder="Given name"
                                            v-show="citation.editRow"
-                                           v-model="citation.authors[j].given_name"
+                                           v-model="citation.authors[j].givenName"
                                            class="citationManager-Input" />
                                     <span v-show="!citation.editRow"
-                                          class="citationManager-Tag">{{ citation.authors[j].family_name }}</span>
-                                    <input id="family_name-{{ i + 1 }}-{{ j + 1 }}" placeholder="Family name"
+                                          class="citationManager-Tag">{{ citation.authors[j].familyName }}</span>
+                                    <input id="familyName-{{ i + 1 }}-{{ j + 1 }}" placeholder="Family name"
                                            v-show="citation.editRow"
-                                           v-model="citation.authors[j].family_name"
+                                           v-model="citation.authors[j].familyName"
                                            class="citationManager-Input" />
                                     <input id="orcid-{{ i + 1 }}-{{ j + 1 }}" placeholder="Orcid"
                                            v-show="citation.editRow"
-                                           v-model="citation.authors[j].orcid_id"
+                                           v-model="citation.authors[j].orcid"
                                            class="citationManager-Input" />
                                     <a class="pkpButton citationManager-Button" target="_blank"
-                                       :class="(citation.authors[j].orcid_id)?'':'citationManager-Disabled'"
-                                       :href="'{$url.orcid}' + '/' + citation.authors[j].orcid_id">iD</a>
+                                       :class="(citation.authors[j].orcid)?'':'citationManager-Disabled'"
+                                       :href="'{$url.orcid}' + '/' + citation.authors[j].orcid">iD</a>
                                     <a class="pkpButton" v-show="citation.editRow"
                                        v-on:click="citationManagerApp.removeAuthor(i, j)">
                                         <i class="fa fa-trash" aria-hidden="true"></i></a>
@@ -137,17 +137,17 @@
                                        class="citationManager-Input"
                                        v-model="citation.title" />
 
-                                <span v-show="!citation.editRow && citation.journal_name"
-                                      class="citationManager-Tag">{{ citation.journal_name }}</span>
+                                <span v-show="!citation.editRow && citation.journalName"
+                                      class="citationManager-Tag">{{ citation.journalName }}</span>
                                 <input id="venue_display_name-{{ i + 1 }}" placeholder="Venue" v-show="citation.editRow"
                                        class="citationManager-Input"
-                                       v-model="citation.journal_name" />
+                                       v-model="citation.journalName" />
 
-                                <span v-show="!citation.editRow && citation.publication_year"
-                                      class="citationManager-Tag">{{ citation.publication_year }}</span>
-                                <input id="publication_year-{{ i + 1 }}" placeholder="Year" v-show="citation.editRow"
+                                <span v-show="!citation.editRow && citation.publicationYear"
+                                      class="citationManager-Tag">{{ citation.publicationYear }}</span>
+                                <input id="publicationYear-{{ i + 1 }}" placeholder="Year" v-show="citation.editRow"
                                        class="citationManager-Input"
-                                       v-model="citation.publication_year" />
+                                       v-model="citation.publicationYear" />
 
                                 <span v-show="!citation.editRow && citation.volume"
                                       class="citationManager-Tag">Volume {{ citation.volume }}</span>
@@ -160,24 +160,24 @@
                                 <input id="issue-{{ i + 1 }}" placeholder="Issue" v-show="citation.editRow"
                                        class="citationManager-Input" v-model="citation.issue" />
 
-                                <span v-show="!citation.editRow && citation.first_page"
-                                      class="citationManager-Tag">Pages {{ citation.first_page }} - {{ citation.last_page }}</span>
-                                <input id="first_page-{{ i + 1 }}" placeholder="First page" v-show="citation.editRow"
+                                <span v-show="!citation.editRow && citation.firstPage"
+                                      class="citationManager-Tag">Pages {{ citation.firstPage }} - {{ citation.lastPage }}</span>
+                                <input id="firstPage-{{ i + 1 }}" placeholder="First page" v-show="citation.editRow"
                                        class="citationManager-Input"
-                                       v-model="citation.first_page" />
-                                <input id="last_page-{{ i + 1 }}" placeholder="Last page" v-show="citation.editRow"
+                                       v-model="citation.firstPage" />
+                                <input id="lastPage-{{ i + 1 }}" placeholder="Last page" v-show="citation.editRow"
                                        class="citationManager-Input"
-                                       v-model="citation.last_page" />
+                                       v-model="citation.lastPage" />
                             </div>
                         </div>
                         <div class="citationManager-RawText">{{ citation.raw }}</div>
                         <div>
                             <a class="pkpButton citationManager-Button" target="_blank"
-                               :class="(citation.wikidata_id)?'':'citationManager-Disabled'"
-                               :href="'{$url.wikidata}/' + citation.wikidata_id">Wikidata</a>
+                               :class="(citation.wikidataId)?'':'citationManager-Disabled'"
+                               :href="'{$url.wikidata}/' + citation.wikidataId">Wikidata</a>
                             <a class="pkpButton citationManager-Button" target="_blank"
-                               :class="(citation.wikidata_id)?'':'citationManager-Disabled'"
-                               :href="'{$url.openAlex}/' + citation.openalex_id">OpenAlex</a>
+                               :class="(citation.wikidataId)?'':'citationManager-Disabled'"
+                               :href="'{$url.openAlex}/' + citation.openAlexId">OpenAlex</a>
                         </div>
                     </td>
                     <td class="citationManager-ScrollableDiv-actions">

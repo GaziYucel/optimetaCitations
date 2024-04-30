@@ -212,27 +212,27 @@ class Outbound extends ExecuteAbstract
                 foreach ($citation->authors as $authorRow) {
                     /* @var AuthorModel $author */
                     $author = ClassHelper::getClassWithValuesAssigned(new AuthorModel(), $authorRow);
-                    if (empty($author->orcid_id)) {
-                        $workMetaData->author .= $author->display_name;
+                    if (empty($author->orcid)) {
+                        $workMetaData->author .= $author->displayName;
                     } else {
-                        $workMetaData->author .= $author->family_name . ', ' . $author->given_name;
+                        $workMetaData->author .= $author->familyName . ', ' . $author->givenName;
                     }
-                    $workMetaData->author .= ' [orcid:' . $author->orcid_id . ']';
+                    $workMetaData->author .= ' [orcid:' . $author->orcid . ']';
                     $workMetaData->author .= '; ';
                 }
                 $workMetaData->author = trim($workMetaData->author, '; ');
             }
 
-            $workMetaData->pub_date = $citation->publication_date;
+            $workMetaData->pub_date = $citation->publicationDate;
 
-            $workMetaData->venue = $citation->journal_name;
-            if (!empty($citation->journal_issn_l)) $workMetaData->venue .= ' [issn:' . $citation->journal_issn_l . ']';
+            $workMetaData->venue = $citation->journalName;
+            if (!empty($citation->journalIssnL)) $workMetaData->venue .= ' [issn:' . $citation->journalIssnL . ']';
 
             $workMetaData->volume = $citation->volume;
             $workMetaData->issue = $citation->issue;
             $workMetaData->page = '';
             $workMetaData->type = str_replace('-', ' ', $citation->type);
-            $workMetaData->publisher = $citation->journal_publisher;
+            $workMetaData->publisher = $citation->journalPublisher;
             $workMetaData->editor = '';
 
             if (!empty($workMetaData->id)) {
@@ -280,7 +280,7 @@ class Outbound extends ExecuteAbstract
                 .= 'urn:' . str_replace(' ', '', $citation->urn) . ' ';
             $workCitingCited->cited_id = trim($workCitingCited->cited_id);
 
-            $workCitingCited->cited_publication_date = $citation->publication_date;
+            $workCitingCited->cited_publication_date = $citation->publicationDate;
 
             if (!empty($workCitingCited->cited_id)) {
                 foreach ($workCitingCited as $name => $value) {
