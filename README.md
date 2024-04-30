@@ -12,6 +12,7 @@ Citation Manager for OJS
     - [Task scheduler](#task-scheduler)
     - [Deposit to OpenCitations](#deposit-to-opencitations)
     - [Deposit Wikidata.org](#deposit-wikidataorg)
+- [Screenshot(s) / screen recording(s)](#screenshots--screen-recordings)
 - [Install and configure the plugin](#install-and-configure-the-plugin)
     - [Requirements](#requirements)
     - [Install with Git](#install-with-git)
@@ -22,6 +23,9 @@ Citation Manager for OJS
     - [Notes](#notes)
     - [Debugging](#debugging)
     - [Tests](#tests)
+- [Data Models](#data-models)
+  - [Models for citations](#models-for-citations)
+  - [Metadata of OJS models](#metadata-of-ojs-models)
 - [Contribute](#contribute)
 - [License](#license)
 
@@ -127,6 +131,12 @@ Only items which have unique identifiers will be deposited to Wikidata.
     - published in ([P1433](https://www.wikidata.org/wiki/Property:P1433)) [2. journal]
     - cites work ([P2860](https://www.wikidata.org/wiki/Property:P2860)) [3. cited article]
 
+# Screenshot(s) / screen recording(s)
+
+![screen recording workflowTab edit.gif](.project/screenrecordings/workflowTab-edit-ojs340.gif)
+![screenshot settings](.project/screenshots/settings-ojs340.png)
+![screenshot settings](.project/screenshots/frontend-ojs340.png)
+
 # Install and configure the plugin
 
 ## Requirements
@@ -201,17 +211,7 @@ If you have none please register one through https://www.wikidata.org/w/index.ph
 - At "Wikidata bot password", fill in the password which you have saved previously
 - Click Save
 
-# Screenshot(s) / screen recording(s)
-
-![screen recording workflowTab edit.gif](.project/screenrecordings/workflowTab-edit-ojs340.gif)
-![screenshot settings](.project/screenshots/settings-ojs340.png)
-![screenshot settings](.project/screenshots/frontend-ojs340.png)
-
 # Development
-
-- Fork the repository
-- Make your changes
-- Open a PR with your changes
 
 ## Structure
 
