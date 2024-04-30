@@ -25,8 +25,8 @@ final class Mappings
     public static function getAuthor(): array
     {
         return [
-            'given_name' => ['person', 'name', 'given-names', 'value'],
-            'family_name' => ['person', 'name', 'family-name', 'value']
+            'givenName' => ['person', 'name', 'given-names', 'value'],
+            'familyName' => ['person', 'name', 'family-name', 'value']
         ];
     }
 }
