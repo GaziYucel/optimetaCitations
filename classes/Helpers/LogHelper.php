@@ -80,7 +80,7 @@ class LogHelper
 
         // convert message to string
         if (is_object($message) || is_array($message)) {
-            $message = json_encode($message, JSON_UNESCAPED_SLASHES);
+            $message = json_encode($message, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             if (json_last_error() !== JSON_ERROR_NONE) $message = var_export($message, true);
         }
 
@@ -94,7 +94,7 @@ class LogHelper
             $backTrace[2]['class'] . '\\' . $backTrace[2]['function'] . ': ' . $message . "\n";
 
         // add extra debug information if debug level
-        if($level === 'DBG') {
+        if ($level === 'DBG') {
             $backTrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             $message .= '                            ' . json_encode($backTrace, JSON_UNESCAPED_SLASHES) . "\n";
         }
