@@ -30,10 +30,22 @@ class Inbound extends ExecuteAbstract
     public Property $property;
 
     /** @copydoc InboundAbstract::__construct */
-    public function __construct(CitationManagerPlugin &$plugin, int $submissionId, int $publicationId)
+    public function __construct(CitationManagerPlugin &$plugin,
+                                int                   $contextId,
+                                int                   $submissionId,
+                                int                   $publicationId)
     {
-        parent::__construct($plugin, $submissionId, $publicationId);
-        $this->api = new Api($plugin);
+        parent::__construct(
+            $plugin,
+            $contextId,
+            $submissionId,
+            $publicationId);
+
+        $this->api = new Api([
+            'username' => $this->plugin->getSetting($this->contextId, Constants::username),
+            'password' => $this->plugin->getSetting($this->contextId, Constants::password)
+        ]);
+
         $this->property = new Property();
     }
 
@@ -41,7 +53,7 @@ class Inbound extends ExecuteAbstract
     public function execute(): bool
     {
         $pluginDao = new PluginDAO();
-        $context = $this->plugin->getRequest()->getContext();
+        $context = $pluginDao->getContext($this->contextId);
         $publication = $pluginDao->getPublication($this->publicationId);
 
         // journal
@@ -69,11 +81,11 @@ class Inbound extends ExecuteAbstract
             /* @var CitationModel $citation */
             $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(), $citations[$i]);
 
-            if (!empty($citation->wikidata_id)) continue;
+            if (!empty($citation->wikidataId)) continue;
 
             $citation = $this->processCitation($citation);
 
-            $citation->wikidata_id = Wikidata::removePrefix($citation->wikidata_id);
+            $citation->wikidataId = Wikidata::removePrefix($citation->wikidataId);
 
             $citations[$i] = $citation;
         }
@@ -110,7 +122,7 @@ class Inbound extends ExecuteAbstract
                 ->getItemWithPropertyAndPid(
                     $this->property->doi['id'], $citation->doi));
 
-        if (!empty($qid)) $citation->wikidata_id = $qid;
+        if (!empty($qid)) $citation->wikidataId = $qid;
 
         return $citation;
     }

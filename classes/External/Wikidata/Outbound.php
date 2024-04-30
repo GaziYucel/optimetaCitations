@@ -33,10 +33,22 @@ class Outbound extends ExecuteAbstract
     private Property $property;
 
     /** @copydoc InboundAbstract::__construct */
-    public function __construct(CitationManagerPlugin &$plugin, int $submissionId, int $publicationId)
+    public function __construct(CitationManagerPlugin &$plugin,
+                                int                   $contextId,
+                                int                   $submissionId,
+                                int                   $publicationId)
     {
-        parent::__construct($plugin, $submissionId, $publicationId);
-        $this->api = new Api($plugin);
+        parent::__construct(
+            $plugin,
+            $contextId,
+            $submissionId,
+            $publicationId);
+
+        $this->api = new Api([
+            'username' => $this->plugin->getSetting($this->contextId, Constants::username),
+            'password' => $this->plugin->getSetting($this->contextId, Constants::password)
+        ]);
+
         $this->property = new Property();
     }
 
@@ -51,7 +63,7 @@ class Outbound extends ExecuteAbstract
         if (!$this->api->isDepositPossible()) return false;
 
         $pluginDao = new PluginDAO();
-        $context = $this->plugin->getRequest()->getContext();
+        $context = $pluginDao->getContext($this->contextId);
         $publication = $pluginDao->getPublication($this->publicationId);
         $locale = $publication->getData('locale');
 
@@ -86,8 +98,8 @@ class Outbound extends ExecuteAbstract
             /* @var CitationModel $citation */
             $citation = Classhelper::getClassWithValuesAssigned(new CitationModel(), $citations[$i]);
 
-            if ($citation->isProcessed && empty($citation->wikidata_id))
-                $citation->wikidata_id = $this->processCitedArticle($locale, $citation);
+            if ($citation->isProcessed && empty($citation->wikidataId))
+                $citation->wikidataId = $this->processCitedArticle($locale, $citation);
 
             $citations[$i] = $citation;
         }
@@ -123,7 +135,7 @@ class Outbound extends ExecuteAbstract
         // cites work in main article
         foreach ($citations as $index => $citation) {
             $this->addReferenceClaim($item,
-                $citation->wikidata_id,
+                $citation->wikidataId,
                 $this->property->citesWork['id']);
         }
 

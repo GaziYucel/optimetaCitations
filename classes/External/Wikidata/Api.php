@@ -12,7 +12,6 @@
 
 namespace APP\plugins\generic\citationManager\classes\External\Wikidata;
 
-use APP\plugins\generic\citationManager\CitationManagerPlugin;
 use APP\plugins\generic\citationManager\classes\External\ApiAbstract;
 use APP\plugins\generic\citationManager\classes\Helpers\ArrayHelper;
 use Application;
@@ -20,9 +19,6 @@ use GuzzleHttp\Client;
 
 class Api extends ApiAbstract
 {
-    /** @var string $url The base URL for API requests. */
-    public string $url = 'https://www.wikidata.org/w/api.php';
-
     /** @var string|null $username The username for authentication. */
     public ?string $username = '';
 
@@ -38,21 +34,11 @@ class Api extends ApiAbstract
     /** @var string|null $csrfToken The CSRF token. */
     public ?string $csrfToken = '';
 
-    /**
-     * @param CitationManagerPlugin $plugin
-     * @param string|null $url The base URL for API requests (optional).
-     */
-    function __construct(CitationManagerPlugin &$plugin, ?string $url = '')
+    /** @copydoc ApiAbstract::__construct */
+    function __construct(?array $args = [])
     {
-        parent::__construct($plugin, $url);
-
-        $this->username = $this->plugin->getSetting(
-            $this->plugin->getCurrentContextId(),
-            Constants::username,);
-
-        $this->password = $this->plugin->getSetting(
-            $this->plugin->getCurrentContextId(),
-            Constants::password);
+        $args['url'] = Constants::apiUrl;
+        parent::__construct($args);
 
         $this->httpClient = new Client(
             [

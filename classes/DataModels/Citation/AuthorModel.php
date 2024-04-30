@@ -15,20 +15,20 @@ namespace APP\plugins\generic\citationManager\classes\DataModels\Citation;
 class AuthorModel
 {
     /** @var string|null The ORCID ID for this author. */
-    public ?string $orcid_id = null;
+    public ?string $orcid = null;
 
     /** @var string|null The name of the author as a single string. */
-    public ?string $display_name = null;
+    public ?string $displayName = null;
 
     /** @var string|null The given name of the author as a single string. */
-    public ?string $given_name = null;
+    public ?string $givenName = null;
 
     /** @var string|null The family name of the author as a single string. */
-    public ?string $family_name = null;
+    public ?string $familyName = null;
 
     /** @var string|null The Wikidata QID */
-    public ?string $wikidata_id = null;
+    public ?string $wikidataId = null;
 
     /** @var string|null The OpenAlex ID */
-    public ?string $openalex_id = null;
+    public ?string $openAlexId = null;
 }
