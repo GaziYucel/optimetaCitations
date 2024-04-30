@@ -81,12 +81,11 @@ class Inbound extends ExecuteAbstract
             /* @var CitationModel $citation */
             $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(), $citations[$i]);
 
-            if (!empty($citation->wikidataId)) continue;
+            if (!empty($citation->wikidataId) || empty($citation->doi)) continue;
 
-            if(!empty($citation->doi)){
-                $citation = $this->processCitation($citation);
-                $citation->wikidataId = Wikidata::removePrefix($citation->wikidataId);
-            }
+            $citation = $this->processCitation($citation);
+
+            $citation->wikidataId = Wikidata::removePrefix($citation->wikidataId);
 
             $citations[$i] = $citation;
         }
