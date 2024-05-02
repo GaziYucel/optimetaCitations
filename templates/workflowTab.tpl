@@ -350,7 +350,8 @@
 			},
 			setCitations: function(publication) {
 				this.citations = [];
-				if (publication["{CitationManagerPlugin::CITATIONS_STRUCTURED}"] !== undefined) {
+				if (publication["{CitationManagerPlugin::CITATIONS_STRUCTURED}"] !== undefined
+					&& publication["{CitationManagerPlugin::CITATIONS_STRUCTURED}"] !== null) {
 					let citations = publication["{CitationManagerPlugin::CITATIONS_STRUCTURED}"];
 					if (typeof citations === 'string') {
 						citations = JSON.parse(citations);
