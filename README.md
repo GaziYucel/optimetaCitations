@@ -27,9 +27,11 @@ Citation Manager for OJS
   - [Models for citations](#models-for-citations)
   - [Metadata of OJS models](#metadata-of-ojs-models)
 - [Contribute](#contribute)
+  - [How to contribute](#how-to-contribute)
 - [License](#license)
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
 
 # Features
 
@@ -377,7 +379,15 @@ isTestMode=true
 
 # Contribute
 
+All help is welcome: asking questions, providing documentation, testing, or even development.
+
+Please note that this project is released with a [Contributor Code of Conduct](code_of_conduct.md).
+By participating in this project you agree to abide by its terms.
+
+## How to contribute
+
 - Fork the repository
+- Create a feature branch in your fork
 - Make your changes
 - Open a PR with your changes
 
