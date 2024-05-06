@@ -65,7 +65,6 @@ class CitationManagerPlugin extends GenericPlugin
                 $pluginApiHandler = new PluginAPIHandler();
                 Hook::add('Dispatcher::dispatch', [$pluginApiHandler, 'register']);
 
-//                // task scheduler; not working as expected
 //                Hook::add('AcronPlugin::parseCronTab', function ($hookName, $args) {
 //                    $taskFilesPath =& $args[0];
 //                    $taskFilesPath[] = $this->getPluginPath() . DIRECTORY_SEPARATOR . 'scheduledTasks.xml';
