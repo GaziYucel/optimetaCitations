@@ -133,7 +133,10 @@ class DepositHandler
     public function batchExecute(): bool
     {
         $batchFilter = [
-            Submission::STATUS_PUBLISHED
+            // 1, // Submission::STATUS_QUEUED,
+            3, // Submission::STATUS_PUBLISHED,
+            // 4, // Submission::STATUS_DECLINED,
+            // 5  // Submission::STATUS_SCHEDULED
         ];
 
         $contextIds = [];
