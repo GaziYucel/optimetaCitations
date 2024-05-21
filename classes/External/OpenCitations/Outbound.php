@@ -197,7 +197,7 @@ class Outbound extends ExecuteAbstract
         foreach ($citations as $citationRow) {
 
             /* @var CitationModel $citation */
-            $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(), $citationRow);
+            $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(), (array)$citationRow);
             $workMetaData = new WorkMetaData();
 
             if (!empty($citation->doi)) $workMetaData->id .= 'doi:' . Doi::removePrefix($citation->doi) . ' ';
@@ -264,7 +264,7 @@ class Outbound extends ExecuteAbstract
         foreach ($citations as $index => $citationRow) {
 
             /* @var CitationModel $citation22 */
-            $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(), $citationRow);
+            $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(), (array)$citationRow);
 
             $workCitingCited = new WorkCitingCited();
 

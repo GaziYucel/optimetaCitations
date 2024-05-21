@@ -54,7 +54,7 @@ class Inbound extends ExecuteAbstract
                 continue;
 
             /** @var CitationModel $citation */
-            $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(), $citations[$i]);
+            $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(), (array)$citations[$i]);
 
             $countAuthors = count($citation->authors);
             for ($j = 0; $j < $countAuthors; $j++) {

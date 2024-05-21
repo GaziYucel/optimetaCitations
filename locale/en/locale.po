@@ -36,7 +36,7 @@ msgstr "Clear"
 msgid "plugins.generic.citationManager.clear.question"
 msgstr "The current parsed citations will be removed if you click OK. Are you sure?"
 
-msgid "plugins.generic.citationManager.citations.empty.description"
+msgid "plugins.generic.citationManager.citations.info.description"
 msgstr "Parsed citations are empty. Please use the button above to parse and enrich the citations."
 
 msgid "plugins.generic.citationManager.wizard.label"

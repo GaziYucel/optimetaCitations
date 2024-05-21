@@ -36,7 +36,7 @@ msgstr "Löschen"
 msgid "plugins.generic.citationManager.clear.question"
 msgstr "Die strukturierten Zitationen werden entfernt, wenn Sie auf OK klicken. Sind Sie sich sicher?"
 
-msgid "plugins.generic.citationManager.citations.empty.description"
+msgid "plugins.generic.citationManager.citations.info.description"
 msgstr "Es sind keine strukturierten Zitationen vorhanden. Bitte klicken Sie auf den oben stehenden "
 "Button \"Verarbeiten\", um die Zitationen zu strukturieren und anzureichern."
 

@@ -96,7 +96,7 @@ class Outbound extends ExecuteAbstract
         $countCitations = count($citations);
         for ($i = 0; $i < $countCitations; $i++) {
             /* @var CitationModel $citation */
-            $citation = Classhelper::getClassWithValuesAssigned(new CitationModel(), $citations[$i]);
+            $citation = Classhelper::getClassWithValuesAssigned(new CitationModel(), (array)$citations[$i]);
 
             if ($citation->isProcessed && empty($citation->wikidataId))
                 $citation->wikidataId = $this->processCitedArticle($locale, $citation);

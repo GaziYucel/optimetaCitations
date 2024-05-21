@@ -67,7 +67,7 @@ class Inbound extends ExecuteAbstract
         $countCitations = count($citations);
         for ($i = 0; $i < $countCitations; $i++) {
             /* @var CitationModel $citation */
-            $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(), $citations[$i]);
+            $citation = ClassHelper::getClassWithValuesAssigned(new CitationModel(), (array)$citations[$i]);
 
             if ($citation->isProcessed || empty($citation->doi) || !empty($citation->openAlexId))
                 continue;
