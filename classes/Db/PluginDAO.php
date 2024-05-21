@@ -44,16 +44,13 @@ class PluginDAO
             true
         );
 
-        if (empty($citationsIn) || json_last_error() !== JSON_ERROR_NONE)
-            return [];
+        if (empty($citationsIn) || json_last_error() !== JSON_ERROR_NONE) return [];
 
         $citationsOut = [];
 
         foreach ($citationsIn as $citation) {
-            if (!empty($citation) && (is_object($citation) || is_array($citation))) {
-                $citationsOut[] =
-                    ClassHelper::getClassAsArrayWithValuesAssigned(new CitationModel(), $citation);
-            }
+            if (!empty($citation) && (is_object($citation) || is_array($citation)))
+                $citationsOut[] = ClassHelper::getClassWithValuesAssigned(new CitationModel(), $citation);
         }
 
         return $citationsOut;

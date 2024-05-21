@@ -125,9 +125,9 @@ class ArticleView
 
         $count = count($citations);
         for ($i = 0; $i < $count; $i++) {
-            $citationOut = $this->getCitationWithLinks($citations[$i]['raw']);
+            $citationOut = $this->getCitationWithLinks($citations[$i]->raw);
 
-            if ($citations[$i]['isProcessed']) $citationOut = $this->getSingleCitationAsHtml($citations[$i]);
+            if ($citations[$i]->isProcessed) $citationOut = $this->getSingleCitationAsHtml($citations[$i]);
 
             $output .= '<p>' . $citationOut . '</p>';
         }
@@ -178,7 +178,7 @@ class ArticleView
 
         // authors
         $orcidUrl = "<a href='" . Orcid::prefix . "/{orcid}' target='_blank' class=''><span>{name}</span></a>";
-        foreach ($citation['authors'] as $author) {
+        foreach ($citation->authors as $author) {
             if (!empty($author['orcid_id'])) {
                 $out .= " " . str_replace(
                         ['{orcid}', '{name}'],
@@ -198,9 +198,9 @@ class ArticleView
         $wikiDataUrl = "<a href='" . Wikidata::prefix . "/{wikidata_id}' target='_blank' class='citationManager-Button citationManager-ButtonGreen'><span>Wikidata</span></a>";
         $openAlexUrl = "<a href='" . OpenAlex::prefix . "/{openalex_id}' target='_blank' class='citationManager-Button citationManager-ButtonGreen'><span>OpenAlex</span></a>";
 
-        if (!empty($citation['doi'])) $out .= " " . str_replace('{doi}', $citation['doi'], $doiUrl);
-        if (!empty($citation['wikidata_id'])) $out .= " " . str_replace('{wikidata_id}', $citation['wikidata_id'], $wikiDataUrl);
-        if (!empty($citation['openalex_id'])) $out .= " " . str_replace('{openalex_id}', $citation['openalex_id'], $openAlexUrl);
+        if (!empty($citation->doi)) $out .= " " . str_replace('{doi}', $citation->doi, $doiUrl);
+        if (!empty($citation->wikidata_id)) $out .= " " . str_replace('{wikidata_id}', $citation->wikidata_id, $wikiDataUrl);
+        if (!empty($citation->openalex_id)) $out .= " " . str_replace('{openalex_id}', $citation->openalex_id, $openAlexUrl);
 
         $out .= '<!-- structured -->';
 
