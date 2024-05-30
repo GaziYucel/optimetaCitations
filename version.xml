@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE version SYSTEM "../../../lib/pkp/dtd/pluginVersion.dtd">
+<!--
+ * @file plugins/generic/citationManager/version.xml
+ *
+ * Copyright (c) 2023+ TIB Hannover
+ * Copyright (c) 2023+ Gazi Yücel
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ *
+ * @class CitationManagerPlugin
+ * @ingroup plugins_generic_citationmanager
+ *
+ * @brief plugin's information
+   -->
+
 <version>
 	<application>citationManager</application>
 	<type>plugins.generic</type>
