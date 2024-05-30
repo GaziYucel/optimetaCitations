@@ -8,6 +8,8 @@
  *
  * @class Doi
  * @brief Doi class
+ *
+ * https://www.crossref.org/blog/dois-and-matching-regular-expressions/
  */
 
 namespace APP\plugins\generic\citationManager\classes\PID;
