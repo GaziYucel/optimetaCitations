@@ -1,13 +1,13 @@
 <?php
 /**
- * @file classes/FrontEnd/ArticleView.php
+ * @file classes/FrontEnd/ArticleDetails.php
  *
  * @copyright (c) 2021+ TIB Hannover
  * @copyright (c) 2021+ Gazi Yücel
  * @license Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @class ArticleView
- * @brief Article page view
+ * @class ArticleDetails
+ * @brief Article details page
  */
 
 namespace APP\plugins\generic\citationManager\classes\FrontEnd;

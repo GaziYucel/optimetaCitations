@@ -7,6 +7,7 @@
  *
  * Citation Manager tab
  *}
+ 
 <link rel="stylesheet" href="{$assetsUrl}/css/backend.css" type="text/css" />
 <link rel="stylesheet" href="{$assetsUrl}/css/frontend.css" type="text/css" />
 
