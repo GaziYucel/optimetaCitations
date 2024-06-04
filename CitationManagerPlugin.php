@@ -17,7 +17,7 @@ define('CITATION_MANAGER_PLUGIN_NAME', basename(__FILE__, '.php'));
 require_once(CitationManagerPlugin::autoloadFile());
 
 use APP\plugins\generic\citationManager\classes\Db\PluginSchema;
-use APP\plugins\generic\citationManager\classes\FrontEnd\ArticleView;
+use APP\plugins\generic\citationManager\classes\FrontEnd\ArticleDetails;
 use APP\plugins\generic\citationManager\classes\Handlers\PluginAPIHandler;
 use APP\plugins\generic\citationManager\classes\Settings\Actions;
 use APP\plugins\generic\citationManager\classes\Settings\Manage;
@@ -59,8 +59,8 @@ class CitationManagerPlugin extends GenericPlugin
                 $workflowSave = new WorkflowSave($this);
                 Hook::add('Publication::edit', [$workflowSave, 'execute']);
 
-                $articlePage = new ArticleView($this);
-                Hook::add('TemplateManager::display', [$articlePage, 'execute']);
+                $articleDetails = new ArticleDetails($this);
+                Hook::add('TemplateManager::display', [$articleDetails, 'execute']);
 
                 $pluginApiHandler = new PluginAPIHandler();
                 Hook::add('Dispatcher::dispatch', [$pluginApiHandler, 'register']);
@@ -81,8 +81,6 @@ class CitationManagerPlugin extends GenericPlugin
     /** @copydoc Plugin::getActions() */
     public function getActions($request, $actionArgs): array
     {
-        if (!$this->getEnabled()) return parent::getActions($request, $actionArgs);
-
         $actions = new Actions($this);
         return $actions->execute($request, $actionArgs, parent::getActions($request, $actionArgs));
     }

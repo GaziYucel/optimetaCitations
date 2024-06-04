@@ -31,6 +31,8 @@ class Actions
     /** @copydoc Plugin::getActions() */
     public function execute($request, $actionArgs, $parentActions): array
     {
+        if (!$this->plugin->getEnabled()) return $parentActions;
+
         $router = $request->getRouter();
 
         $linkAction[] = new LinkAction(
