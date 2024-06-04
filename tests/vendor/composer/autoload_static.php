@@ -44,7 +44,7 @@ class ComposerStaticInit29b4f851711c241fe71b7433fc111f5d
         'APP\\plugins\\generic\\citationManager\\classes\\External\\Wikidata\\DataModels\\Property' => __DIR__ . '/../..' . '/classes/External/Wikidata/DataModels/Property.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\Wikidata\\Inbound' => __DIR__ . '/../..' . '/../classes/External/Wikidata/Inbound.php',
         'APP\\plugins\\generic\\citationManager\\classes\\External\\Wikidata\\Outbound' => __DIR__ . '/../..' . '/../classes/External/Wikidata/Outbound.php',
-        'APP\\plugins\\generic\\citationManager\\classes\\FrontEnd\\ArticleView' => __DIR__ . '/../..' . '/../classes/FrontEnd/ArticleView.php',
+        'APP\\plugins\\generic\\citationManager\\classes\\FrontEnd\\ArticleDetails' => __DIR__ . '/../..' . '/../classes/FrontEnd/ArticleDetails.php',
         'APP\\plugins\\generic\\citationManager\\classes\\Handlers\\DepositHandler' => __DIR__ . '/../..' . '/../classes/Handlers/DepositHandler.php',
         'APP\\plugins\\generic\\citationManager\\classes\\Handlers\\PluginAPIHandler' => __DIR__ . '/../..' . '/../classes/Handlers/PluginAPIHandler.php',
         'APP\\plugins\\generic\\citationManager\\classes\\Handlers\\ProcessHandler' => __DIR__ . '/../..' . '/../classes/Handlers/ProcessHandler.php',

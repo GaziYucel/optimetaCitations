@@ -20,7 +20,7 @@ import('lib.pkp.classes.handler.APIHandler');
 import('lib.pkp.classes.linkAction.request.AjaxAction');
 
 use APP\plugins\generic\citationManager\classes\Db\PluginSchema;
-use APP\plugins\generic\citationManager\classes\FrontEnd\ArticleView;
+use APP\plugins\generic\citationManager\classes\FrontEnd\ArticleDetails;
 use APP\plugins\generic\citationManager\classes\Handlers\PluginAPIHandler;
 use APP\plugins\generic\citationManager\classes\Settings\Actions;
 use APP\plugins\generic\citationManager\classes\Settings\Manage;
@@ -57,8 +57,8 @@ class CitationManagerPlugin extends GenericPlugin
                 $workflowSave = new WorkflowSave($this);
                 HookRegistry::register('Publication::edit', [$workflowSave, 'execute']);
 
-                $articlePage = new ArticleView($this);
-                HookRegistry::register('TemplateManager::display', [$articlePage, 'execute']);
+                $articleDetails = new ArticleDetails($this);
+                HookRegistry::register('TemplateManager::display', [$articleDetails, 'execute']);
 
                 $pluginApiHandler = new PluginAPIHandler();
                 HookRegistry::register('Dispatcher::dispatch', [$pluginApiHandler, 'register']);
@@ -79,8 +79,6 @@ class CitationManagerPlugin extends GenericPlugin
     /** @copydoc Plugin::getActions() */
     public function getActions($request, $actionArgs): array
     {
-        if (!$this->getEnabled()) return parent::getActions($request, $actionArgs);
-
         $actions = new Actions($this);
         return $actions->execute($request, $actionArgs, parent::getActions($request, $actionArgs));
     }

@@ -1,13 +1,13 @@
 <?php
 /**
- * @file classes/FrontEnd/ArticleView.php
+ * @file classes/FrontEnd/ArticleDetails.php
  *
  * @copyright (c) 2021+ TIB Hannover
  * @copyright (c) 2021+ Gazi Yücel
  * @license Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @class ArticleView
- * @brief Article page view
+ * @class ArticleDetails
+ * @brief Article details page
  */
 
 namespace APP\plugins\generic\citationManager\classes\FrontEnd;
@@ -23,7 +23,7 @@ use Publication;
 use TemplateManager;
 use SmartyException;
 
-class ArticleView
+class ArticleDetails
 {
     /** @var CitationManagerPlugin */
     public CitationManagerPlugin $plugin;
@@ -125,9 +125,9 @@ class ArticleView
 
         $count = count($citations);
         for ($i = 0; $i < $count; $i++) {
-            $citationOut = $this->getCitationWithLinks($citations[$i]['raw']);
+            $citationOut = $this->getCitationWithLinks($citations[$i]->raw);
 
-            if ($citations[$i]['isProcessed']) $citationOut = $this->getSingleCitationAsHtml($citations[$i]);
+            if ($citations[$i]->isProcessed) $citationOut = $this->getSingleCitationAsHtml($citations[$i]);
 
             $output .= '<p>' . $citationOut . '</p>';
         }
@@ -146,14 +146,14 @@ class ArticleView
         $out = '<!-- structured -->';
 
         foreach ($citation as $key => $value) {
-            switch ($key){
+            switch ($key) {
+                case 'isProcessed':
                 case 'raw':
                 case 'authors':
                 case 'doi':
-                case 'wikidata_id':
-                case 'openalex_id':
-                case 'github_issue_id':
-                case 'isProcessed':
+                case 'wikidataId':
+                case 'openAlexId':
+                case 'githubIssueId':
                 case 'type':
                 case 'volume':
                 case 'issue':
@@ -178,14 +178,14 @@ class ArticleView
 
         // authors
         $orcidUrl = "<a href='" . Orcid::prefix . "/{orcid}' target='_blank' class=''><span>{name}</span></a>";
-        foreach ($citation['authors'] as $author) {
-            if (!empty($author['orcid_id'])) {
+        foreach ($citation->authors as $author) {
+            if (!empty($author['orcid'])) {
                 $out .= " " . str_replace(
                         ['{orcid}', '{name}'],
-                        [$author['orcid_id'], $author['given_name'] . ' ' . $author['family_name']],
+                        [$author['orcid'], $author['givenName'] . ' ' . $author['familyName']],
                         $orcidUrl);
             } else {
-                $out .= $author['given_name'] . ' ' . $author['family_name'];
+                $out .= $author['givenName'] . ' ' . $author['familyName'];
             }
             $out .= ', ';
         }
@@ -195,12 +195,12 @@ class ArticleView
 
         // external ids
         $doiUrl = "<a href='" . Doi::prefix . "/{doi}' target='_blank' class='citationManager-Button citationManager-ButtonGreen'><span>doi</span></a>";
-        $wikiDataUrl = "<a href='" . Wikidata::prefix . "/{wikidata_id}' target='_blank' class='citationManager-Button citationManager-ButtonGreen'><span>Wikidata</span></a>";
-        $openAlexUrl = "<a href='" . OpenAlex::prefix . "/{openalex_id}' target='_blank' class='citationManager-Button citationManager-ButtonGreen'><span>OpenAlex</span></a>";
+        $wikiDataUrl = "<a href='" . Wikidata::prefix . "/{wikidataId}' target='_blank' class='citationManager-Button citationManager-ButtonGreen'><span>Wikidata</span></a>";
+        $openAlexUrl = "<a href='" . OpenAlex::prefix . "/{openAlexId}' target='_blank' class='citationManager-Button citationManager-ButtonGreen'><span>OpenAlex</span></a>";
 
-        if (!empty($citation['doi'])) $out .= " " . str_replace('{doi}', $citation['doi'], $doiUrl);
-        if (!empty($citation['wikidata_id'])) $out .= " " . str_replace('{wikidata_id}', $citation['wikidata_id'], $wikiDataUrl);
-        if (!empty($citation['openalex_id'])) $out .= " " . str_replace('{openalex_id}', $citation['openalex_id'], $openAlexUrl);
+        if (!empty($citation->doi)) $out .= " " . str_replace('{doi}', $citation->doi, $doiUrl);
+        if (!empty($citation->wikidataId)) $out .= " " . str_replace('{wikidataId}', $citation->wikidataId, $wikiDataUrl);
+        if (!empty($citation->openAlexId)) $out .= " " . str_replace('{openAlexId}', $citation->openAlexId, $openAlexUrl);
 
         $out .= '<!-- structured -->';
 

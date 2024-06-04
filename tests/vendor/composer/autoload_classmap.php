@@ -43,7 +43,7 @@ return array(
     'APP\\plugins\\generic\\citationManager\\classes\\External\\Wikidata\\DataModels\\Property' => $baseDir . '/classes/External/Wikidata/DataModels/Property.php',
     'APP\\plugins\\generic\\citationManager\\classes\\External\\Wikidata\\Inbound' => $baseDir . '/../classes/External/Wikidata/Inbound.php',
     'APP\\plugins\\generic\\citationManager\\classes\\External\\Wikidata\\Outbound' => $baseDir . '/../classes/External/Wikidata/Outbound.php',
-    'APP\\plugins\\generic\\citationManager\\classes\\FrontEnd\\ArticleView' => $baseDir . '/../classes/FrontEnd/ArticleView.php',
+    'APP\\plugins\\generic\\citationManager\\classes\\FrontEnd\\ArticleDetails' => $baseDir . '/../classes/FrontEnd/ArticleDetails.php',
     'APP\\plugins\\generic\\citationManager\\classes\\Handlers\\DepositHandler' => $baseDir . '/../classes/Handlers/DepositHandler.php',
     'APP\\plugins\\generic\\citationManager\\classes\\Handlers\\PluginAPIHandler' => $baseDir . '/../classes/Handlers/PluginAPIHandler.php',
     'APP\\plugins\\generic\\citationManager\\classes\\Handlers\\ProcessHandler' => $baseDir . '/../classes/Handlers/ProcessHandler.php',

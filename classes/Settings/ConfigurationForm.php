@@ -15,6 +15,8 @@ namespace APP\plugins\generic\citationManager\classes\Settings;
 import('lib.pkp.classes.form.Form');
 
 use APP\plugins\generic\citationManager\CitationManagerPlugin;
+use APP\plugins\generic\citationManager\classes\External\Wikidata\Constants as WikidataConstants;
+use APP\plugins\generic\citationManager\classes\External\OpenCitations\Constants as OpenCitationsConstants;
 use Application;
 use Form;
 use FormValidatorCSRF;
